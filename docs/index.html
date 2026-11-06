@@ -102,6 +102,11 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .tline { display: grid; grid-template-columns: 36px 1fr; gap: 6px; font-size: 14px; margin: 6px 0; }
 .tline .lab { color: var(--muted); font-size: 13px; }
 .teambox { margin-top: 10px; }
+.wbox { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; background: var(--bg); margin-bottom: 12px; }
+.wbox .big { font-size: 22px; font-weight: 800; color: var(--accent); }
+.wbox .order { font-size: 12px; color: var(--muted); width: 100%; }
+.wbox .order b { color: var(--accent); }
+.wbox .order span { white-space: nowrap; margin-right: 12px; display: inline-block; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -527,6 +532,9 @@ function render(D, A) {
 
   <div class="pane" id="p5"><section class="card">
     <h2>自由球員 <small>本週已加 ${A.adds} 人</small></h2>
+    ${(() => { const order = [...D.teams].filter((t) => t.waiverRank).sort((a, b) => a.waiverRank - b.waiverRank);
+      return D.me.waiverRank ? `<div class="wbox"><span>你的 waiver 順位</span><span class="big">第 ${D.me.waiverRank} 順位</span><span class="sub">（共 ${order.length} 隊，數字越小越先拿到）</span>
+      <div class="order">${order.map((t) => `<span>${t.id === D.me.id ? `<b>${t.waiverRank}. ${esc(t.name)}</b>` : `${t.waiverRank}. ${esc(t.name)}`}</span>`).join("")}</div></div>` : ""; })()}
     <div class="scroll"><table class="roster" id="t-fa">
       ${HEAD}
       ${A.faList.map((f) => row(f, f.pos, faVerdict(f, A), true)).join("")}

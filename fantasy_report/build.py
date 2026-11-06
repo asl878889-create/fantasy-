@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import html as htmllib
 import os
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -283,6 +284,10 @@ def main():
         compare=(cmp := compare(r, days)),
         team_views=team_views(r, cmp[1], worst, ideas),
         fa_list=r.free_agents()[:20],
+        waiver_order="".join(
+            (f"<span><b>{r.waiver[t.team_id]}. {htmllib.escape(t.team_name)}</b></span>" if t.team_id == r.me.team_id
+             else f"<span>{r.waiver[t.team_id]}. {htmllib.escape(t.team_name)}</span>")
+            for t in sorted((t for t in r.lg.teams if r.waiver.get(t.team_id)), key=lambda t: r.waiver[t.team_id])),
         next_week=[p + 7 for p in r.week_periods],
         day_char={p: r.day_label(p)[1] for p in r.remaining},
         now=dt.datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y-%m-%d %H:%M"),

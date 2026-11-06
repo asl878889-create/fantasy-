@@ -103,6 +103,7 @@ class Report:
         self.slot_counts = {int(k): v for k, v in counts.items() if v and int(k) not in (BENCH, IR)}
         self.acq = raw["settings"]["acquisitionSettings"]
         self.tx = {t["id"]: t.get("transactionCounter", {}) for t in raw["teams"]}
+        self.waiver = {t["id"]: t.get("waiverRank") for t in raw["teams"]}
 
         self.me = self._find_team(team)
         self.period = lg.scoringPeriodId
