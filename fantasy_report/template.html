@@ -77,6 +77,9 @@ tr.me td { font-weight: 700; color: var(--accent); }
 .verdict { font-size: 13px; min-width: 240px; }
 .verdict.core { color: var(--accent); } .verdict.good { color: var(--ok); } .verdict.mid { color: var(--warn); }
 .verdict.bad { color: var(--bad); } .verdict.mute { color: var(--muted); }
+th.sortable { cursor: pointer; color: var(--accent); text-decoration: underline dotted; text-underline-offset: 3px; }
+th.sortable::after { content: " ⇅"; font-size: 11px; opacity: .6; }
+th.sortable.on::after { content: " ▼"; opacity: 1; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -131,7 +134,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     <section class="card">
       <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
       {% set LABEL = {0:"PG",1:"SG",2:"SF",3:"PF",4:"C",5:"G",6:"F",7:"SG/SF",8:"G/F",9:"PF/C",10:"F/C",11:"UTIL",12:"BN",13:"IR"} %}
-      {% macro head() %}<tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>{% endmacro %}
+      {% macro head() %}<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>{% endmacro %}
       {% macro row(p, slot, v) %}
         <tr><td class="slot">{{ slot }}</td><td>{{ p.name }}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"缺陣","DAY_TO_DAY":"每日觀察","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
           <td class="n big">{{ p.avg }}</td>
@@ -141,7 +144,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
           <td class="n">{{ next_week|select('in', p.games)|list|length }} 場</td>
           <td class="verdict {{ v[0] }}">{{ v[1] }}</td></tr>
       {% endmacro %}
-      <div class="scroll"><table class="roster">
+      <div class="scroll"><table class="roster" id="t-roster">
         {{ head() }}
         {% for p in r.my_roster|sort(attribute='avg', reverse=True)|sort(attribute='lineup_slot') %}{{ row(p, LABEL.get(p.lineup_slot, ""), verdict(p)) }}{% endfor %}
       </table></div>
@@ -152,7 +155,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
   <div class="pane" id="p5" hidden>
     <section class="card">
       <h2>自由球員 <small>本週已加 {{ adds }} 人</small></h2>
-      <div class="scroll"><table class="roster">
+      <div class="scroll"><table class="roster" id="t-fa">
         {{ head() }}
         {% for f in fa_list %}{{ row(f, f.pos, fa_verdict(f)) }}{% endfor %}
       </table></div>
@@ -190,6 +193,29 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
   <footer>資料來源：ESPN Fantasy Basketball · 預估僅供參考</footer>
 </main>
 <script>
+// 點「今年 / 近7場 / 去年」標題：由高到低排序；再點一次恢復原本順序
+const sortState = {};
+function applySort(table) {
+  const col = sortState[table.id];
+  const rows = [...table.querySelectorAll("tr")].slice(1);
+  rows.forEach((r, i) => { if (r.dataset.i === undefined) r.dataset.i = i; });
+  const val = (r) => { const v = parseFloat(r.children[col].textContent); return isNaN(v) ? -Infinity : v; };
+  rows.sort((a, b) => col == null ? a.dataset.i - b.dataset.i : val(b) - val(a) || a.dataset.i - b.dataset.i);
+  const body = rows[0] ? rows[0].parentNode : null;
+  rows.forEach((r) => body.appendChild(r));
+  table.querySelectorAll("th.sortable").forEach((th) => th.classList.toggle("on", th.cellIndex === col));
+}
+function setupSort() {
+  document.querySelectorAll("table.roster[id]").forEach((table) => {
+    table.querySelectorAll("th.sortable").forEach((th) => th.addEventListener("click", () => {
+      sortState[table.id] = sortState[table.id] === th.cellIndex ? null : th.cellIndex;
+      applySort(table);
+    }));
+    if (sortState[table.id] != null) applySort(table);
+  });
+}
+setupSort();
+
 document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
   document.querySelectorAll('.pane').forEach(p => p.hidden = p.id !== b.dataset.pane);

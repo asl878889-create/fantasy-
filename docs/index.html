@@ -83,6 +83,9 @@ tr.me td { font-weight: 700; color: var(--accent); }
 .verdict { font-size: 13px; min-width: 240px; }
 .verdict.core { color: var(--accent); } .verdict.good { color: var(--ok); } .verdict.mid { color: var(--warn); }
 .verdict.bad { color: var(--bad); } .verdict.mute { color: var(--muted); }
+th.sortable { cursor: pointer; color: var(--accent); text-decoration: underline dotted; text-underline-offset: 3px; }
+th.sortable::after { content: " ⇅"; font-size: 11px; opacity: .6; }
+th.sortable.on::after { content: " ▼"; opacity: 1; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -327,6 +330,29 @@ function faVerdict(f, A) {
 }
 const limitText = (D) => { const l = D.acq.matchupAcquisitionLimit; return l > 0 ? `聯盟規定每${D.acq.matchupLimitPerScoringPeriod ? "天" : "週"}最多加 ${l} 人。` : ""; };
 
+
+// 點「今年 / 近7場 / 去年」標題：由高到低排序；再點一次恢復原本順序
+const sortState = {};
+function applySort(table) {
+  const col = sortState[table.id];
+  const rows = [...table.querySelectorAll("tr")].slice(1);
+  rows.forEach((r, i) => { if (r.dataset.i === undefined) r.dataset.i = i; });
+  const val = (r) => { const v = parseFloat(r.children[col].textContent); return isNaN(v) ? -Infinity : v; };
+  rows.sort((a, b) => col == null ? a.dataset.i - b.dataset.i : val(b) - val(a) || a.dataset.i - b.dataset.i);
+  const body = rows[0] ? rows[0].parentNode : null;
+  rows.forEach((r) => body.appendChild(r));
+  table.querySelectorAll("th.sortable").forEach((th) => th.classList.toggle("on", th.cellIndex === col));
+}
+function setupSort() {
+  document.querySelectorAll("table.roster[id]").forEach((table) => {
+    table.querySelectorAll("th.sortable").forEach((th) => th.addEventListener("click", () => {
+      sortState[table.id] = sortState[table.id] === th.cellIndex ? null : th.cellIndex;
+      applySort(table);
+    }));
+    if (sortState[table.id] != null) applySort(table);
+  });
+}
+
 let activeTab = store("tab") || "p1";
 function render(D, A) {
   const diff = D.myScore - D.oppScore;
@@ -337,7 +363,7 @@ function render(D, A) {
   const inj = (x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `<span class="pill">${esc(INJURY[x.injury] || x.injury)}</span>` : "";
   const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
   const standings = [...D.teams].sort((a, b) => b.record.overall.wins - a.record.overall.wins || a.record.overall.losses - b.record.overall.losses || b.record.overall.pointsFor - a.record.overall.pointsFor);
-  const HEAD = `<tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
+  const HEAD = `<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
   const row = (x, slot, v) => `<tr>
     <td class="slot">${esc(slot)}</td><td>${esc(x.name)}${inj(x)}</td>
     <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
@@ -387,7 +413,7 @@ function render(D, A) {
   <div class="pane" id="p2">
     <section class="card">
       <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
-      <div class="scroll"><table class="roster">
+      <div class="scroll"><table class="roster" id="t-roster">
         ${HEAD}
         ${[...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => row(x, SLOT_LABEL[x.lineupSlot] || "", verdict(x, A))).join("")}
       </table></div>
@@ -397,7 +423,7 @@ function render(D, A) {
 
   <div class="pane" id="p5"><section class="card">
     <h2>自由球員 <small>本週已加 ${A.adds} 人</small></h2>
-    <div class="scroll"><table class="roster">
+    <div class="scroll"><table class="roster" id="t-fa">
       ${HEAD}
       ${A.faList.map((f) => row(f, f.pos, faVerdict(f, A))).join("")}
     </table></div>
@@ -426,6 +452,7 @@ function render(D, A) {
   };
   document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.pane)));
   show(activeTab);
+  setupSort();
 }
 
 let busy = false;
