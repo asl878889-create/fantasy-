@@ -101,7 +101,10 @@ td.name.core { color: var(--accent); font-weight: 700; } td.name.good { color: v
 td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(--bad); font-weight: 700; } td.name.mute { color: var(--muted); }
 .vs td:first-child { color: var(--muted); }
 .vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
-.teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
+.teams { min-width: 560px; }
+tr.dayrow { cursor: pointer; } tr.dayrow .arrow { color: var(--muted); font-size: 11px; }
+tr.daydetail td { padding-top: 0; }
+.hero .sub2 { opacity: .75; font-size: 13px; } .teams td.tname { white-space: nowrap; }
 .teamview { width: 100%; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); margin-bottom: 8px; }
 .teambox .sub { margin: 4px 0 8px; }
 .tcard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
@@ -353,27 +356,11 @@ function analyse(D) {
 
   const myRest = days.reduce((s, d) => s + d.myProj, 0), oppRest = days.reduce((s, d) => s + d.oppProj, 0);
   const final = diff + myRest - oppRest;
-  todos.push([final >= 0 ? "warn" : "bad", final >= 0 ? "留意" : "要做",
-    `目前${diff >= 0 ? "領先" : "落後"} ${r0(Math.abs(diff))} 分，預估最後${final >= 0 ? "贏" : "輸"} ${r0(Math.abs(final))} 分`,
-    `剩下 ${days.length} 天，預估你再拿 ${r0(myRest)} 分、對手 ${r0(oppRest)} 分（用今年平均和近 15 場各半估算）。`]);
-
-  for (const d of days) {
-    const empty = D.seats.length - d.mine.length;
-    if (empty > 0) todos.push(["ok", "建議", `${d.label} 你只有 ${d.mine.length} 人上場`,
-      `對手這天 ${d.theirs.length} 人。` + (d.stream.length ? `這天有比賽的自由球員：${d.stream.map((f) => `${f.name}（${f1(f.avg)}）`).join("、")}。` : "")]);
-  }
 
   const tc = (D.me.transactionCounter || {}).matchupAcquisitionTotals || {};
   const adds = Number(tc[D.week] || 0);
   const worst = [...D.myRoster].filter((x) => !x.out).sort((a, b) => a.proj - b.proj)[0];
   const ideas = worst ? D.fas.filter((f) => f.proj > worst.proj + 3).slice(0, 5) : [];
-  if (ideas.length) {
-    const f = ideas[0];
-    todos.push(["ok", "建議", `可以考慮用 ${f.name} 換掉 ${worst.name}`,
-      `${f.name} 平均 ${f1(f.avg)}、近 7 場 ${f1(f.last7)}、去年 ${f1(f.lastYear)}，本週還有 ${f.weekGames} 場；` +
-      `${worst.name} 平均 ${f1(worst.avg)}、近 7 場 ${f1(worst.last7)}。本週你已經加了 ${adds} 人` +
-      (weeklyLimit(D) ? `（本週上限 ${weeklyLimit(D)} 人，還可以加 ${Math.max(0, weeklyLimit(D) - adds)} 人）` : "") + "。"]);
-  }
 
   const threats = D.oppRoster.filter((x) => !x.out && [...x.games].some((g) => remSet.has(g)))
     .sort((a, b) => b.proj - a.proj).slice(0, 3)
@@ -409,10 +396,13 @@ function analyse(D) {
   const sd = Math.sqrt(varOf("mine") + varOf("theirs"));
   const winProb = sd > 0 ? normCdf((diff + myRest - oppRest) / sd) : (diff > 0 ? 1 : diff < 0 ? 0 : 0.5);
   const plan = streamPlan(D, adds);
-  if (plan.steps.length) todos.splice(todos.findIndex((t) => t[1] === "建議") >= 0 ? todos.findIndex((t) => t[1] === "建議") : todos.length, 0,
-    ["ok", "建議", `撿人排程：本週還可以加 ${plan.left} 人，照排程預估多拿 ${r0(plan.total)} 分`,
-     plan.steps.map((x) => `${label(x.p)} 撿 ${x.f.name}、丟 ${x.d.name}`).join("；") + "。詳細在「戰況」分頁。"]);
-  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews,
+  if (plan.steps.length) {
+    const [s0, ...rest] = plan.steps;
+    todos.push(["ok", "建議", `照撿人排程：${label(s0.p)} 撿 ${s0.f.name}、丟 ${s0.d.name}`,
+      (rest.length ? `接著 ${rest.map((x) => `${label(x.p)} 撿 ${x.f.name}、丟 ${x.d.name}`).join("；")}。` : "") +
+      `本週還可以加 ${plan.left} 人，照排程預估多拿 ${r0(plan.total)} 分。詳細在「戰況」分頁。`]);
+  }
+  return { days, todos, myRest, oppRest, final, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews,
     plan, label, next: nextWeekPreview(D), odds: playoffOdds(D, league), winProb };
 }
 
@@ -584,7 +574,7 @@ function normCdf(z) { // 標準常態分布累積機率
   return z > 0 ? 1 - p : p;
 }
 
-const openTeams = new Set();
+const openTeams = new Set(), openDays = new Set();
 let CUR = null;
 const GAMES = {}; // NBA 比賽 id -> 比賽資訊（主客隊、時間）
 let ABBR = {}; // 目前這次讀到的資料（給判斷文字用）
@@ -679,8 +669,8 @@ function render(D, A) {
     </div>
     <hr>
     <p class="wp"><span>本週勝率</span><b class="${A.winProb >= 0.5 ? "up" : "down"}">${pct(A.winProb)}</b><span class="bar"><i style="width:${Math.round(A.winProb * 100)}%"></i></span></p>
-    <p><b>${diff >= 0 ? "領先" : "落後"} ${diff >= 0 ? "+" : "-"}${r0(Math.abs(diff))} 分</b> · 剩餘 ${A.days.map((d) => d.label.split(" ")[0]).join("、") || "無"}</p>
-    ${A.threats.length ? `<p>對手主力：${A.threats.map(({ x, n }) => `${esc(x.name)}（平均 ${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
+    <p>目前${diff >= 0 ? "領先" : "落後"} <b>${r0(Math.abs(diff))}</b> 分 · 預估最終 <b>${r0(D.myScore + A.myRest)} : ${r0(D.oppScore + A.oppRest)}</b><span style="white-space:nowrap">（<b class="${A.final >= 0 ? "up" : "down"}">${A.final >= 0 ? "贏" : "輸"} ${r0(Math.abs(A.final))}</b>）</span></p>
+    <p class="sub2">剩餘 ${A.days.map((d) => d.label.split(" ")[0]).join("、") || "無"}</p>
   </section>
 
   <section class="card">
@@ -693,19 +683,36 @@ function render(D, A) {
     <button role="tab" data-pane="p1">戰況</button>
     <button role="tab" data-pane="p2">陣容</button>
     <button role="tab" data-pane="p5">自由球員</button>
-    <button role="tab" data-pane="p6">球隊比較</button>
-    <button role="tab" data-pane="p7">各隊陣容</button>
+    <button role="tab" data-pane="p7">聯盟</button>
   </nav>
 
   <div class="pane" id="p1"><section class="card">
-    <h2>剩下每天的上場人數 <small>你 vs 對手</small></h2>
-    ${A.days.map((d) => { const b = benchedIds(d); return `<div class="day">
-      <div class="top"><span>${d.label}</span><span>${d.mine.length} 人 vs ${d.theirs.length} 人</span></div>
-      <div class="sub">預估 ${r0(d.myProj)} vs ${r0(d.oppProj)} 分</div>
-      <div class="sub">你：${d.mine.map((x) => esc(x.name) + (b.has(x.id) ? '<span class="pill">在替補</span>' : "")).join("、") || "沒有人有比賽"}</div>
-      <div class="sub">對手：${d.theirs.map((x) => esc(x.name)).join("、") || "沒有人有比賽"}</div>
-    </div>`; }).join("") || '<p class="sub">本週比賽已經結束。</p>'}
+    <h2>本週剩下每天 <small>點一下看名單</small></h2>
+    ${A.days.length ? `<table class="vs days">
+      <tr><th>日期</th><th class="n">你</th><th class="n">${esc(D.opp.name)}</th></tr>
+      ${A.days.map((d) => { const b = benchedIds(d), open = openDays.has(d.p) || b.size > 0; return `<tr class="dayrow" data-p="${d.p}">
+        <td>${d.label} <span class="arrow">${open ? "▲" : "▼"}</span>${b.size ? '<span class="pill">有人在替補</span>' : ""}</td>
+        <td class="n ${d.mine.length > d.theirs.length ? "win" : ""}">${d.mine.length} 人 · ${r0(d.myProj)}</td><td class="n ${d.theirs.length > d.mine.length ? "win" : ""}">${d.theirs.length} 人 · ${r0(d.oppProj)}</td></tr>
+        <tr class="daydetail" data-p="${d.p}"${open ? "" : " hidden"}><td colspan="3">
+          <div class="sub">你：${d.mine.map((x) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>` + (b.has(x.id) ? '<span class="pill">在替補</span>' : "")).join("、") || "沒有人有比賽"}</div>
+          <div class="sub">對手：${d.theirs.map((x) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>`).join("、") || "沒有人有比賽"}</div></td></tr>`; }).join("")}
+      <tr><td><b>合計</b></td><td class="n ${A.vs[0].starts > A.vs[1].starts ? "win" : ""}"><b>${A.vs[0].starts} 人次 · ${r0(A.myRest)}</b></td><td class="n ${A.vs[1].starts > A.vs[0].starts ? "win" : ""}"><b>${A.vs[1].starts} 人次 · ${r0(A.oppRest)}</b></td></tr>
+    </table>
+    <p class="note">每格是「當天能排上先發的人數 · 預估分」，綠色是人數比較多的一方。有人有比賽卻排在替補的日子會自動展開。</p>` : '<p class="sub">本週比賽已經結束。</p>'}
   </section>
+  <section class="card">
+      <h2>本週對決 <small>${esc(D.me.name)} vs ${esc(D.opp.name)}</small></h2>
+      <table class="vs">
+        <tr><th>項目</th><th class="n">${esc(D.me.name)}</th><th class="n">${esc(D.opp.name)}</th></tr>
+        ${[["剩餘出賽人次", "starts", 1, String], ["預估剩餘得分", "proj", 1, r0],
+           ["陣容實力", "power", 1, r0], ["近 7 場實力", "hot", 1, r0], ["OUT 人數", "out", -1, String], ["本週已加人數", "adds", 0, String]]
+          .map(([name, k, dir, fmt]) => { const [m, o] = [A.vs[0][k], A.vs[1][k]];
+            const cm = dir && m !== o ? ((m - o) * dir > 0 ? "win" : "lose") : "", co = cm ? (cm === "win" ? "lose" : "win") : "";
+            return `<tr><td>${name}</td><td class="n ${cm}">${fmt(m)}</td><td class="n ${co}">${fmt(o)}</td></tr>`; }).join("")}
+      </table>
+      ${A.threats.length ? `<p class="sub" style="margin-top:10px">對手主力：${A.threats.map(({ x, n }) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>（平均 ${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
+      <p class="note">本週勝率和預估最終比分在最上面。<span class="up">綠色</span>是這一項比較好的一方。陣容實力 = 健康球員中今年平均最高的 ${D.seats.length} 人加總；近 7 場實力用近 7 場平均算。剩餘出賽人次是剩下每天能排上先發的人數加總。</p>
+    </section>
     <section class="card">
       <h2>撿人排程 <small>${A.plan.limit == null ? "" : `本週還可以加 ${A.plan.left} 人`}</small></h2>
       ${A.plan.limit != null && A.plan.left === 0 ? '<p class="sub">本週的增補額度已經用完了，下週一會重新計算。</p>'
@@ -752,41 +759,18 @@ function render(D, A) {
     <p class="note">依預估分數排序，位置欄是球員的主要位置。${A.worst ? `判斷是跟你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）比較。` : ""}${limitText(D)}表格可以左右滑。</p>
   </section></div>
 
-  <div class="pane" id="p6">
-    <section class="card">
-      <h2>本週對決 <small>${esc(D.me.name)} vs ${esc(D.opp.name)}</small></h2>
-      <table class="vs">
-        <tr><th>項目</th><th class="n">${esc(D.me.name)}</th><th class="n">${esc(D.opp.name)}</th></tr>
-        <tr><td>本週勝率</td><td class="n ${A.winProb >= 0.5 ? "win" : ""}">${pct(A.winProb)}</td><td class="n ${A.winProb < 0.5 ? "win" : ""}">${pct(1 - A.winProb)}</td></tr>
-        ${[["目前得分", "score", 1, r0], ["剩餘出賽人次", "starts", 1, String], ["預估剩餘得分", "proj", 1, r0], ["預估最終得分", "final", 1, r0],
-           ["陣容實力", "power", 1, r0], ["近 7 場實力", "hot", 1, r0], ["OUT 人數", "out", -1, String], ["本週已加人數", "adds", 0, String]]
-          .map(([name, k, dir, fmt]) => { const [m, o] = [A.vs[0][k], A.vs[1][k]];
-            const cm = dir && m !== o ? ((m - o) * dir > 0 ? "win" : "lose") : "", co = cm ? (cm === "win" ? "lose" : "win") : "";
-            return `<tr><td>${name}</td><td class="n ${cm}">${fmt(m)}</td><td class="n ${co}">${fmt(o)}</td></tr>`; }).join("")}
-      </table>
-      <p class="note"><span class="up">綠色</span>是這一項比較好的一方。陣容實力 = 健康球員中今年平均最高的 ${D.seats.length} 人加總；近 7 場實力用近 7 場平均算。剩餘出賽人次是剩下每天能排上先發的人數加總。</p>
-    </section>
-    <section class="card">
-      <h2>季後賽機率 <small>前 ${A.odds.spots} 名進季後賽</small></h2>
-      <div class="scroll"><table class="teams" id="t-odds">
-        <tr><th>隊伍</th><th class="n">目前戰績</th><th class="n sortable">預估戰績</th><th class="n sortable">進季後賽</th><th class="n sortable">前 4 名</th><th class="n sortable">第 1 種子</th></tr>
-        ${A.odds.rows.map((x) => `<tr class="${x.t.id === D.me.id ? "me" : ""}"><td class="tname">${esc(x.t.name)}</td><td class="n">${rec(x.t)}</td><td class="n">${r0(x.w)}-${r0(x.l)}</td>
-          <td class="n">${pct(x.po)}</td><td class="n">${pct(x.top4)}</td><td class="n">${pct(x.first)}</td></tr>`).join("")}
-      </table></div>
-      <p class="note">把剩下到第 ${A.odds.reg} 週的例行賽模擬 4000 次算出來的。每隊每週得分用「目前平均週得分」和「陣容實力」各半估算${A.odds.bonus ? "，也算進「得分高於聯盟中位數多一勝」的規則" : ""}。同戰績先比總得分。陣容和傷兵變動後機率會跟著變。</p>
-    </section>
-    <section class="card">
-      <h2>全聯盟比較 <small>點標題可排序</small></h2>
-      <div class="scroll"><table class="teams" id="t-teams">
-        <tr><th>隊伍</th><th class="n">戰績</th><th class="n sortable">本週得分</th><th class="n sortable">陣容實力</th><th class="n sortable">近7場實力</th><th class="n sortable">總得分</th></tr>
-        ${[...A.league].sort((a, b) => b.power - a.power).map(({ t, week, power, hot }) => `<tr class="${t.id === D.me.id ? "me" : ""}">
-          <td class="tname">${esc(t.name)}</td><td class="n">${rec(t)}</td><td class="n">${r0(week)}</td><td class="n">${r0(power)}</td><td class="n">${r0(hot)}</td><td class="n">${r0(t.record.overall.pointsFor)}</td></tr>`).join("")}
-      </table></div>
-      <p class="note">預設依陣容實力排序。你的隊伍用藍色標示。</p>
-    </section>
-  </div>
-
   <div class="pane" id="p7"><section class="card">
+    <h2>聯盟總表 <small>點標題可排序</small></h2>
+    <div class="scroll"><table class="teams" id="t-league">
+      <tr><th>隊伍</th><th class="n">戰績</th><th class="n sortable">預估戰績</th><th class="n sortable">進季後賽</th><th class="n sortable">陣容實力</th><th class="n sortable">近7場實力</th><th class="n sortable">總得分</th></tr>
+      ${[...A.odds.rows].sort((a, b) => b.po - a.po || b.w - a.w).map((x) => { const l = A.league.find((y) => y.t.id === x.t.id); return `<tr class="${x.t.id === D.me.id ? "me" : ""}">
+        <td class="tname">${esc(x.t.name)}</td><td class="n">${rec(x.t)}</td><td class="n">${r0(x.w)}-${r0(x.l)}</td><td class="n">${pct(x.po)}</td>
+        <td class="n">${r0(l.power)}</td><td class="n">${r0(l.hot)}</td><td class="n">${r0(x.t.record.overall.pointsFor)}</td></tr>`; }).join("")}
+    </table></div>
+    <p class="note">預設依進季後賽機率排序，你的隊伍用藍色標示。前 ${A.odds.spots} 名進季後賽。預估戰績和機率是把剩下到第 ${A.odds.reg} 週的例行賽模擬 4000 次算出來的，每隊每週得分用「目前平均週得分」和「陣容實力」各半估算${A.odds.bonus ? "，也算進「得分高於聯盟中位數多一勝」的規則" : ""}。陣容實力 = 健康球員中今年平均最高的 ${D.seats.length} 人加總，近 7 場實力用近 7 場平均算。</p>
+  </section>
+
+  <section class="card">
     <h2>各隊陣容判斷 <small>點「展開陣容」看全部球員</small></h2>
     ${A.teamViews.map((v) => { const R = v.report, open = openTeams.has(v.t.id); return `<div class="tcard">
       <div class="thead"><b>${esc(v.t.name)}</b><span class="rec">${rec(v.t)}</span>${v.t.id === D.me.id ? '<span class="tag ok">你</span>' : v.t.id === D.opp.id ? '<span class="tag bad">本週對手</span>' : ""}
@@ -818,6 +802,14 @@ function render(D, A) {
     btn.setAttribute("aria-expanded", open);
     btn.textContent = open ? "收起陣容 ▲" : "展開陣容 ▼";
   }));
+  document.querySelectorAll("tr.dayrow").forEach((tr) => tr.addEventListener("click", (e) => {
+    if (e.target.closest(".pname")) return;
+    const p = Number(tr.dataset.p), det = document.querySelector(`tr.daydetail[data-p="${p}"]`);
+    det.hidden = !det.hidden;
+    det.hidden ? openDays.delete(p) : openDays.add(p);
+    tr.querySelector(".arrow").textContent = det.hidden ? "▼" : "▲";
+  }));
+  if (activeTab === "p6") activeTab = "p7";
   show(document.getElementById(activeTab) ? activeTab : "p1");
   setupSort();
 }
