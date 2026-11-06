@@ -152,6 +152,7 @@ function toPlayer(pl, lineupSlot, teamGames, starterSlots, abbrev) {
     games: teamGames[pl.proTeamId] || new Set(),
     out: injury === "OUT" || injury === "SUSPENSION" || lineupSlot === IR,
     own: pl.ownership ? pl.ownership.percentOwned : null,
+    pos: { 1: "PG", 2: "SG", 3: "SF", 4: "PF", 5: "C" }[pl.defaultPositionId] || "",
     proj: last15 != null ? (avg + last15) / 2 : avg,
   };
 }
@@ -225,7 +226,7 @@ async function load(teamPick) {
   const faRaw = await get(`${LEAGUE}?${qs({ view: "kona_player_info", scoringPeriodId: period })}`,
     { players: { filterStatus: { value: ["FREEAGENT", "WAIVERS"] }, limit: 120, sortPercOwned: { sortPriority: 1, sortAsc: false } } });
   const remSet = new Set(remaining);
-  const fas = faRaw.players.map((x) => toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev))
+  const fas = faRaw.players.map((x) => Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status }))
     .filter((f) => !f.out && f.avg > 0)
     .map((f) => Object.assign(f, { weekGames: [...f.games].filter((g) => remSet.has(g)).length }))
     .sort((a, b) => b.proj - a.proj);
@@ -290,7 +291,7 @@ function analyse(D) {
   const threats = D.oppRoster.filter((x) => !x.out && [...x.games].some((g) => remSet.has(g)))
     .sort((a, b) => b.proj - a.proj).slice(0, 3)
     .map((x) => ({ x, n: [...x.games].filter((g) => remSet.has(g)).length }));
-  return { days, todos, adds, worst, ideas, threats, remSet };
+  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20) };
 }
 
 const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
@@ -311,6 +312,21 @@ function verdict(x, A) {
   return ["mid", `表現穩定：今年 ${a}、去年 ${ly}。`];
 }
 
+function faVerdict(f, A) {
+  const a = f1(f.avg), l7 = f1(f.last7), ly = f1(f.lastYear), w = A.worst;
+  const wv = f.status === "WAIVERS" ? "（在 waiver，要等處理才拿得到）" : "";
+  if (f.injury === "DAY_TO_DAY") return ["mid", `每日觀察中，撿之前先確認能不能上場。今年 ${a}。${wv}`];
+  if (w && f.proj > w.proj + 3) {
+    if (f.weekGames === 0) return ["mid", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，但本週沒比賽了，可以下週再撿。${wv}`];
+    return ["good", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，本週還有 ${f.weekGames} 場，值得撿。${wv}`];
+  }
+  if (f.last7 != null && f.last7 >= f.avg + 5) return ["good", `近 7 場 ${l7}，比今年 ${a} 高，手感正熱，可以觀察。${wv}`];
+  if (f.last7 != null && f.last7 <= f.avg - 5) return ["bad", `近 7 場 ${l7}，比今年 ${a} 低，先不要撿。${wv}`];
+  if (f.lastYear != null && f.lastYear >= f.avg + 5) return ["mid", `去年 ${ly}，今年 ${a} 還沒回到水準，有反彈空間。${wv}`];
+  return ["mute", `跟你現有的人差不多，不急著撿。${wv}`];
+}
+const limitText = (D) => { const l = D.acq.matchupAcquisitionLimit; return l > 0 ? `聯盟規定每${D.acq.matchupLimitPerScoringPeriod ? "天" : "週"}最多加 ${l} 人。` : ""; };
+
 let activeTab = store("tab") || "p1";
 function render(D, A) {
   const diff = D.myScore - D.oppScore;
@@ -321,6 +337,13 @@ function render(D, A) {
   const inj = (x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `<span class="pill">${esc(INJURY[x.injury] || x.injury)}</span>` : "";
   const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
   const standings = [...D.teams].sort((a, b) => b.record.overall.wins - a.record.overall.wins || a.record.overall.losses - b.record.overall.losses || b.record.overall.pointsFor - a.record.overall.pointsFor);
+  const HEAD = `<tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
+  const row = (x, slot, v) => `<tr>
+    <td class="slot">${esc(slot)}</td><td>${esc(x.name)}${inj(x)}</td>
+    <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
+    <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
+    <td class="n">${D.nextWeek.filter((p) => x.games.has(p)).length} 場</td>
+    <td class="verdict ${v[0]}">${esc(v[1])}</td></tr>`;
   const slotName = (s) => s === IR ? "傷兵名單" : s === BENCH ? "替補" : "先發";
 
   $("#app").innerHTML = `
@@ -345,7 +368,8 @@ function render(D, A) {
 
   <nav class="tabs" role="tablist">
     <button role="tab" data-pane="p1">戰況</button>
-    <button role="tab" data-pane="p2">陣容與增補</button>
+    <button role="tab" data-pane="p2">陣容</button>
+    <button role="tab" data-pane="p5">自由球員</button>
     <button role="tab" data-pane="p3">傷兵</button>
     <button role="tab" data-pane="p4">聯盟排名</button>
   </nav>
@@ -364,26 +388,21 @@ function render(D, A) {
     <section class="card">
       <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
       <div class="scroll"><table class="roster">
-        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>
-        ${[...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => { const v = verdict(x, A); return `<tr>
-          <td class="slot">${SLOT_LABEL[x.lineupSlot] || ""}</td><td class="who">${esc(x.name)}${inj(x)}</td>
-          <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
-          <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
-          <td class="n">${D.nextWeek.filter((p) => x.games.has(p)).length} 場</td>
-          <td class="verdict ${v[0]}">${esc(v[1])}</td></tr>`; }).join("")}
+        ${HEAD}
+        ${[...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => row(x, SLOT_LABEL[x.lineupSlot] || "", verdict(x, A))).join("")}
       </table></div>
       <p class="note">位置欄是今天（${A.days[0] ? A.days[0].label : "本日"}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。「本週」亮起來的是剩下有比賽的日子。表格可以左右滑。</p>
     </section>
-    <section class="card">
-      <h2>自由球員推薦 <small>本週已加 ${A.adds} 人</small></h2>
-      ${A.ideas.length ? `<table>
-        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">本週剩</th></tr>
-        ${A.ideas.map((f) => `<tr><td>${esc(f.name)} <span class="sub">${esc(f.team)}</span>${inj(f)}</td><td class="n">${f1(f.avg)}</td><td class="n">${f1(f.last7)}</td><td class="n">${f1(f.lastYear)}</td><td class="n">${f.weekGames}</td></tr>`).join("")}
-      </table>
-      <p class="sub">比較對象：你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）。</p>`
-      : '<p class="sub">目前沒有明顯比你陣容更好的自由球員。</p>'}
-    </section>
   </div>
+
+  <div class="pane" id="p5"><section class="card">
+    <h2>自由球員 <small>本週已加 ${A.adds} 人</small></h2>
+    <div class="scroll"><table class="roster">
+      ${HEAD}
+      ${A.faList.map((f) => row(f, f.pos, faVerdict(f, A))).join("")}
+    </table></div>
+    <p class="note">依預估分數排序，位置欄是球員的主要位置。${A.worst ? `判斷是跟你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）比較。` : ""}${limitText(D)}表格可以左右滑。</p>
+  </section></div>
 
   <div class="pane" id="p3"><section class="card">
     <h2>傷兵狀況</h2>

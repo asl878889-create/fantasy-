@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import json
 from dataclasses import dataclass, field
 from zoneinfo import ZoneInfo
 
@@ -200,9 +201,23 @@ class Report:
         if self._fas is None:
             fas = [to_p(x, self.year) for x in self.lg.free_agents(size=100)]
             fas = [f for f in fas if not f.out and f.avg > 0]
+            # espn-api 沒有去年平均、持有率和 waiver 狀態，另外從 ESPN 原始資料補上
+            flt = {"players": {"filterStatus": {"value": ["FREEAGENT", "WAIVERS"]}, "limit": 150,
+                               "sortPercOwned": {"sortPriority": 1, "sortAsc": False}}}
+            raw = self.lg.espn_request.league_get(
+                params={"view": "kona_player_info", "scoringPeriodId": self.period},
+                headers={"x-fantasy-filter": json.dumps(flt)})
+            extra = {}
+            for x in raw.get("players", []):
+                pl = x["player"]
+                ly = next((st.get("appliedAverage") for st in pl.get("stats", [])
+                           if st["id"] == f"00{self.year - 1}" and st["statSourceId"] == 0), None)
+                extra[pl["id"]] = (round(ly, 1) if ly else None,
+                                   (pl.get("ownership") or {}).get("percentOwned"), x.get("status"))
             for f in fas:
                 f.games = self.team_games.get(f.team, set())
                 f.week_games = len(f.games & set(self.remaining))
+                f.last_year, f.own, f.status = extra.get(f.id, (None, None, None))
             self._fas = sorted(fas, key=lambda f: -f.proj)
         return self._fas
 

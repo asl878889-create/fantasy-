@@ -91,6 +91,28 @@ def make_verdict(worst, ideas):
     return verdict
 
 
+def make_fa_verdict(worst):
+    f = lambda v: "-" if v is None else f"{v:.1f}"
+
+    def verdict(x):
+        a, l7, ly = f(x.avg), f(x.last7), f(x.last_year)
+        wv = "（在 waiver，要等處理才拿得到）" if getattr(x, "status", None) == "WAIVERS" else ""
+        if x.injury == "DAY_TO_DAY":
+            return "mid", f"每日觀察中，撿之前先確認能不能上場。今年 {a}。{wv}"
+        if worst and x.proj > worst.proj + 3:
+            if x.week_games == 0:
+                return "mid", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，但本週沒比賽了，可以下週再撿。{wv}"
+            return "good", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，本週還有 {x.week_games} 場，值得撿。{wv}"
+        if x.last7 is not None and x.last7 >= x.avg + 5:
+            return "good", f"近 7 場 {l7}，比今年 {a} 高，手感正熱，可以觀察。{wv}"
+        if x.last7 is not None and x.last7 <= x.avg - 5:
+            return "bad", f"近 7 場 {l7}，比今年 {a} 低，先不要撿。{wv}"
+        if x.last_year is not None and x.last_year >= x.avg + 5:
+            return "mid", f"去年 {ly}，今年 {a} 還沒回到水準，有反彈空間。{wv}"
+        return "mute", f"跟你現有的人差不多，不急著撿。{wv}"
+    return verdict
+
+
 def main():
     league_id = int(os.environ.get("ESPN_LEAGUE_ID", "406470928"))
     year = int(os.environ.get("ESPN_SEASON", "2027"))
@@ -107,6 +129,8 @@ def main():
         threats=r.threats(), injuries=r.injuries(), standings=r.standings(),
         adds=r.adds_this_week(r.me.team_id),
         verdict=make_verdict(worst, ideas),
+        fa_verdict=make_fa_verdict(worst),
+        fa_list=r.free_agents()[:20],
         next_week=[p + 7 for p in r.week_periods],
         day_char={p: r.day_label(p)[1] for p in r.remaining},
         now=dt.datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y-%m-%d %H:%M"),
