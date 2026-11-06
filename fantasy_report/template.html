@@ -115,7 +115,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
       <table>
         <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">本週剩</th></tr>
         {% for p in r.my_roster|sort(attribute='avg', reverse=True) %}
-        <tr><td>{{ p.name }} <span class="names">{{ p.team }}</span>{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ p.injury }}</span>{% endif %}</td>
+        <tr><td>{{ p.name }}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ p.injury }}</span>{% endif %}</td>
           <td class="n">{{ p.avg }}</td><td class="n">{{ p.last7 or "-" }}</td>
           <td class="n">{{ p.games|select('in', r.remaining)|list|length }}</td></tr>
         {% endfor %}

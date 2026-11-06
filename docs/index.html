@@ -325,7 +325,7 @@ function render(D, A) {
       <h2>我的陣容 <small>每場平均 fantasy 分</small></h2>
       <table>
         <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">本週剩</th></tr>
-        ${[...D.myRoster].sort((a, b) => b.avg - a.avg).map((x) => `<tr><td>${esc(x.name)} <span class="sub">${esc(x.team)}</span>${inj(x)}</td>
+        ${[...D.myRoster].sort((a, b) => b.avg - a.avg).map((x) => `<tr><td>${esc(x.name)}${inj(x)}</td>
           <td class="n">${f1(x.avg)}</td><td class="n">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${gamesLeft(x)}</td></tr>`).join("")}
       </table>
     </section>
