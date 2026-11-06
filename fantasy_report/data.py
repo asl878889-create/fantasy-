@@ -26,6 +26,8 @@ class P:
     avg: float                # 今年平均
     last7: float | None
     last15: float | None
+    last_year: float | None = None
+    own: float | None = None
     games: set[int] = field(default_factory=set)  # 有比賽的 scoring period
 
     @property
@@ -120,6 +122,16 @@ class Report:
         self.opp_score = box.away_score if home else box.home_score
 
         self.my_roster = [to_p(x, year) for x in self.me.roster]
+        # espn-api 沒有去年平均和持有率，另外從 ESPN 原始資料補上
+        raw_me = lg.espn_request.league_get(params={"view": "mRoster", "forTeamId": self.me.team_id})
+        extra = {}
+        for e in next(t for t in raw_me["teams"] if t["id"] == self.me.team_id)["roster"]["entries"]:
+            pl = e["playerPoolEntry"]["player"]
+            ly = next((s.get("appliedAverage") for s in pl.get("stats", [])
+                       if s["id"] == f"00{year - 1}" and s["statSourceId"] == 0), None)
+            extra[pl["id"]] = (round(ly, 1) if ly else None, (pl.get("ownership") or {}).get("percentOwned"))
+        for p in self.my_roster:
+            p.last_year, p.own = extra.get(p.id, (None, None))
         self.opp_roster = [to_p(x, year) for x in self.opp.roster]
         self.my_daily_slots = {p: self._lineup_on(self.me.team_id, p) for p in self.remaining}
         self.starters = sum(self.slot_counts.values())

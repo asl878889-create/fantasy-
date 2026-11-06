@@ -62,6 +62,13 @@ tr.me td { font-weight: 700; color: var(--accent); }
 .day .names { color: var(--muted); font-size: 13px; }
 .pill { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--bad-bg); color: var(--bad); margin-left: 4px; }
 .empty { color: var(--muted); font-size: 14px; }
+.roster td { padding: 9px 4px; }
+.roster .pill { white-space: normal; display: inline-block; }
+.roster td.slot { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.roster td.big { font-weight: 800; font-size: 15px; }
+.up { color: var(--ok); } .down { color: var(--bad); }
+.note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
+.note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
 </style>
 </head>
@@ -111,15 +118,18 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
 
   <div class="pane" id="p2" hidden>
     <section class="card">
-      <h2>我的陣容 <small>平均 = 每場 fantasy 分</small></h2>
-      <table>
-        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">本週剩</th></tr>
-        {% for p in r.my_roster|sort(attribute='avg', reverse=True) %}
-        <tr><td>{{ p.name }}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ p.injury }}</span>{% endif %}</td>
-          <td class="n">{{ p.avg }}</td><td class="n">{{ p.last7 or "-" }}</td>
-          <td class="n">{{ p.games|select('in', r.remaining)|list|length }}</td></tr>
+      <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
+      {% set LABEL = {0:"PG",1:"SG",2:"SF",3:"PF",4:"C",5:"G",6:"F",7:"SG/SF",8:"G/F",9:"PF/C",10:"F/C",11:"UTIL",12:"BN",13:"IR"} %}
+      <table class="roster">
+        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th></tr>
+        {% for p in r.my_roster|sort(attribute='avg', reverse=True)|sort(attribute='lineup_slot') %}
+        <tr><td class="slot">{{ LABEL.get(p.lineup_slot, "") }}</td><td>{{ p.name }}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"缺陣","DAY_TO_DAY":"每日觀察","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
+          <td class="n big">{{ p.avg }}</td>
+          <td class="n {{ '' if p.last7 is none else ('up' if p.last7 > p.avg else ('down' if p.last7 < p.avg else '')) }}">{{ p.last7 or "-" }}</td>
+          <td class="n">{{ p.last_year or "-" }}</td><td class="n">{{ "%.0f"|format(p.own) if p.own is not none else "-" }}</td></tr>
         {% endfor %}
       </table>
+      <p class="note">位置欄是今天（{{ days[0].label if days else "本日" }}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。</p>
     </section>
     <section class="card">
       <h2>自由球員推薦 <small>本週已加 {{ adds }} 人</small></h2>

@@ -68,6 +68,13 @@ tr.me td { font-weight: 700; color: var(--accent); }
 .sub { color: var(--muted); font-size: 13px; }
 .pill { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--bad-bg); color: var(--bad); margin-left: 4px; white-space: nowrap; }
 .msg { text-align: center; padding: 40px 16px; color: var(--muted); }
+.roster td { padding: 9px 4px; }
+.roster .pill { white-space: normal; display: inline-block; }
+.roster td.slot { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.roster td.big { font-weight: 800; font-size: 15px; }
+.up { color: var(--ok); } .down { color: var(--bad); }
+.note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
+.note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
 </style>
 </head>
@@ -89,6 +96,9 @@ const BASE = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/${
 const LEAGUE = `${BASE}/segments/0/leagues/${LEAGUE_ID}`;
 const BENCH = 12, IR = 13;
 const WEEKDAYS = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"];
+const SLOT_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+const SLOT_LABEL = { 0: "PG", 1: "SG", 2: "SF", 3: "PF", 4: "C", 5: "G", 6: "F", 7: "SG/SF", 8: "G/F", 9: "PF/C", 10: "F/C", 11: "UTIL", 12: "BN", 13: "IR" };
+const trend = (x) => x.last7 == null ? "" : x.last7 > x.avg ? "up" : x.last7 < x.avg ? "down" : "";
 const INJURY = { OUT: "缺陣", DAY_TO_DAY: "每日觀察", SUSPENSION: "禁賽", QUESTIONABLE: "出賽成疑", DOUBTFUL: "可能缺陣", PROBABLE: "可能出賽" };
 
 const $ = (s) => document.querySelector(s);
@@ -131,6 +141,7 @@ function toPlayer(pl, lineupSlot, teamGames, starterSlots, abbrev) {
     lastYear: statAvg(pl, "00" + (SEASON - 1)),
     games: teamGames[pl.proTeamId] || new Set(),
     out: injury === "OUT" || injury === "SUSPENSION" || lineupSlot === IR,
+    own: pl.ownership ? pl.ownership.percentOwned : null,
     proj: last15 != null ? (avg + last15) / 2 : avg,
   };
 }
@@ -322,12 +333,14 @@ function render(D, A) {
 
   <div class="pane" id="p2">
     <section class="card">
-      <h2>我的陣容 <small>每場平均 fantasy 分</small></h2>
-      <table>
-        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">本週剩</th></tr>
-        ${[...D.myRoster].sort((a, b) => b.avg - a.avg).map((x) => `<tr><td>${esc(x.name)}${inj(x)}</td>
-          <td class="n">${f1(x.avg)}</td><td class="n">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${gamesLeft(x)}</td></tr>`).join("")}
+      <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
+      <table class="roster">
+        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th></tr>
+        ${[...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => `<tr>
+          <td class="slot">${SLOT_LABEL[x.lineupSlot] || ""}</td><td>${esc(x.name)}${inj(x)}</td>
+          <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : Math.round(x.own)}</td></tr>`).join("")}
       </table>
+      <p class="note">位置欄是今天（${A.days[0] ? A.days[0].label : "本日"}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。</p>
     </section>
     <section class="card">
       <h2>自由球員推薦 <small>本週已加 ${A.adds} 人</small></h2>
