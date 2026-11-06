@@ -34,7 +34,3 @@ python -m fantasy_report.build
 ## 即時版網頁
 
 `docs/index.html` 是即時版：每次打開都直接從 ESPN 讀最新資料，開著時每 2 分鐘自動更新。用 GitHub Pages 發布（來源選這個分支的 `/docs` 資料夾）。網址後面加 `?team=隊伍編號` 可以看別隊，例如 `?team=11`。
-
-### 版本號
-
-即時版最下面會顯示版本號（例如 `v30`），點一下可以看更新紀錄。每次修改 `docs/index.html` 時，在 `CHANGES` 最上面加一筆（版本號 +1、日期、改了什麼），commit 訊息也用同一個版本號開頭。

@@ -137,7 +137,6 @@ tr.daydetail td { padding-top: 0; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
-footer .ver { margin-top: 6px; font: inherit; color: var(--accent); background: none; border: 0; padding: 4px; cursor: pointer; text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -148,7 +147,7 @@ footer .ver { margin-top: 6px; font: inherit; color: var(--accent); background: 
   </div>
   <div id="app"><div class="msg">正在讀取 ESPN 資料…</div></div>
   <div id="modal" hidden><div class="sheet"><button class="close" aria-label="關閉">✕</button><div class="box"></div></div></div>
-  <footer>資料來源：ESPN Fantasy Basketball · 每次打開都即時讀取 · 預估僅供參考<br><button id="ver" class="ver"></button></footer>
+  <footer>資料來源：ESPN Fantasy Basketball · 每次打開都即時讀取 · 預估僅供參考</footer>
 </main>
 <script>
 "use strict";
@@ -899,46 +898,6 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePlayer(); });
 
-// ---------- 版本號與更新紀錄（每次更新都加一筆在最上面） ----------
-const CHANGES = [
-  ["30", "11/06", "加上版本號和更新紀錄"],
-  ["29", "11/06", "對手主力括號拿掉「平均」兩字"],
-  ["28", "11/06", "改用「夜間球館」配色"],
-  ["27", "11/06", "整合重複功能：分頁減為戰況／陣容／自由球員／聯盟，聯盟總表合併季後賽機率，本週每天改成可展開的表格"],
-  ["26", "11/06", "新增本週勝率、點球員名字看最近比賽與新聞、標出有重要新聞的球員"],
-  ["25", "11/06", "新增下週預覽、撿人排程、傷兵預計回歸日、季後賽機率"],
-  ["24", "11/06", "每週增補上限改成依本週 NBA 比賽日數計算"],
-  ["23", "11/06", "拿掉「每天最多加 1 人」的錯誤說法"],
-  ["22", "11/06", "用電腦打開時自動變成寬版"],
-  ["21", "11/06", "移除切換電腦版／手機版按鈕"],
-  ["20", "11/06", "新增切換電腦版／手機版按鈕"],
-  ["19", "11/06", "加上主畫面圖示"],
-  ["18", "11/06", "刪除交易分頁"],
-  ["17", "11/06", "首頁重點不寫「今年」"],
-  ["16", "11/06", "首頁重點拿掉先發空幾格與球員的 NBA 球隊"],
-  ["15", "11/06", "新增交易分頁"],
-  ["14", "11/06", "自由球員分頁顯示 waiver 順位"],
-  ["13", "11/06", "各隊陣容改成卡片：核心、判斷、對你三行重點"],
-  ["12", "11/06", "刪除聯盟排名分頁；新增各隊陣容判斷分頁"],
-  ["11", "11/06", "傷況全部改英文代號；刪除傷兵分頁；新增球隊比較分頁"],
-  ["10", "11/06", "傷況標籤改成 DTD、OUT"],
-  ["9", "11/06", "自由球員：waiver 標籤顯示在名字後面，名字顏色跟判斷一致"],
-  ["8", "11/06", "陣容與自由球員表格可以點標題排序"],
-  ["7", "11/06", "自由球員獨立成分頁，並加上自由球員專用的判斷"],
-  ["6", "11/06", "陣容評估只固定位置欄，球員名字跟著左右滑"],
-  ["5", "11/06", "陣容評估的球員名字不換行"],
-  ["4", "11/06", "陣容評估加上本週賽程、下週場數、判斷三欄，表格可左右滑"],
-  ["3", "11/06", "陣容表格改成陣容評估：加上位置、去年平均、持有率，近 7 場用顏色標示好壞"],
-  ["2", "11/06", "陣容表格拿掉 NBA 球隊名稱"],
-  ["1", "11/06", "加入即時版日報網頁"],
-];
-const VERSION = CHANGES[0][0];
-function openChanges() {
-  $("#modal").hidden = false; document.body.style.overflow = "hidden";
-  $("#modal .box").innerHTML = `<h3>更新紀錄 <span class="sub">目前 v${VERSION}</span></h3>
-    ${CHANGES.map(([v, d, t]) => `<div class="nitem"><div class="sub">v${v} · ${d}</div><b>${esc(t)}</b></div>`).join("")}`;
-}
-
 let busy = false;
 async function run() {
   if (busy) return;
@@ -961,8 +920,6 @@ async function run() {
 }
 $("#team").addEventListener("change", (e) => { store("team", e.target.value); history.replaceState(null, "", location.pathname); run(); });
 $("#refresh").addEventListener("click", run);
-$("#ver").textContent = `版本 v${VERSION}（${CHANGES[0][1]}）· 更新紀錄`;
-$("#ver").addEventListener("click", openChanges);
 // 開著的時候每 2 分鐘自動更新；從背景切回來也會更新
 setInterval(() => { if (!document.hidden) run(); }, 120000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) run(); });
