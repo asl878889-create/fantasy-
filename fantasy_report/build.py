@@ -23,7 +23,7 @@ def todo_list(r: Report, days, ideas, worst, rest):
             items.append(("要做", f"{d['label']} 把 {names} 換上先發",
                           f"他們這天有比賽，但 ESPN 上現在排在替補。"))
         if d["issues"]["injured"]:
-            names = "、".join(f"{p.name}({p.injury})" for p in d["issues"]["injured"])
+            names = "、".join(f"{p.name}({INJ.get(p.injury, p.injury)})" for p in d["issues"]["injured"])
             items.append(("要做", f"{d['label']} 先發有傷兵：{names}",
                           "受傷的球員不會得分，請換成健康、當天有比賽的人。"))
     if not any(d["issues"]["benched"] or d["issues"]["injured"] for d in days):
@@ -62,7 +62,7 @@ def todo_list(r: Report, days, ideas, worst, rest):
     return items
 
 
-INJ = {"OUT": "缺陣", "DAY_TO_DAY": "每日觀察", "SUSPENSION": "禁賽"}
+INJ = {"OUT": "OUT", "DAY_TO_DAY": "DTD", "SUSPENSION": "禁賽"}
 
 
 def make_verdict(worst, ideas):
@@ -97,7 +97,7 @@ def make_fa_verdict(worst):
     def verdict(x):
         a, l7, ly = f(x.avg), f(x.last7), f(x.last_year)
         if x.injury == "DAY_TO_DAY":
-            return "mid", f"每日觀察中，撿之前先確認能不能上場。今年 {a}。"
+            return "mid", f"DTD，撿之前先確認能不能上場。今年 {a}。"
         if worst and x.proj > worst.proj + 3:
             if x.week_games == 0:
                 return "mid", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，但本週沒比賽了，可以下週再撿。"

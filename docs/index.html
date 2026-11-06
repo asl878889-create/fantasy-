@@ -115,7 +115,7 @@ const WEEKDAYS = ["週一", "週二", "週三", "週四", "週五", "週六", "�
 const SLOT_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const SLOT_LABEL = { 0: "PG", 1: "SG", 2: "SF", 3: "PF", 4: "C", 5: "G", 6: "F", 7: "SG/SF", 8: "G/F", 9: "PF/C", 10: "F/C", 11: "UTIL", 12: "BN", 13: "IR" };
 const trend = (x) => x.last7 == null ? "" : x.last7 > x.avg ? "up" : x.last7 < x.avg ? "down" : "";
-const INJURY = { OUT: "缺陣", DAY_TO_DAY: "每日觀察", SUSPENSION: "禁賽", QUESTIONABLE: "出賽成疑", DOUBTFUL: "可能缺陣", PROBABLE: "可能出賽" };
+const INJURY = { OUT: "OUT", DAY_TO_DAY: "DTD", SUSPENSION: "禁賽", QUESTIONABLE: "出賽成疑", DOUBTFUL: "可能缺陣", PROBABLE: "可能出賽" };
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -320,7 +320,7 @@ function verdict(x, A) {
 
 function faVerdict(f, A) {
   const a = f1(f.avg), l7 = f1(f.last7), ly = f1(f.lastYear), w = A.worst;
-  if (f.injury === "DAY_TO_DAY") return ["mid", `每日觀察中，撿之前先確認能不能上場。今年 ${a}。`];
+  if (f.injury === "DAY_TO_DAY") return ["mid", `DTD，撿之前先確認能不能上場。今年 ${a}。`];
   if (w && f.proj > w.proj + 3) {
     if (f.weekGames === 0) return ["mid", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，但本週沒比賽了，可以下週再撿。`];
     return ["good", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，本週還有 ${f.weekGames} 場，值得撿。`];

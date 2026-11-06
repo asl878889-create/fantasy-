@@ -139,7 +139,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
       {% set LABEL = {0:"PG",1:"SG",2:"SF",3:"PF",4:"C",5:"G",6:"F",7:"SG/SF",8:"G/F",9:"PF/C",10:"F/C",11:"UTIL",12:"BN",13:"IR"} %}
       {% macro head() %}<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>{% endmacro %}
       {% macro row(p, slot, v, fa=false) %}
-        <tr><td class="slot">{{ slot }}</td><td class="{{ 'name ' ~ v[0] if fa }}">{{ p.name }}{% if fa and p.status == "WAIVERS" %}<span class="wv">waiver</span>{% endif %}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"缺陣","DAY_TO_DAY":"每日觀察","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
+        <tr><td class="slot">{{ slot }}</td><td class="{{ 'name ' ~ v[0] if fa }}">{{ p.name }}{% if fa and p.status == "WAIVERS" %}<span class="wv">waiver</span>{% endif %}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"OUT","DAY_TO_DAY":"DTD","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
           <td class="n big">{{ p.avg }}</td>
           <td class="n {{ '' if p.last7 is none else ('up' if p.last7 > p.avg else ('down' if p.last7 < p.avg else '')) }}">{{ p.last7 or "-" }}</td>
           <td class="n">{{ p.last_year or "-" }}</td><td class="n">{{ "%.1f"|format(p.own) if p.own is not none else "-" }}</td>
@@ -174,7 +174,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
       <table>
         <tr><th>球員</th><th>狀態</th><th>位置</th></tr>
         {% for p in injuries %}
-        <tr><td>{{ p.name }} <span class="names">{{ p.team }}</span></td><td>{{ {"OUT":"缺陣","DAY_TO_DAY":"每日觀察","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</td><td>{{ "傷兵名單" if p.lineup_slot == 13 else ("替補" if p.lineup_slot == 12 else "先發") }}</td></tr>
+        <tr><td>{{ p.name }} <span class="names">{{ p.team }}</span></td><td>{{ {"OUT":"OUT","DAY_TO_DAY":"DTD","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</td><td>{{ "傷兵名單" if p.lineup_slot == 13 else ("替補" if p.lineup_slot == 12 else "先發") }}</td></tr>
         {% endfor %}
       </table>
       {% else %}<p class="empty">目前沒有傷兵。</p>{% endif %}
