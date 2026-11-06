@@ -1,19 +1,22 @@
 // 每天把重點提醒發到 Discord。
-// 用法：node fantasy_report/notify.js [--dry]   （--dry 只印出訊息，不發送）
+// 用法：node fantasy_report/notify.js [--team 隊伍編號] [--channel 頻道ID] [--dry]   （--dry 只印出訊息，不發送）
+// 不指定時是 Podcast P（隊伍 1）和預設頻道；例如 aespa 是 --team 11。
 // 頻道 ID 用環境變數 DISCORD_CHANNEL_ID 設定；機器人 Token 由雲端環境的網路代理自動帶上。
 // 做法：用無頭瀏覽器打開即時版網頁（docs/index.html），直接用網頁裡的計算結果，數字和網頁完全一致。
 const { chromium } = require("playwright");
 const { execFileSync } = require("child_process");
 const path = require("path");
 
-const CHANNEL = process.env.DISCORD_CHANNEL_ID || "1568289576332566689";
-const SITE = "https://asl878889-create.github.io/fantasy-/";
+const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
+const TEAM = arg("--team");
+const CHANNEL = arg("--channel") || process.env.DISCORD_CHANNEL_ID || "1568289576332566689";
+const SITE = "https://asl878889-create.github.io/fantasy-/" + (TEAM ? `?team=${TEAM}` : "");
 const DRY = process.argv.includes("--dry");
 
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  await page.goto("file://" + path.resolve(__dirname, "../docs/index.html"));
+  await page.goto("file://" + path.resolve(__dirname, "../docs/index.html") + (TEAM ? `?team=${TEAM}` : ""));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && document.querySelector(".tabs"), null, { timeout: 120000 });
   const text = await page.evaluate(async (site) => {
     const D = CUR, A = analyse(D);
