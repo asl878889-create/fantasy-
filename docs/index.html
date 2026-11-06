@@ -120,6 +120,25 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .step { display: grid; grid-template-columns: 26px 1fr; gap: 10px; margin-bottom: 12px; }
 .step .num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: var(--card); font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
 .step p { margin: 2px 0 0; }
+.pname { cursor: pointer; text-decoration: underline dotted; text-decoration-color: var(--line); text-underline-offset: 4px; }
+.pname:hover { color: var(--accent); }
+.news { margin-left: 4px; font-size: 12px; }
+.wp { display: flex; align-items: center; gap: 10px; }
+.wp b { font-size: 22px; }
+.wp .bar { flex: 1; height: 8px; border-radius: 4px; background: var(--hero-muted); opacity: .9; overflow: hidden; max-width: 220px; }
+.wp .bar i { display: block; height: 100%; background: var(--ok); }
+#modal { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+#modal[hidden] { display: none; }
+#modal .sheet { position: relative; background: var(--card); color: var(--ink); width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; border-radius: 16px 16px 0 0; padding: 20px 16px 28px; }
+@media (min-width: 700px) { #modal { align-items: center; } #modal .sheet { border-radius: 16px; } }
+#modal .close { position: absolute; top: 10px; right: 12px; background: none; border: 0; color: var(--muted); font-size: 20px; cursor: pointer; }
+#modal h3 { margin: 0 30px 4px 0; font-size: 20px; }
+#modal h4 { margin: 16px 0 8px; font-size: 16px; }
+#modal .pill.big { display: inline-block; font-size: 13px; margin: 4px 0; }
+.log { min-width: 520px; } .log td.big { font-weight: 800; }
+.nitem { border-top: 1px solid var(--line); padding: 8px 0; font-size: 14px; }
+.nitem p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.nitem.imp b { color: var(--warn); }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -132,6 +151,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     <button id="refresh">重新整理</button>
   </div>
   <div id="app"><div class="msg">正在讀取 ESPN 資料…</div></div>
+  <div id="modal" hidden><div class="sheet"><button class="close" aria-label="關閉">✕</button><div class="box"></div></div></div>
   <footer>資料來源：ESPN Fantasy Basketball · 每次打開都即時讀取 · 預估僅供參考</footer>
 </main>
 <script>
@@ -226,9 +246,11 @@ async function load(teamPick) {
   const abbrev = {}, teamGames = {};
   for (const t of sched.settings.proTeams) {
     abbrev[t.id] = t.abbrev;
+    for (const gs of Object.values(t.proGamesByScoringPeriod || {})) for (const g of gs) GAMES[g.id] = g;
     teamGames[t.id] = new Set(Object.keys(t.proGamesByScoringPeriod || {}).map(Number));
   }
 
+  ABBR = abbrev;
   const counts = lg.settings.rosterSettings.lineupSlotCounts;
   const seats = [];
   for (const [k, n] of Object.entries(counts)) {
@@ -382,12 +404,16 @@ function analyse(D) {
   teamViews.forEach((v) => (v.core = D.rosters[v.t.id].filter((x) => verdict(x, v)[0] === "core").length));
   teamViews.sort((a, b) => (b.t.id === D.opp.id) - (a.t.id === D.opp.id) || b.power - a.power);
   teamViews.forEach((v) => (v.report = teamReport(v, D, teamViews)));
+  // 本週勝率：剩下每位先發的得分當作有起伏（標準差約為預估的 30%），算出贏的機率
+  const varOf = (key) => days.reduce((s, d) => s + d[key].reduce((t, x) => t + (0.3 * x.proj) ** 2, 0), 0);
+  const sd = Math.sqrt(varOf("mine") + varOf("theirs"));
+  const winProb = sd > 0 ? normCdf((diff + myRest - oppRest) / sd) : (diff > 0 ? 1 : diff < 0 ? 0 : 0.5);
   const plan = streamPlan(D, adds);
   if (plan.steps.length) todos.splice(todos.findIndex((t) => t[1] === "建議") >= 0 ? todos.findIndex((t) => t[1] === "建議") : todos.length, 0,
     ["ok", "建議", `撿人排程：本週還可以加 ${plan.left} 人，照排程預估多拿 ${r0(plan.total)} 分`,
      plan.steps.map((x) => `${label(x.p)} 撿 ${x.f.name}、丟 ${x.d.name}`).join("；") + "。詳細在「戰況」分頁。"]);
   return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews,
-    plan, label, next: nextWeekPreview(D), odds: playoffOdds(D, league) };
+    plan, label, next: nextWeekPreview(D), odds: playoffOdds(D, league), winProb };
 }
 
 const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
@@ -552,8 +578,16 @@ function playoffOdds(D, league) {
     return { t, w, l: total - w, po: r.po / N, top4: r.top4 / N, first: r.first / N }; }).sort((a, b) => b.po - a.po || b.w - a.w) };
 }
 
+function normCdf(z) { // 標準常態分布累積機率
+  const t = 1 / (1 + 0.2316419 * Math.abs(z)), d = 0.3989423 * Math.exp(-z * z / 2);
+  const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  return z > 0 ? 1 - p : p;
+}
+
 const openTeams = new Set();
-let CUR = null; // 目前這次讀到的資料（給判斷文字用）
+let CUR = null;
+const GAMES = {}; // NBA 比賽 id -> 比賽資訊（主客隊、時間）
+let ABBR = {}; // 目前這次讀到的資料（給判斷文字用）
 const lastName = (n) => { const p = n.split(" "); return p.length > 1 ? p.slice(1).join(" ") : n; };
 const CN = ["零", "一", "兩", "三", "四", "五"];
 
@@ -626,7 +660,7 @@ function render(D, A) {
   const pct = (v) => v >= 0.995 ? ">99%" : v > 0 && v < 0.005 ? "<1%" : `${Math.round(v * 100)}%`;
   const HEAD = `<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
   const row = (x, slot, v, fa) => `<tr>
-    <td class="slot">${esc(slot)}</td><td class="${fa ? "name " + v[0] : ""}">${esc(x.name)}${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
+    <td class="slot">${esc(slot)}</td><td class="${fa ? "name " + v[0] : ""}"><span class="pname" data-pid="${x.id}">${esc(x.name)}</span>${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
     <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
     <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
     <td class="n">${D.nextWeek.filter((p) => x.games.has(p)).length} 場</td>
@@ -644,6 +678,7 @@ function render(D, A) {
       <div><div class="n">${r0(D.oppScore)}</div><div class="who">${esc(D.opp.name)}</div></div>
     </div>
     <hr>
+    <p class="wp"><span>本週勝率</span><b class="${A.winProb >= 0.5 ? "up" : "down"}">${pct(A.winProb)}</b><span class="bar"><i style="width:${Math.round(A.winProb * 100)}%"></i></span></p>
     <p><b>${diff >= 0 ? "領先" : "落後"} ${diff >= 0 ? "+" : "-"}${r0(Math.abs(diff))} 分</b> · 剩餘 ${A.days.map((d) => d.label.split(" ")[0]).join("、") || "無"}</p>
     ${A.threats.length ? `<p>對手主力：${A.threats.map(({ x, n }) => `${esc(x.name)}（平均 ${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
   </section>
@@ -722,6 +757,7 @@ function render(D, A) {
       <h2>本週對決 <small>${esc(D.me.name)} vs ${esc(D.opp.name)}</small></h2>
       <table class="vs">
         <tr><th>項目</th><th class="n">${esc(D.me.name)}</th><th class="n">${esc(D.opp.name)}</th></tr>
+        <tr><td>本週勝率</td><td class="n ${A.winProb >= 0.5 ? "win" : ""}">${pct(A.winProb)}</td><td class="n ${A.winProb < 0.5 ? "win" : ""}">${pct(1 - A.winProb)}</td></tr>
         ${[["目前得分", "score", 1, r0], ["剩餘出賽人次", "starts", 1, String], ["預估剩餘得分", "proj", 1, r0], ["預估最終得分", "final", 1, r0],
            ["陣容實力", "power", 1, r0], ["近 7 場實力", "hot", 1, r0], ["OUT 人數", "out", -1, String], ["本週已加人數", "adds", 0, String]]
           .map(([name, k, dir, fmt]) => { const [m, o] = [A.vs[0][k], A.vs[1][k]];
@@ -786,6 +822,98 @@ function render(D, A) {
   setupSort();
 }
 
+// ---------- 球員詳細（點名字）與新聞 ----------
+const NEWS = {}; // player id -> { at, items }
+const IMPORTANT = /injur|sprain|strain|surgery|ruled out|\bout\b|will not play|won't play|not play|questionable|doubtful|probable|returns?\b|sidelined|(will|to) miss|day-to-day|resting|rest\b|starting|to start|will start|bench|minutes restriction|suspend|illness|sore|g league|traded|waived|concussion|mri|upgraded|downgraded|available|cleared/i;
+// 標題是「XX 拿了幾分」這種比賽數據報導就不算重要新聞
+const isImportant = (n) => IMPORTANT.test(n.head) && !/\d+ points|\(\d+-\d+ FG/i.test(n.head);
+async function getNews(id) {
+  const c = NEWS[id];
+  if (c && Date.now() - c.at < 30 * 60000) return c.items;
+  const r = await fetch(`https://site.api.espn.com/apis/fantasy/v2/games/fba/news/players?days=30&playerId=${id}`);
+  const d = r.ok ? await r.json() : { feed: [] };
+  const items = (d.feed || []).filter((n) => n.type === "Rotowire" || n.story)
+    .map((n) => ({ when: new Date(n.published || n.lastModified), head: n.headline || "", story: (n.story || n.description || "").replace(/<[^>]+>/g, "") }))
+    .sort((a, b) => b.when - a.when);
+  NEWS[id] = { at: Date.now(), items };
+  return items;
+}
+const recentImportant = (items) => items.find((n) => Date.now() - n.when < 3 * 86400000 && isImportant(n));
+
+// 在名字旁邊標出最近 3 天有重要新聞（傷病、先發異動等）的球員
+async function markNews() {
+  const els = [...document.querySelectorAll(".pname[data-pid]")];
+  const ids = [...new Set(els.map((e) => Number(e.dataset.pid)))];
+  const visible = new Set([...document.querySelectorAll("#t-roster .pname, #t-fa .pname")].map((e) => Number(e.dataset.pid)));
+  const todo = ids.filter((id) => visible.has(id));
+  for (let i = 0; i < todo.length; i += 8) {
+    await Promise.all(todo.slice(i, i + 8).map((id) => getNews(id).catch(() => [])));
+  }
+  for (const e of document.querySelectorAll(".pname[data-pid]")) {
+    const c = NEWS[e.dataset.pid];
+    const hit = c && recentImportant(c.items);
+    if (hit && !e.querySelector(".news")) {
+      const s = document.createElement("span");
+      s.className = "news"; s.textContent = "📰"; s.title = hit.head;
+      e.appendChild(s);
+    }
+  }
+}
+
+function findPlayer(id) {
+  if (!CUR) return null;
+  for (const t of CUR.teams) { const x = CUR.rosters[t.id].find((p) => p.id === id); if (x) return { x, team: t }; }
+  const f = CUR.fas.find((p) => p.id === id);
+  return f ? { x: f, team: null } : null;
+}
+
+async function openPlayer(id) {
+  const m = $("#modal"), box = $("#modal .box");
+  const hit = findPlayer(id);
+  m.hidden = false;
+  document.body.style.overflow = "hidden";
+  const x = hit && hit.x;
+  const head = x ? `<h3>${esc(x.name)} <span class="sub">${esc(x.team)}${hit.team ? ` · ${esc(hit.team.name)}` : " · 自由球員"}</span></h3>
+    <p class="sub">今年 ${f1(x.avg)} · 近 7 場 ${f1(x.last7)} · 近 15 場 ${f1(x.last15)} · 去年 ${f1(x.lastYear)}${x.own != null ? ` · 持有 ${f1(x.own)}%` : ""}</p>
+    ${x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `<p class="pill big">${esc(INJURY[x.injury] || x.injury)}${(() => { const i = injInfo(x, CUR); return i ? "：" + esc(i.long) : ""; })()}</p>` : ""}` : "";
+  box.innerHTML = head + '<p class="sub">讀取中…</p>';
+  try {
+    const [card, news] = await Promise.all([
+      get(`${LEAGUE}?view=kona_playercard`, { players: { filterIds: { value: [id] }, filterStatsForTopScoringPeriodIds: { value: 16, additionalValue: ["00" + SEASON] } } }),
+      getNews(id).catch(() => []),
+    ]);
+    const pl = card.players && card.players[0] && card.players[0].player;
+    const logs = ((pl && pl.stats) || []).filter((st) => st.statSplitTypeId === 5 && st.statSourceId === 0 && st.seasonId === SEASON && st.stats && st.stats["40"] != null)
+      .sort((a, b) => b.scoringPeriodId - a.scoringPeriodId).slice(0, 10);
+    const proId = pl && pl.proTeamId;
+    const vs = (st) => { const g = GAMES[Number(String(st.id).slice(2))]; if (!g) return ["", ""];
+      const home = g.homeProTeamId === proId; const o = home ? g.awayProTeamId : g.homeProTeamId;
+      const d = new Date(g.date); return [`${d.getMonth() + 1}/${d.getDate()}`, `${home ? "vs" : "@"} ${ABBR[o] || ""}`]; };
+    const n = (st, k) => st.stats[k] == null ? "-" : Math.round(st.stats[k]);
+    box.innerHTML = head + `
+      <h4>最近 ${logs.length} 場</h4>
+      ${logs.length ? `<div class="scroll"><table class="log">
+        <tr><th>日期</th><th>對手</th><th class="n">分數</th><th class="n">得分</th><th class="n">籃板</th><th class="n">助攻</th><th class="n">抄截</th><th class="n">阻攻</th><th class="n">失誤</th><th class="n">分鐘</th></tr>
+        ${logs.map((st) => { const [d, o] = vs(st); const fp = st.appliedTotal || 0;
+          return `<tr><td>${d}</td><td>${esc(o)}</td><td class="n big ${x ? (fp > x.avg ? "up" : fp < x.avg ? "down" : "") : ""}">${f1(fp)}</td><td class="n">${n(st, "0")}</td><td class="n">${n(st, "6")}</td><td class="n">${n(st, "3")}</td><td class="n">${n(st, "2")}</td><td class="n">${n(st, "1")}</td><td class="n">${n(st, "11")}</td><td class="n">${n(st, "40")}</td></tr>`; }).join("")}
+      </table></div>` : '<p class="sub">今年還沒有出賽紀錄。</p>'}
+      <h4>最新消息 <small class="sub">（Rotowire，英文）</small></h4>
+      ${news.length ? news.slice(0, 4).map((nw) => `<div class="nitem${isImportant(nw) ? " imp" : ""}">
+        <div class="sub">${nw.when.getMonth() + 1}/${nw.when.getDate()} ${String(nw.when.getHours()).padStart(2, "0")}:${String(nw.when.getMinutes()).padStart(2, "0")}${isImportant(nw) ? " · 重要" : ""}</div>
+        <b>${esc(nw.head)}</b>${nw.story ? `<p>${esc(nw.story)}</p>` : ""}</div>`).join("") : '<p class="sub">最近 30 天沒有新聞。</p>'}
+      <p class="note">分數是 fantasy 分數；<span class="up">綠色</span>代表比今年平均高，<span class="down">紅色</span>代表比較低。</p>`;
+  } catch (e) {
+    box.innerHTML = head + `<p class="sub">讀不到詳細資料：${esc(e.message || e)}</p>`;
+  }
+}
+function closePlayer() { $("#modal").hidden = true; document.body.style.overflow = ""; }
+document.addEventListener("click", (e) => {
+  const n = e.target.closest(".pname[data-pid]");
+  if (n) { openPlayer(Number(n.dataset.pid)); return; }
+  if (e.target.id === "modal" || e.target.closest(".close")) closePlayer();
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePlayer(); });
+
 let busy = false;
 async function run() {
   if (busy) return;
@@ -798,6 +926,7 @@ async function run() {
     const sel = $("#team");
     sel.innerHTML = D.teams.map((t) => `<option value="${t.id}"${t.id === D.me.id ? " selected" : ""}>${esc(t.name)}</option>`).join("");
     render(D, analyse(D));
+    markNews().catch(() => {});
   } catch (e) {
     $("#app").innerHTML = `<div class="msg">讀不到 ESPN 資料：${esc(e.message || e)}<br>請稍後按「重新整理」再試一次。</div>`;
   } finally {
