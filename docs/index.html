@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" id="vp" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fantasy 日報">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -30,13 +30,6 @@
 body { margin: 0; background: var(--bg); color: var(--ink);
   font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; }
 main { max-width: 640px; margin: 0 auto; padding: 16px; }
-/* 電腦版：畫面變寬，首頁比分和今天要做的事並排，表格不用左右滑 */
-html.desktop main { max-width: 1240px; padding: 24px; }
-html.desktop .top2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-html.desktop .top2 > .card { margin-top: 0; }
-html.desktop .tabs button { padding: 12px 18px; font-size: 16px; }
-html.desktop .roster td:nth-child(1) { position: static; box-shadow: none; }
-#mode[aria-pressed="true"] { background: var(--accent); color: var(--card); border-color: var(--accent); }
 .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
 .bar select, .bar button { font: inherit; font-size: 14px; padding: 6px 10px; border-radius: 8px;
   border: 1px solid var(--line); background: var(--card); color: var(--ink); }
@@ -125,7 +118,6 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
 <main>
   <div class="bar">
     <select id="team" aria-label="選擇隊伍"></select>
-    <button id="mode" aria-pressed="false">💻 電腦版</button>
     <button id="refresh">重新整理</button>
   </div>
   <div id="app"><div class="msg">正在讀取 ESPN 資料…</div></div>
@@ -492,7 +484,6 @@ function render(D, A) {
     <td class="verdict ${v[0]}">${esc(v[1])}</td></tr>`;
 
   $("#app").innerHTML = `
-  <div class="top2">
   <section class="hero">
     <h1>${esc(D.me.name)} 日報</h1>
     <div class="meta">更新於 ${esc(now)}（台北時間）</div>
@@ -511,7 +502,6 @@ function render(D, A) {
     <h2>今天要做的事 <small>依優先順序</small></h2>
     ${A.todos.map(([c, tag, t, b]) => `<div class="todo"><span class="tag ${c}">${tag}</span><div><b>${esc(t)}</b><p>${esc(b)}</p></div></div>`).join("")}
   </section>
-  </div>
 
   <nav class="tabs" role="tablist">
     <button role="tab" data-pane="p1">戰況</button>
@@ -634,22 +624,6 @@ async function run() {
 }
 $("#team").addEventListener("change", (e) => { store("team", e.target.value); history.replaceState(null, "", location.pathname); run(); });
 $("#refresh").addEventListener("click", run);
-
-// 一鍵切換電腦版 / 手機版（手機上切到電腦版時，會像電腦一樣顯示整個寬版畫面）
-function applyMode(desktop) {
-  document.documentElement.classList.toggle("desktop", desktop);
-  const phone = window.matchMedia("(max-width: 900px)").matches || /iPhone|Android/i.test(navigator.userAgent);
-  $("#vp").setAttribute("content", desktop && phone ? "width=1280" : "width=device-width, initial-scale=1");
-  const b = $("#mode");
-  b.setAttribute("aria-pressed", desktop);
-  b.textContent = desktop ? "📱 手機版" : "💻 電腦版";
-}
-$("#mode").addEventListener("click", () => {
-  const d = !document.documentElement.classList.contains("desktop");
-  store("mode", d ? "desktop" : "phone");
-  applyMode(d);
-});
-applyMode(store("mode") === "desktop");
 // 開著的時候每 2 分鐘自動更新；從背景切回來也會更新
 setInterval(() => { if (!document.hidden) run(); }, 120000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) run(); });
