@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ r.me.team_name }} 日報</title>
+<style>
+:root {
+  --bg: #f3f5f9; --card: #ffffff; --ink: #141a26; --muted: #5b6577; --line: #dfe3ea;
+  --accent: #4f6fe0; --hero: #141a26; --hero-ink: #ffffff; --hero-muted: #b7bfcc;
+  --warn-bg: #fff1d6; --warn: #8a5a00; --ok-bg: #dff5e6; --ok: #17733a; --bad-bg: #fde2e2; --bad: #a32020;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1420; --card: #171e2d; --ink: #e8ecf3; --muted: #98a2b3; --line: #2a3346;
+    --accent: #8ea6ff; --hero: #e9edf4; --hero-ink: #10151f; --hero-muted: #4b5566;
+    --warn-bg: #3a2c10; --warn: #f2c063; --ok-bg: #12321f; --ok: #6fd391; --bad-bg: #3a1616; --bad: #ff8f8f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1420; --card: #171e2d; --ink: #e8ecf3; --muted: #98a2b3; --line: #2a3346;
+  --accent: #8ea6ff; --hero: #e9edf4; --hero-ink: #10151f; --hero-muted: #4b5566;
+  --warn-bg: #3a2c10; --warn: #f2c063; --ok-bg: #12321f; --ok: #6fd391; --bad-bg: #3a1616; --bad: #ff8f8f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; }
+main { max-width: 640px; margin: 0 auto; padding: 16px; }
+.hero { background: var(--hero); color: var(--hero-ink); border-radius: 16px; padding: 22px 20px; }
+.hero h1 { margin: 0; font-size: 30px; letter-spacing: .5px; }
+.hero .meta { color: var(--hero-muted); font-size: 14px; margin-top: 4px; }
+.score { display: flex; align-items: flex-end; gap: 18px; margin: 18px 0 8px; flex-wrap: wrap; }
+.score .n { font-size: 46px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .who { font-size: 14px; color: var(--hero-muted); margin-top: 4px; }
+.score .vs { color: var(--hero-muted); font-weight: 700; padding-bottom: 22px; }
+.hero hr { border: 0; border-top: 1px solid var(--hero-muted); opacity: .4; margin: 14px 0; }
+.hero p { margin: 6px 0; font-size: 15px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-top: 16px; }
+.card h2 { margin: 0 0 12px; font-size: 19px; display: flex; justify-content: space-between; align-items: baseline; }
+.card h2 small { font-size: 13px; color: var(--muted); font-weight: 400; }
+.todo { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin-bottom: 14px; }
+.todo:last-child { margin-bottom: 0; }
+.tag { font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 6px; height: fit-content; white-space: nowrap; }
+.tag.留意 { background: var(--warn-bg); color: var(--warn); }
+.tag.建議 { background: var(--ok-bg); color: var(--ok); }
+.tag.要做 { background: var(--bad-bg); color: var(--bad); }
+.todo b { font-size: 16px; }
+.todo div p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.tabs { display: flex; gap: 4px; margin-top: 20px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs button { background: none; border: 0; color: var(--muted); font: inherit; font-weight: 700;
+  padding: 10px 12px; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--accent); border-color: var(--accent); }
+.pane[hidden] { display: none; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.me td { font-weight: 700; color: var(--accent); }
+.day { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.day:last-child { border-bottom: 0; }
+.day .top { display: flex; justify-content: space-between; font-weight: 700; }
+.day .names { color: var(--muted); font-size: 13px; }
+.pill { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--bad-bg); color: var(--bad); margin-left: 4px; }
+.empty { color: var(--muted); font-size: 14px; }
+footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
+</style>
+</head>
+<body>
+<main>
+  {% set diff = r.my_score - r.opp_score %}
+  <section class="hero">
+    <h1>{{ r.me.team_name }} 日報</h1>
+    <div class="meta">資料截至 {{ now }}（台北時間）</div>
+    <div class="meta">{{ r.lg.settings.name }} · ESPN H2H 積分 · 第 {{ r.week }} 週（{{ r.week_start.month }}/{{ r.week_start.day }}–{{ r.week_end.month }}/{{ r.week_end.day }}）· 戰績 {{ r.me.wins }}-{{ r.me.losses }}</div>
+    <div class="score">
+      <div><div class="n">{{ "%.0f"|format(r.my_score) }}</div><div class="who">{{ r.me.team_name }}</div></div>
+      <div class="vs">VS</div>
+      <div><div class="n">{{ "%.0f"|format(r.opp_score) }}</div><div class="who">{{ r.opp.team_name }}</div></div>
+    </div>
+    <hr>
+    <p><b>{{ "領先" if diff >= 0 else "落後" }} {{ "%+.0f"|format(diff) }} 分</b> · 剩餘 {% for d in days %}{{ d.label.split(" ")[0] }}{{ "、" if not loop.last }}{% endfor %}</p>
+    {% if threats %}<p>對手主力：{% for p, g in threats %}{{ p.name }}（平均 {{ p.avg }}，{{ p.team }} 剩 {{ g }} 場）{{ "、" if not loop.last }}{% endfor %}</p>{% endif %}
+  </section>
+
+  <section class="card">
+    <h2>今天要做的事 <small>依優先順序</small></h2>
+    {% for tag, title, body in todos %}
+    <div class="todo"><span class="tag {{ tag }}">{{ tag }}</span><div><b>{{ title }}</b><p>{{ body }}</p></div></div>
+    {% endfor %}
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-pane="p1">戰況</button>
+    <button role="tab" aria-selected="false" data-pane="p2">陣容與增補</button>
+    <button role="tab" aria-selected="false" data-pane="p3">傷兵</button>
+    <button role="tab" aria-selected="false" data-pane="p4">聯盟排名</button>
+  </nav>
+
+  <div class="pane" id="p1">
+    <section class="card">
+      <h2>剩下每天的上場人數 <small>你 vs 對手</small></h2>
+      {% for d in days %}
+      <div class="day">
+        <div class="top"><span>{{ d.label }}</span><span>{{ d.mine|length }} 人 vs {{ d.theirs|length }} 人</span></div>
+        <div class="names">預估 {{ "%.0f"|format(d.my_proj) }} vs {{ "%.0f"|format(d.opp_proj) }} 分</div>
+        <div class="names">你：{% for p in d.mine %}{{ p.name }}{% if p.id in d.issues.benched|map(attribute='id')|list %}<span class="pill">在替補</span>{% endif %}{{ "、" if not loop.last }}{% else %}沒有人有比賽{% endfor %}</div>
+      </div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <div class="pane" id="p2" hidden>
+    <section class="card">
+      <h2>我的陣容 <small>平均 = 每場 fantasy 分</small></h2>
+      <table>
+        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">本週剩</th></tr>
+        {% for p in r.my_roster|sort(attribute='avg', reverse=True) %}
+        <tr><td>{{ p.name }} <span class="names">{{ p.team }}</span>{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ p.injury }}</span>{% endif %}</td>
+          <td class="n">{{ p.avg }}</td><td class="n">{{ p.last7 or "-" }}</td>
+          <td class="n">{{ p.games|select('in', r.remaining)|list|length }}</td></tr>
+        {% endfor %}
+      </table>
+    </section>
+    <section class="card">
+      <h2>自由球員推薦 <small>本週已加 {{ adds }} 人</small></h2>
+      {% if ideas %}
+      <table>
+        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">本週剩</th></tr>
+        {% for f in ideas %}
+        <tr><td>{{ f.name }} <span class="names">{{ f.team }}</span></td><td class="n">{{ f.avg }}</td><td class="n">{{ f.last7 or "-" }}</td><td class="n">{{ f.week_games }}</td></tr>
+        {% endfor %}
+      </table>
+      {% if worst %}<p class="empty">比較對象：你陣容裡預估最低的 {{ worst.name }}（今年 {{ worst.avg }}）。</p>{% endif %}
+      {% else %}<p class="empty">目前沒有明顯比你陣容更好的自由球員。</p>{% endif %}
+    </section>
+  </div>
+
+  <div class="pane" id="p3" hidden>
+    <section class="card">
+      <h2>傷兵狀況</h2>
+      {% if injuries %}
+      <table>
+        <tr><th>球員</th><th>狀態</th><th>位置</th></tr>
+        {% for p in injuries %}
+        <tr><td>{{ p.name }} <span class="names">{{ p.team }}</span></td><td>{{ {"OUT":"缺陣","DAY_TO_DAY":"每日觀察","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</td><td>{{ "傷兵名單" if p.lineup_slot == 13 else ("替補" if p.lineup_slot == 12 else "先發") }}</td></tr>
+        {% endfor %}
+      </table>
+      {% else %}<p class="empty">目前沒有傷兵。</p>{% endif %}
+    </section>
+  </div>
+
+  <div class="pane" id="p4" hidden>
+    <section class="card">
+      <h2>聯盟排名</h2>
+      <table>
+        <tr><th>#</th><th>隊伍</th><th class="n">戰績</th><th class="n">總得分</th></tr>
+        {% for t in standings %}
+        <tr class="{{ 'me' if t.team_id == r.me.team_id }}"><td>{{ loop.index }}</td><td>{{ t.team_name }}</td><td class="n">{{ t.wins }}-{{ t.losses }}</td><td class="n">{{ "%.0f"|format(t.points_for) }}</td></tr>
+        {% endfor %}
+      </table>
+    </section>
+  </div>
+
+  <footer>資料來源：ESPN Fantasy Basketball · 預估僅供參考</footer>
+</main>
+<script>
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  document.querySelectorAll('.pane').forEach(p => p.hidden = p.id !== b.dataset.pane);
+}));
+</script>
+</body>
+</html>
