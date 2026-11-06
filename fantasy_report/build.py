@@ -264,49 +264,6 @@ def team_views(r: Report, league, my_worst, my_ideas):
     return views
 
 
-def trade_analysis(r: Report):
-    """賣高買低：你今年比去年好很多的球員，換別隊今年比去年差很多的球員。"""
-    base = lambda x: (x.avg + x.last_year) / 2  # 兩季平均
-    hot = lambda x: (x.last7 if x.last7 is not None else x.avg) - x.avg
-    sell = []
-    for x in r.my_roster:
-        if x.out or x.last_year is None or x.avg <= 0:
-            continue
-        gap = x.avg - x.last_year
-        if gap >= 5 or (gap >= 2 and hot(x) >= 6):
-            sell.append({"p": x, "gap": gap, "hot": hot(x), "base": base(x)})
-    sell.sort(key=lambda d: -d["gap"])
-    buy = []
-    for t in r.lg.teams:
-        if t.team_id == r.me.team_id:
-            continue
-        for x in r.rosters[t.team_id]:
-            if x.out or x.last_year is None or x.last_year < 25 or x.avg <= 0:
-                continue
-            gap = x.last_year - x.avg
-            if gap >= 5:
-                buy.append({"p": x, "team": t, "gap": gap, "hot": hot(x), "base": base(x)})
-    buy.sort(key=lambda d: -(d["gap"] + max(d["hot"], 0)))
-    ideas = []
-    for b in buy:
-        for m in sell:
-            fair = m["p"].avg - b["p"].avg
-            gain = b["base"] - m["base"]
-            if fair >= -3 and gain >= 2:
-                ideas.append({"m": m, "b": b, "fair": fair, "gain": gain})
-    ideas.sort(key=lambda d: -d["gain"])
-    used, picks = {}, []
-    for i in ideas:
-        mid, bid = i["m"]["p"].id, i["b"]["p"].id
-        if used.get(mid, 0) >= 2 or any(p["b"]["p"].id == bid for p in picks):
-            continue
-        used[mid] = used.get(mid, 0) + 1
-        picks.append(i)
-        if len(picks) >= 6:
-            break
-    return {"sell": sell, "buy": buy[:12], "picks": picks}
-
-
 def main():
     league_id = int(os.environ.get("ESPN_LEAGUE_ID", "406470928"))
     year = int(os.environ.get("ESPN_SEASON", "2027"))
@@ -325,7 +282,6 @@ def main():
         verdict=make_verdict(worst, ideas),
         fa_verdict=make_fa_verdict(worst),
         compare=(cmp := compare(r, days)),
-        trade=trade_analysis(r),
         team_views=team_views(r, cmp[1], worst, ideas),
         fa_list=r.free_agents()[:20],
         waiver_order="".join(
