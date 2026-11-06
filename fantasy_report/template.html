@@ -86,8 +86,15 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .vs td:first-child { color: var(--muted); }
 .vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
 .teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
-.teamview { width: 100%; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); margin-bottom: 8px; }
-.teambox .names { margin: 4px 0 8px; }
+.teambox .names { margin: 4px 0 8px; font-size: 13px; color: var(--muted); }
+.tcard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.thead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.thead b { font-size: 18px; }
+.rec { font-size: 13px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--ok-bg); color: var(--ok); }
+.expand { margin-left: auto; background: none; border: 0; color: var(--accent); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; padding: 4px 0; }
+.tline { display: grid; grid-template-columns: 36px 1fr; gap: 6px; font-size: 14px; margin: 6px 0; }
+.tline .lab { color: var(--muted); font-size: 13px; }
+.teambox { margin-top: 10px; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -195,20 +202,24 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
 
   <div class="pane" id="p7" hidden>
     <section class="card">
-      <h2>各隊陣容判斷 <small>點標題可排序</small></h2>
-      <select id="teamview" class="teamview" aria-label="選擇要看的隊伍">
-        {% for v in team_views %}<option value="{{ v.t.team_id }}">{{ v.t.team_name }}{{ "（本週對手）" if v.is_opp }}</option>{% endfor %}
-      </select>
+      <h2>各隊陣容判斷 <small>點「展開陣容」看全部球員</small></h2>
       {% for v in team_views %}
-      <div class="teambox" data-team="{{ v.t.team_id }}"{{ " hidden" if not loop.first }}>
-        <p class="names">戰績 {{ v.t.wins }}-{{ v.t.losses }} · 陣容實力 {{ "%.0f"|format(v.power) }}（全聯盟第 {{ v.rank }}）· 核心 {{ v.core }} 人 · OUT {{ v.out }} 人</p>
-        <div class="scroll"><table class="roster" id="t-team-{{ v.t.team_id }}">
-          {{ head() }}
-          {% for p, vv in v.rows %}{{ row(p, LABEL.get(p.lineup_slot, ""), vv) }}{% endfor %}
-        </table></div>
+      <div class="tcard">
+        <div class="thead"><b>{{ v.t.team_name }}</b><span class="rec">{{ v.t.wins }}-{{ v.t.losses }}</span>{% if v.is_me %}<span class="tag 建議">你</span>{% elif v.is_opp %}<span class="tag 要做">本週對手</span>{% endif %}
+          <button class="expand" data-team="{{ v.t.team_id }}" aria-expanded="false">展開陣容 ▼</button></div>
+        <div class="tline"><span class="lab">核心</span><span>{{ v.report.core }}</span></div>
+        <div class="tline"><span class="lab">判斷</span><span>{{ v.report.judge }}</span></div>
+        {% if v.report.to_you %}<div class="tline"><span class="lab">對你</span><span>{{ v.report.to_you }}</span></div>{% endif %}
+        <div class="teambox" data-team="{{ v.t.team_id }}" hidden>
+          <p class="names">陣容實力 {{ "%.0f"|format(v.power) }}（全聯盟第 {{ v.rank }}）· 核心 {{ v.core }} 人 · OUT {{ v.out }} 人 · 點標題可排序</p>
+          <div class="scroll"><table class="roster" id="t-team-{{ v.t.team_id }}">
+            {{ head() }}
+            {% for p, vv in v.rows %}{{ row(p, LABEL.get(p.lineup_slot, ""), vv) }}{% endfor %}
+          </table></div>
+        </div>
       </div>
       {% endfor %}
-      <p class="note">判斷方式跟「陣容」分頁一樣；「可以換成」是跟目前的自由球員比較。表格可以左右滑。</p>
+      <p class="note">「核心」列出每隊最強的幾個人（今年 / 近 7 場 / 去年）。陣容表格的判斷方式跟「陣容」分頁一樣。這些文字都是依照 ESPN 數據自動產生的。</p>
     </section>
   </div>
 
@@ -216,8 +227,12 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
 </main>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const tv = document.getElementById("teamview");
-  if (tv) tv.addEventListener("change", () => document.querySelectorAll(".teambox").forEach((b) => (b.hidden = b.dataset.team !== tv.value)));
+  document.querySelectorAll("button.expand").forEach((btn) => btn.addEventListener("click", () => {
+    const box = document.querySelector(`.teambox[data-team="${btn.dataset.team}"]`);
+    box.hidden = !box.hidden;
+    btn.setAttribute("aria-expanded", !box.hidden);
+    btn.textContent = box.hidden ? "展開陣容 ▼" : "收起陣容 ▲";
+  }));
 });
 // 點「今年 / 近7場 / 去年」標題：由高到低排序；再點一次恢復原本順序
 const sortState = {};

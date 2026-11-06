@@ -94,6 +94,14 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
 .teamview { width: 100%; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); margin-bottom: 8px; }
 .teambox .sub { margin: 4px 0 8px; }
+.tcard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.thead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.thead b { font-size: 18px; }
+.rec { font-size: 13px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--ok-bg); color: var(--ok); }
+.expand { margin-left: auto; background: none; border: 0; color: var(--accent); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; padding: 4px 0; }
+.tline { display: grid; grid-template-columns: 36px 1fr; gap: 6px; font-size: 14px; margin: 6px 0; }
+.tline .lab { color: var(--muted); font-size: 13px; }
+.teambox { margin-top: 10px; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -323,16 +331,17 @@ function analyse(D) {
   const league = D.teams.map((t) => ({ t, week: D.weekScores[t.id] || 0,
     power: strength(D.rosters[t.id], "avg"), hot: strength(D.rosters[t.id], "last7") }));
   const ranked = [...league].sort((a, b) => b.power - a.power);
-  const teamViews = D.teams.filter((t) => t.id !== D.me.id).map((t) => {
+  const teamViews = D.teams.map((t) => {
     const ros = D.rosters[t.id];
     const w = [...ros].filter((x) => !x.out).sort((a, b) => a.proj - b.proj)[0];
-    const v = { t, worst: w, ideas: w ? D.fas.filter((f) => f.proj > w.proj + 3).slice(0, 5) : [] };
+    const v = t.id === D.me.id ? { t, worst, ideas } : { t, worst: w, ideas: w ? D.fas.filter((f) => f.proj > w.proj + 3).slice(0, 5) : [] };
     const l = league.find((x) => x.t.id === t.id);
     return Object.assign(v, { power: l.power, rank: ranked.indexOf(l) + 1,
       out: ros.filter((x) => x.injury === "OUT" || x.lineupSlot === IR).length });
   });
   teamViews.forEach((v) => (v.core = D.rosters[v.t.id].filter((x) => verdict(x, v)[0] === "core").length));
-  teamViews.sort((a, b) => (b.t.id === D.opp.id) - (a.t.id === D.opp.id) || a.t.name.localeCompare(b.t.name));
+  teamViews.sort((a, b) => (b.t.id === D.opp.id) - (a.t.id === D.opp.id) || b.power - a.power);
+  teamViews.forEach((v) => (v.report = teamReport(v, D, teamViews)));
   return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews };
 }
 
@@ -391,10 +400,67 @@ function setupSort() {
   });
 }
 
-let teamView = null;
+const openTeams = new Set();
+const lastName = (n) => { const p = n.split(" "); return p.length > 1 ? p.slice(1).join(" ") : n; };
+const CN = ["零", "一", "兩", "三", "四", "五"];
+
+// 每隊的「核心 / 判斷 / 對你」三行重點，依數據自動產生
+function teamReport(v, D, views) {
+  const ros = D.rosters[v.t.id], o = v.t.record.overall;
+  const flag = (x) => x.lineupSlot === IR ? `(IR ${INJURY[x.injury] || "OUT"})` : x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `(${INJURY[x.injury] || x.injury})` : "";
+  const byAvg = [...ros].sort((a, b) => Math.max(b.avg, 0) - Math.max(a.avg, 0));
+  let core = ros.filter((x) => verdict(x, v)[0] === "core").sort((a, b) => b.avg - a.avg);
+  if (core.length < 2) core = byAvg.slice(0, 3);
+  const coreText = core.slice(0, 4).map((x, i) => i < 2
+    ? `${lastName(x.name)} ${r0(x.avg)}/${x.last7 == null ? "-" : r0(x.last7)}/${x.lastYear == null ? "-" : r0(x.lastYear)}${flag(x)}`
+    : `${lastName(x.name)} ${r0(x.avg)}${flag(x)}`).join("、");
+
+  const healthy = ros.filter((x) => !x.out).sort((a, b) => b.avg - a.avg);
+  const stars = healthy.filter((x) => x.avg >= 38);
+  const mid = healthy.filter((x) => x.avg < 38).slice(0, Math.max(0, D.seats.length - stars.length));
+  const lo = mid.length ? r0(Math.min(...mid.map((x) => x.avg))) : 0, hi = mid.length ? r0(Math.max(...mid.map((x) => x.avg))) : 0;
+  const parts = [];
+  if (stars.length >= 2) parts.push(`${CN[stars.length] || stars.length + " "}個一線球員（${stars.map((x) => lastName(x.name)).join("、")}），其他主力多在 ${lo} 到 ${hi} 分`);
+  else if (stars.length === 1) parts.push(`${lastName(stars[0].name)} 撐起陣容（今年 ${r0(stars[0].avg)}），其他主力多在 ${lo} 到 ${hi} 分${stars[0].avg - hi >= 15 ? "，頭重腳輕" : ""}`);
+  else parts.push(`沒有一線球員，主力多在 ${lo} 到 ${hi} 分，靠平均分散`);
+  const hurt = ros.filter((x) => x.out && Math.max(x.avg, x.lastYear || 0) >= 30);
+  if (hurt.length) parts.push(`${hurt.map((x) => `${lastName(x.name)}（OUT，${x.avg > 0 ? `今年 ${r0(x.avg)}` : `去年 ${r0(x.lastYear)}`}）`).join("、")}傷停中，回來後陣容會更深`);
+  const down = healthy.slice(0, 8).filter((x) => x.lastYear != null && x.lastYear - x.avg >= 6).slice(0, 2);
+  if (down.length) parts.push(`${down.map((x) => `${lastName(x.name)} 今年 ${r0(x.avg)} 低於去年 ${r0(x.lastYear)}`).join("、")}，要看能不能回升`);
+  const hot = healthy.slice(0, 10).filter((x) => x.last7 != null && x.last7 - x.avg >= 8).slice(0, 2);
+  if (hot.length) parts.push(`${hot.map((x) => `${lastName(x.name)} 近 7 場 ${r0(x.last7)}`).join("、")}，手感正熱`);
+  const rankOf = (key, asc) => [...D.teams].sort((a, b) => asc ? a.record.overall[key] - b.record.overall[key] : b.record.overall[key] - a.record.overall[key]).findIndex((t) => t.id === v.t.id) + 1;
+  const winRank = [...D.teams].sort((a, b) => b.record.overall.wins - a.record.overall.wins || b.record.overall.pointsFor - a.record.overall.pointsFor).findIndex((t) => t.id === v.t.id) + 1;
+  const pfRank = rankOf("pointsFor"), paRank = rankOf("pointsAgainst", true);
+  if (pfRank - winRank >= 3) parts.push(`戰績 ${o.wins}-${o.losses} 但總得分只排第 ${pfRank}，戰績偏好看，較可能往下掉`);
+  else if (winRank - pfRank >= 3) parts.push(`總得分排第 ${pfRank}，實力比戰績 ${o.wins}-${o.losses} 好`);
+  else if (paRank === 1 && o.wins >= o.losses) parts.push(`失分 ${r0(o.pointsAgainst)} 是全聯盟最低，戰績有賽程運氣成分；總得分排第 ${pfRank}`);
+  else parts.push(`總得分排第 ${pfRank}`);
+  const m = D.lg.schedule.find((x) => x.matchupPeriodId === D.week && (x.home.teamId === v.t.id || (x.away && x.away.teamId === v.t.id)));
+  if (m && m.away) {
+    const me = m.home.teamId === v.t.id ? m.home : m.away, op = m.home.teamId === v.t.id ? m.away : m.home;
+    const d = (me.totalPointsLive ?? me.totalPoints ?? 0) - (op.totalPointsLive ?? op.totalPoints ?? 0);
+    parts.push(`本週${d >= 0 ? "領先" : "落後"} ${r0(Math.abs(d))} 分`);
+  }
+
+  let toYou = "";
+  if (v.t.id !== D.me.id) {
+    const mine = views.find((x) => x.t.id === D.me.id), d = v.power - mine.power, bits = [];
+    if (v.t.id === D.opp.id) { const diff = D.myScore - D.oppScore; bits.push(`本週對手，你${diff >= 0 ? "領先" : "落後"} ${r0(Math.abs(diff))} 分`); }
+    bits.push(d >= 10 ? `陣容實力 ${r0(v.power)} 比你的 ${r0(mine.power)} 強，是要追的對象`
+      : d <= -25 ? `弱隊，陣容實力 ${r0(v.power)} 比你的 ${r0(mine.power)} 低很多，沒有威脅`
+      : `實力跟你接近（${r0(v.power)} 對 ${r0(mine.power)}）`);
+    const meets = D.lg.schedule.filter((x) => x.matchupPeriodId > D.week && x.away &&
+      [x.home.teamId, x.away.teamId].includes(D.me.id) && [x.home.teamId, x.away.teamId].includes(v.t.id)).map((x) => x.matchupPeriodId);
+    if (meets.length) {
+      bits.push(`第 ${meets[0]} 週${meets[1] ? `與第 ${meets[1]} 週` : ""}會跟你碰面`);
+    }
+    toYou = bits.join("。") + "。";
+  }
+  return { core: coreText, judge: parts.join("。") + "。", toYou };
+}
 let activeTab = store("tab") || "p1";
 function render(D, A) {
-  if (teamView == null || !A.teamViews.some((v) => v.t.id === teamView)) teamView = D.opp.id;
   const diff = D.myScore - D.oppScore;
   const end = addDays(D.monday, 6);
   const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
@@ -493,17 +559,21 @@ function render(D, A) {
   </div>
 
   <div class="pane" id="p7"><section class="card">
-    <h2>各隊陣容判斷 <small>點標題可排序</small></h2>
-    <select id="teamview" class="teamview" aria-label="選擇要看的隊伍">
-      ${A.teamViews.map((v) => `<option value="${v.t.id}"${v.t.id === teamView ? " selected" : ""}>${esc(v.t.name)}${v.t.id === D.opp.id ? "（本週對手）" : ""}</option>`).join("")}
-    </select>
-    ${A.teamViews.map((v) => `<div class="teambox" data-team="${v.t.id}"${v.t.id === teamView ? "" : " hidden"}>
-      <p class="sub">戰績 ${rec(v.t)} · 陣容實力 ${r0(v.power)}（全聯盟第 ${v.rank}）· 核心 ${v.core} 人 · OUT ${v.out} 人</p>
-      <div class="scroll"><table class="roster" id="t-team-${v.t.id}">
-        ${HEAD}
-        ${[...D.rosters[v.t.id]].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => row(x, SLOT_LABEL[x.lineupSlot] || "", verdict(x, v))).join("")}
-      </table></div></div>`).join("")}
-    <p class="note">判斷方式跟「陣容」分頁一樣；「可以換成」是跟目前的自由球員比較。表格可以左右滑。</p>
+    <h2>各隊陣容判斷 <small>點「展開陣容」看全部球員</small></h2>
+    ${A.teamViews.map((v) => { const R = v.report, open = openTeams.has(v.t.id); return `<div class="tcard">
+      <div class="thead"><b>${esc(v.t.name)}</b><span class="rec">${rec(v.t)}</span>${v.t.id === D.me.id ? '<span class="tag ok">你</span>' : v.t.id === D.opp.id ? '<span class="tag bad">本週對手</span>' : ""}
+        <button class="expand" data-team="${v.t.id}" aria-expanded="${open}">${open ? "收起陣容 ▲" : "展開陣容 ▼"}</button></div>
+      <div class="tline"><span class="lab">核心</span><span>${esc(R.core)}</span></div>
+      <div class="tline"><span class="lab">判斷</span><span>${esc(R.judge)}</span></div>
+      ${R.toYou ? `<div class="tline"><span class="lab">對你</span><span>${esc(R.toYou)}</span></div>` : ""}
+      <div class="teambox" data-team="${v.t.id}"${open ? "" : " hidden"}>
+        <p class="sub">陣容實力 ${r0(v.power)}（全聯盟第 ${v.rank}）· 核心 ${v.core} 人 · OUT ${v.out} 人 · 點標題可排序</p>
+        <div class="scroll"><table class="roster" id="t-team-${v.t.id}">
+          ${HEAD}
+          ${[...D.rosters[v.t.id]].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => row(x, SLOT_LABEL[x.lineupSlot] || "", verdict(x, v))).join("")}
+        </table></div>
+      </div></div>`; }).join("")}
+    <p class="note">「核心」列出每隊最強的幾個人（今年 / 近 7 場 / 去年）。陣容表格的判斷方式跟「陣容」分頁一樣。這些文字都是依照 ESPN 數據自動產生的。</p>
   </section></div>`;
 
   const show = (id) => {
@@ -512,14 +582,14 @@ function render(D, A) {
     document.querySelectorAll(".pane").forEach((p) => (p.hidden = p.id !== id));
   };
   document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.pane)));
-  const tv = $("#teamview");
-  if (tv) {
-    teamView = Number(tv.value);
-    tv.addEventListener("change", () => {
-      teamView = Number(tv.value);
-      document.querySelectorAll(".teambox").forEach((b) => (b.hidden = Number(b.dataset.team) !== teamView));
-    });
-  }
+  document.querySelectorAll("button.expand").forEach((btn) => btn.addEventListener("click", () => {
+    const id = Number(btn.dataset.team), box = document.querySelector(`.teambox[data-team="${id}"]`);
+    const open = box.hidden;
+    box.hidden = !open;
+    open ? openTeams.add(id) : openTeams.delete(id);
+    btn.setAttribute("aria-expanded", open);
+    btn.textContent = open ? "收起陣容 ▲" : "展開陣容 ▼";
+  }));
   show(document.getElementById(activeTab) ? activeTab : "p1");
   setupSort();
 }

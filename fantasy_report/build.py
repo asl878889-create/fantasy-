@@ -143,27 +143,123 @@ def compare(r: Report, days):
     return table, league
 
 
-def team_views(r: Report, league):
-    """其他每一隊的陣容和判斷（本週對手排第一個）。"""
+CN = ["零", "一", "兩", "三", "四", "五"]
+
+
+def last_name(n):
+    parts = n.split(" ")
+    return " ".join(parts[1:]) if len(parts) > 1 else n
+
+
+def team_report(r: Report, v, views, schedule):
+    """每隊的「核心 / 判斷 / 對你」三行重點，依數據自動產生（和即時版同樣規則）。"""
+    t, ros, verdict = v["t"], r.rosters[v["t"].team_id], v["verdict"]
+    r0 = lambda x: str(int(x + 0.5)) if x >= 0 else str(-int(-x + 0.5))
+
+    def flag(x):
+        if x.lineup_slot == 13:
+            return f"(IR {INJ.get(x.injury, 'OUT') if x.injury not in ('ACTIVE', 'NORMAL') else 'OUT'})"
+        return f"({INJ.get(x.injury, x.injury)})" if x.injury not in ("ACTIVE", "NORMAL") else ""
+
+    core = sorted((x for x in ros if verdict(x)[0] == "core"), key=lambda x: -x.avg)
+    if len(core) < 2:
+        core = sorted(ros, key=lambda x: -max(x.avg, 0))[:3]
+    core_text = "、".join(
+        f"{last_name(x.name)} {r0(x.avg)}/{'-' if x.last7 is None else r0(x.last7)}/{'-' if x.last_year is None else r0(x.last_year)}{flag(x)}"
+        if i < 2 else f"{last_name(x.name)} {r0(x.avg)}{flag(x)}" for i, x in enumerate(core[:4]))
+
+    healthy = sorted((x for x in ros if not x.out), key=lambda x: -x.avg)
+    stars = [x for x in healthy if x.avg >= 38]
+    mid = [x for x in healthy if x.avg < 38][:max(0, r.starters - len(stars))]
+    lo = r0(min(x.avg for x in mid)) if mid else "0"
+    hi_v = max((x.avg for x in mid), default=0)
+    hi = r0(hi_v)
+    parts = []
+    if len(stars) >= 2:
+        n = CN[len(stars)] if len(stars) < len(CN) else f"{len(stars)} "
+        parts.append(f"{n}個一線球員（{'、'.join(last_name(x.name) for x in stars)}），其他主力多在 {lo} 到 {hi} 分")
+    elif len(stars) == 1:
+        s0 = stars[0]
+        parts.append(f"{last_name(s0.name)} 撐起陣容（今年 {r0(s0.avg)}），其他主力多在 {lo} 到 {hi} 分"
+                     + ("，頭重腳輕" if s0.avg - hi_v >= 15 else ""))
+    else:
+        parts.append(f"沒有一線球員，主力多在 {lo} 到 {hi} 分，靠平均分散")
+    hurt = [x for x in ros if x.out and max(x.avg, x.last_year or 0) >= 30]
+    if hurt:
+        parts.append("、".join(f"{last_name(x.name)}（OUT，{'今年 ' + r0(x.avg) if x.avg > 0 else '去年 ' + r0(x.last_year)}）"
+                              for x in hurt) + "傷停中，回來後陣容會更深")
+    down = [x for x in healthy[:8] if x.last_year is not None and x.last_year - x.avg >= 6][:2]
+    if down:
+        parts.append("、".join(f"{last_name(x.name)} 今年 {r0(x.avg)} 低於去年 {r0(x.last_year)}" for x in down) + "，要看能不能回升")
+    hot = [x for x in healthy[:10] if x.last7 is not None and x.last7 - x.avg >= 8][:2]
+    if hot:
+        parts.append("、".join(f"{last_name(x.name)} 近 7 場 {r0(x.last7)}" for x in hot) + "，手感正熱")
+    teams = r.lg.teams
+    win_rank = sorted(teams, key=lambda x: (-x.wins, -x.points_for)).index(t) + 1
+    pf_rank = sorted(teams, key=lambda x: -x.points_for).index(t) + 1
+    pa_rank = sorted(teams, key=lambda x: x.points_against).index(t) + 1
+    if pf_rank - win_rank >= 3:
+        parts.append(f"戰績 {t.wins}-{t.losses} 但總得分只排第 {pf_rank}，戰績偏好看，較可能往下掉")
+    elif win_rank - pf_rank >= 3:
+        parts.append(f"總得分排第 {pf_rank}，實力比戰績 {t.wins}-{t.losses} 好")
+    elif pa_rank == 1 and t.wins >= t.losses:
+        parts.append(f"失分 {r0(t.points_against)} 是全聯盟最低，戰績有賽程運氣成分；總得分排第 {pf_rank}")
+    else:
+        parts.append(f"總得分排第 {pf_rank}")
+    for m in schedule:
+        if m["matchupPeriodId"] == r.week and m.get("away") and t.team_id in (m["home"]["teamId"], m["away"]["teamId"]):
+            mine, op = (m["home"], m["away"]) if m["home"]["teamId"] == t.team_id else (m["away"], m["home"])
+            pts = lambda x: x.get("totalPointsLive") if x.get("totalPointsLive") is not None else x.get("totalPoints", 0)
+            d = pts(mine) - pts(op)
+            parts.append(f"本週{'領先' if d >= 0 else '落後'} {abs(d):.0f} 分")
+
+    to_you = ""
+    if t.team_id != r.me.team_id:
+        mine = next(x for x in views if x["t"].team_id == r.me.team_id)
+        d = v["power"] - mine["power"]
+        bits = []
+        if t.team_id == r.opp.team_id:
+            diff = r.my_score - r.opp_score
+            bits.append(f"本週對手，你{'領先' if diff >= 0 else '落後'} {abs(diff):.0f} 分")
+        if d >= 10:
+            bits.append(f"陣容實力 {r0(v['power'])} 比你的 {r0(mine['power'])} 強，是要追的對象")
+        elif d <= -25:
+            bits.append(f"弱隊，陣容實力 {r0(v['power'])} 比你的 {r0(mine['power'])} 低很多，沒有威脅")
+        else:
+            bits.append(f"實力跟你接近（{r0(v['power'])} 對 {r0(mine['power'])}）")
+        meets = [m["matchupPeriodId"] for m in schedule if m["matchupPeriodId"] > r.week and m.get("away")
+                 and {m["home"]["teamId"], m["away"]["teamId"]} == {r.me.team_id, t.team_id}]
+        if meets:
+            bits.append(f"第 {meets[0]} 週" + (f"與第 {meets[1]} 週" if len(meets) > 1 else "") + "會跟你碰面")
+        to_you = "。".join(bits) + "。"
+    return {"core": core_text, "judge": "。".join(parts) + "。", "to_you": to_you}
+
+
+def team_views(r: Report, league, my_worst, my_ideas):
+    """每一隊的陣容、判斷和重點卡片（本週對手排第一個，其餘依陣容實力）。"""
     ranked = [x["t"].team_id for x in league]  # league 已依陣容實力排序
     fas = r.free_agents()
     views = []
     for t in r.lg.teams:
-        if t.team_id == r.me.team_id:
-            continue
         ros = r.rosters[t.team_id]
-        healthy = sorted((p for p in ros if not p.out), key=lambda p: p.proj)
-        worst = healthy[0] if healthy else None
-        ideas = [f for f in fas if worst and f.proj > worst.proj + 3][:5]
+        if t.team_id == r.me.team_id:
+            worst, ideas = my_worst, my_ideas
+        else:
+            healthy = sorted((p for p in ros if not p.out), key=lambda p: p.proj)
+            worst = healthy[0] if healthy else None
+            ideas = [f for f in fas if worst and f.proj > worst.proj + 3][:5]
         v = make_verdict(worst, ideas)
         rows = sorted(sorted(ros, key=lambda p: -p.avg), key=lambda p: p.lineup_slot)
         lg_row = next(x for x in league if x["t"].team_id == t.team_id)
-        views.append({"t": t, "rows": [(p, v(p)) for p in rows], "power": lg_row["power"],
+        views.append({"t": t, "verdict": v, "rows": [(p, v(p)) for p in rows], "power": lg_row["power"],
                       "rank": ranked.index(t.team_id) + 1,
                       "core": sum(1 for p in ros if v(p)[0] == "core"),
                       "out": sum(1 for p in ros if p.injury == "OUT" or p.lineup_slot == 13),
-                      "is_opp": t.team_id == r.opp.team_id})
-    views.sort(key=lambda x: (not x["is_opp"], x["t"].team_name))
+                      "is_opp": t.team_id == r.opp.team_id, "is_me": t.team_id == r.me.team_id})
+    views.sort(key=lambda x: (not x["is_opp"], -x["power"]))
+    schedule = r.lg.espn_request.league_get(params={"view": "mMatchupScore"})["schedule"]
+    for v in views:
+        v["report"] = team_report(r, v, views, schedule)
     return views
 
 
@@ -185,7 +281,7 @@ def main():
         verdict=make_verdict(worst, ideas),
         fa_verdict=make_fa_verdict(worst),
         compare=(cmp := compare(r, days)),
-        team_views=team_views(r, cmp[1]),
+        team_views=team_views(r, cmp[1], worst, ideas),
         fa_list=r.free_agents()[:20],
         next_week=[p + 7 for p in r.week_periods],
         day_char={p: r.day_label(p)[1] for p in r.remaining},
