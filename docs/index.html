@@ -143,6 +143,7 @@ td.logo { text-align: center; padding-left: 2px; padding-right: 2px; } td.logo i
 .tocmp.xs { float: none; margin: 0 0 0 4px; padding: 0 5px; font-size: 11px; border-color: transparent; background: none; color: var(--muted); }
 .cmpin2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; align-items: end; margin-bottom: 12px; }
 .cmpin2 label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; } .cmpin2 .row2 { display: flex; gap: 4px; }
+.cmpin2 select { font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
 .cmpin2 input, .tradein input { font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; min-width: 0; box-sizing: border-box; }
 .cmpin2 input:focus, .tradein input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .cmpin2 .rm, .chip2 button { font: inherit; border: 0; background: none; color: var(--muted); cursor: pointer; padding: 0 6px; }
@@ -154,6 +155,11 @@ i.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; marg
 .tradein label { font-size: 13px; color: var(--muted); } .chips2 { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip2 { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 4px 2px 10px; font-size: 13px; }
 @media (max-width: 520px) { .tradein { grid-template-columns: 1fr; } }
+.lu { padding: 10px 0; border-bottom: 1px solid var(--line); } .lu:last-of-type { border-bottom: 0; }
+.luhead { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin-bottom: 6px; }
+.lugrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.luslot { display: flex; gap: 6px; align-items: baseline; border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-size: 13px; min-width: 0; }
+.luslot i { font-style: normal; font-weight: 800; color: var(--accent); min-width: 34px; font-size: 12px; } .luslot small { margin-left: auto; }
 .rec2 { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; } .dif { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; } .move.chg { display: grid; grid-template-columns: 38px 1fr; } .move b.ver { color: var(--accent); min-width: 34px; font-variant-numeric: tabular-nums; } .tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; } .tgrid > div { min-width: 0; }
 .tgrid h4 { margin: 6px 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } table.today-t td, table.today-t th { padding-left: 2px; padding-right: 2px; }
 table.today-t td.who2 { font-size: 13px; word-break: break-word; } table.today-t .pill { margin-left: 2px; } table.today-t td:first-child { color: var(--ink); } td.who2 .sub { font-size: 12px; line-height: 1.2; } #t-po th small { font-weight: 400; color: var(--muted); }
@@ -300,7 +306,9 @@ function bestLineup(players, seats) {
     return false;
   };
   [...players].sort((a, b) => b.proj - a.proj).forEach((p) => place(p, new Set()));
-  return owner.filter(Boolean).sort((a, b) => b.proj - a.proj);
+  const out = owner.filter(Boolean).sort((a, b) => b.proj - a.proj);
+  out.seatOf = new Map(owner.map((p, i) => [p, seats[i]]).filter(([p]) => p)); // 每位先發排在哪個位置
+  return out;
 }
 
 async function load(teamPick) {
@@ -816,7 +824,7 @@ function playoffCard(D) {
 
 
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
-const CHANGES = [["球員比較升級：2 到 4 人、快速選擇、各處一鍵加入比較、本週／下週預估總分、賽程、細項數據、穩定度、結論並排；新增交易試算", false], ["整合重複功能：撿人排程併進補強建議（本週先撿＋長期換人）、剩餘賽程併進本週對戰、表格判斷欄改用該不該留的結論", false], ["陣容分頁新增「補強建議」卡片：建議換誰、6 位推薦球員（賽程、角色、Waiver/FA 標籤和說明）", false], ["主畫面縮圖改成 P 字籃球（深色底、橘色外框）", false], ["點球員：該不該留加上適配性（球權分配、球風和球隊節奏、教練的信任度）", false], ["點球員：分析未來 5 場賽程偏軟還是偏硬（依對手勝率、連兩天）", false], ["更新標記：每個更新的地方有「✓ 確認」按鈕", false], ["「撿人排程」從戰況分頁移到陣容分頁", false], ["點球員：今年比去年差 5 分以上時，分析會不會反彈", false], ["自由球員分頁新增搜尋欄（名字、NBA 球隊、位置）", false], ["撿人排程：本週額度用完時也顯示「如果還有額度」的參考排程", false], ["球員比較加上最近 10 場每場得分折線圖", false], ["新增「球員比較」分頁：選兩位球員並排比較各項數據", false], ["今天要做的事、撿人排程、下週預覽裡提到的球員也可以點開", false], ["該不該留的建議裡提到的球員也可以點開", false], ["該不該留：去年明顯比較好的球員先建議觀察，不急著換掉", false], ["點球員名字：分析你的球員該不該留、自由球員值不值得撿", false], ["刪除陣容分頁的「季後賽賽程」", false], ["陣容、自由球員、各隊陣容表格新增球隊隊徽", false], ["新增上場分鐘變化（陣容、自由球員表格）、熱門撿人、連兩天比賽提醒、每週得分走勢圖", false], ["修正本週得分排名：排序時名次和中位數虛線跟著順序", false], ["聯盟分頁新增「本週得分排名」：目前得分和預估最終得分，標出中位數分界", false], ["聯盟總表：點預估戰績，看剩下每週預估贏誰、輸誰", false], ["本週對戰拿掉每天人數表（和剩餘賽程重複）", false], ["本週對戰：點每天得分的括號，看每位球員實際和預估差多少", false], ["新增「本週對戰」：每天兩隊有比賽的人數、每天實際得分和預估差多少、預估最終得分", false], ["新增「更新紀錄」分頁", false], ["「本週剩下每天」改名「剩餘賽程」", false], ["「今天的比賽」改成你和對手左右排", false], ["新增「季後賽賽程」：每位球員在季後賽各輪有幾場", false], ["新增「聯盟動態」：最近 3 天各隊撿人丟人，好球員被丟掉時標「可以搶」", false], ["新增「今天的比賽」：每人開打時間（台灣時間）、今天得分，DTD 先發開打前提醒", false], ["最上面改回淺色卡片，勝率和預估最終得分移到本週對決", false], ["對手主力括號拿掉「平均」兩字", false], ["改用「夜間球館」配色", false], ["整合重複功能：分頁減為戰況／陣容／自由球員／聯盟，聯盟總表合併季後賽機率", false], ["新增本週勝率、點球員名字看最近比賽與新聞、標出有重要新聞的球員", false], ["新增下週預覽、撿人排程、傷兵預計回歸日、季後賽機率", false], ["每週增補上限改成依本週 NBA 比賽日數計算", false], ["用電腦打開時自動變成寬版", false], ["加上主畫面圖示", false], ["新增交易分頁（之後刪除）", false], ["自由球員分頁顯示 waiver 順位", false], ["刪除聯盟排名分頁，新增各隊陣容判斷（核心、判斷、對你）", false], ["刪除傷兵分頁，新增球隊比較分頁", false], ["傷況標籤改成 DTD、OUT 等英文代號", false], ["自由球員：waiver 標籤顯示在名字後面，名字顏色跟判斷一致", false], ["陣容與自由球員表格可以點標題排序", false], ["自由球員獨立成分頁，並加上自由球員專用的判斷", false], ["陣容評估的球員名字不換行", false], ["陣容評估加上本週賽程、下週場數、判斷三欄，表格可左右滑", false], ["陣容表格改成陣容評估：加上位置、去年平均、持有率，近 7 場用顏色標示好壞", false], ["陣容表格拿掉 NBA 球隊名稱", false], ["加入即時版日報網頁", false]];
+const CHANGES = [["球員比較：按「我的球員 vs 對手球員」時，A 的選單只列你的球員，B 只列對手的球員", false], ["球員比較的快速選擇「我的主力 vs 對手主力」改名為「我的球員 vs 對手球員」", false], ["戰況分頁新增「最佳先發建議」：只在能上場超過 10 人的日子出現，排出最好的先發和位置，並對照 ESPN 要換誰", false], ["球員比較升級：2 到 4 人、快速選擇、各處一鍵加入比較、本週／下週預估總分、賽程、細項數據、穩定度、結論並排；新增交易試算", false], ["整合重複功能：撿人排程併進補強建議（本週先撿＋長期換人）、剩餘賽程併進本週對戰、表格判斷欄改用該不該留的結論", false], ["陣容分頁新增「補強建議」卡片：建議換誰、6 位推薦球員（賽程、角色、Waiver/FA 標籤和說明）", false], ["主畫面縮圖改成 P 字籃球（深色底、橘色外框）", false], ["點球員：該不該留加上適配性（球權分配、球風和球隊節奏、教練的信任度）", false], ["點球員：分析未來 5 場賽程偏軟還是偏硬（依對手勝率、連兩天）", false], ["更新標記：每個更新的地方有「✓ 確認」按鈕", false], ["「撿人排程」從戰況分頁移到陣容分頁", false], ["點球員：今年比去年差 5 分以上時，分析會不會反彈", false], ["自由球員分頁新增搜尋欄（名字、NBA 球隊、位置）", false], ["撿人排程：本週額度用完時也顯示「如果還有額度」的參考排程", false], ["球員比較加上最近 10 場每場得分折線圖", false], ["新增「球員比較」分頁：選兩位球員並排比較各項數據", false], ["今天要做的事、撿人排程、下週預覽裡提到的球員也可以點開", false], ["該不該留的建議裡提到的球員也可以點開", false], ["該不該留：去年明顯比較好的球員先建議觀察，不急著換掉", false], ["點球員名字：分析你的球員該不該留、自由球員值不值得撿", false], ["刪除陣容分頁的「季後賽賽程」", false], ["陣容、自由球員、各隊陣容表格新增球隊隊徽", false], ["新增上場分鐘變化（陣容、自由球員表格）、熱門撿人、連兩天比賽提醒、每週得分走勢圖", false], ["修正本週得分排名：排序時名次和中位數虛線跟著順序", false], ["聯盟分頁新增「本週得分排名」：目前得分和預估最終得分，標出中位數分界", false], ["聯盟總表：點預估戰績，看剩下每週預估贏誰、輸誰", false], ["本週對戰拿掉每天人數表（和剩餘賽程重複）", false], ["本週對戰：點每天得分的括號，看每位球員實際和預估差多少", false], ["新增「本週對戰」：每天兩隊有比賽的人數、每天實際得分和預估差多少、預估最終得分", false], ["新增「更新紀錄」分頁", false], ["「本週剩下每天」改名「剩餘賽程」", false], ["「今天的比賽」改成你和對手左右排", false], ["新增「季後賽賽程」：每位球員在季後賽各輪有幾場", false], ["新增「聯盟動態」：最近 3 天各隊撿人丟人，好球員被丟掉時標「可以搶」", false], ["新增「今天的比賽」：每人開打時間（台灣時間）、今天得分，DTD 先發開打前提醒", false], ["最上面改回淺色卡片，勝率和預估最終得分移到本週對決", false], ["對手主力括號拿掉「平均」兩字", false], ["改用「夜間球館」配色", false], ["整合重複功能：分頁減為戰況／陣容／自由球員／聯盟，聯盟總表合併季後賽機率", false], ["新增本週勝率、點球員名字看最近比賽與新聞、標出有重要新聞的球員", false], ["新增下週預覽、撿人排程、傷兵預計回歸日、季後賽機率", false], ["每週增補上限改成依本週 NBA 比賽日數計算", false], ["用電腦打開時自動變成寬版", false], ["加上主畫面圖示", false], ["新增交易分頁（之後刪除）", false], ["自由球員分頁顯示 waiver 順位", false], ["刪除聯盟排名分頁，新增各隊陣容判斷（核心、判斷、對你）", false], ["刪除傷兵分頁，新增球隊比較分頁", false], ["傷況標籤改成 DTD、OUT 等英文代號", false], ["自由球員：waiver 標籤顯示在名字後面，名字顏色跟判斷一致", false], ["陣容與自由球員表格可以點標題排序", false], ["自由球員獨立成分頁，並加上自由球員專用的判斷", false], ["陣容評估的球員名字不換行", false], ["陣容評估加上本週賽程、下週場數、判斷三欄，表格可左右滑", false], ["陣容表格改成陣容評估：加上位置、去年平均、持有率，近 7 場用顏色標示好壞", false], ["陣容表格拿掉 NBA 球隊名稱", false], ["加入即時版日報網頁", false]];
 const changesPane = () => `<div class="pane" id="p8"><section class="card">
     <h2>更新紀錄 <small>目前 v${CHANGES.length}</small></h2>
     ${CHANGES.map(([t, trial], i) => `<div class="move chg"><b class="ver">v${CHANGES.length - i}</b><span>${esc(t)}${trial ? '<span class="wv">試做中</span>' : ""}</span></div>`).join("")}
@@ -1119,14 +1127,16 @@ function comparePane(D, A) {
   const presets = [
     A.worst && top3[0] ? ["我最弱 vs 最佳自由球員", [A.worst.id, top3[0].id]] : null,
     A.worst && top3.length >= 2 ? ["我最弱 vs 前 3 名自由球員", [A.worst.id, ...top3.map((f) => f.id)]] : null,
-    mine[0] && oppTop ? ["我的主力 vs 對手主力", [mine[0].id, oppTop.id]] : null,
+    mine[0] && oppTop ? ["我的球員 vs 對手球員", [mine[0].id, oppTop.id], "mvo"] : null,
     top3.length >= 2 ? ["前 3 名自由球員", top3.map((f) => f.id)] : null,
   ].filter(Boolean);
   const others = list.filter((p) => p.team && p.team.id !== D.me.id);
   return `<div class="pane" id="p9"><section class="card${nw("cmp2")}">
     <h2>球員比較 <small>2 到 4 人，輸入名字或用下面的快速選擇</small></h2>
     <datalist id="plist">${list.map((p) => `<option value="${esc(cmpLabel(p))}"></option>`).join("")}</datalist>
-    <div class="presets">${presets.map(([n, ids]) => `<button type="button" class="preset" data-ids="${ids.join(",")}">${esc(n)}</button>`).join("")}</div>
+    <datalist id="plistMe">${list.filter((p) => p.team && p.team.id === D.me.id).map((p) => `<option value="${esc(cmpLabel(p))}"></option>`).join("")}</datalist>
+    <datalist id="plistOpp">${list.filter((p) => p.team && p.team.id === D.opp.id).map((p) => `<option value="${esc(cmpLabel(p))}"></option>`).join("")}</datalist>
+    <div class="presets">${presets.map(([n, ids, mode]) => `<button type="button" class="preset" data-ids="${ids.join(",")}" data-mode="${mode || ""}">${esc(n)}</button>`).join("")}</div>
     <div id="cmpInputs"></div>
     <div id="cmpOut"></div>
   </section>
@@ -1206,21 +1216,25 @@ function compareTable(D, ps) {
 function drawCompare(D) {
   const list = allPlayers(D), ids = cmpIds(D), ps = ids.map((id) => list.find((p) => p.x.id === id)).filter(Boolean);
   const inBox = $("#cmpInputs"); if (!inBox) return;
-  inBox.innerHTML = `<div class="cmpin2">${ps.map((p, i) => `<label><span><i class="dot" style="background:${CMP_COLORS[i]}"></i>球員 ${"ABCD"[i]}</span>
-      <span class="row2"><input id="cmp${i}" list="plist" value="${esc(cmpLabel(p))}" autocomplete="off">${ps.length > 2 ? `<button type="button" class="rm" data-rm="${i}" aria-label="移除">✕</button>` : ""}</span></label>`).join("")}
+  const mvo = store("cmpMode") === "mvo"; // 我的球員 vs 對手球員：A 只列你的球員，其他只列對手的球員
+  const listFor = (i) => (mvo ? (i === 0 ? "plistMe" : "plistOpp") : "plist");
+  const tag = (i) => (mvo ? (i === 0 ? `（${esc(D.me.name)}）` : `（${esc(D.opp.name)}）`) : "");
+  inBox.innerHTML = `<div class="cmpin2">${ps.map((p, i) => `<label><span><i class="dot" style="background:${CMP_COLORS[i]}"></i>球員 ${"ABCD"[i]}${tag(i)}</span>
+      <span class="row2">${mvo ? `<select id="cmp${i}">${(i === 0 ? D.myRoster : D.oppRoster).slice().sort((a, b) => b.proj - a.proj).map((x) => `<option value="${x.id}"${x.id === p.x.id ? " selected" : ""}>${esc(x.name)}（${f1(x.proj)}）</option>`).join("")}</select>` : `<input id="cmp${i}" list="${listFor(i)}" value="${esc(cmpLabel(p))}" autocomplete="off">`}${ps.length > 2 ? `<button type="button" class="rm" data-rm="${i}" aria-label="移除">✕</button>` : ""}</span></label>`).join("")}
     ${ps.length < 4 ? '<button type="button" id="cmpAdd" class="preset">＋ 加一人</button>' : ""}</div>`;
   const find = (v) => list.find((p) => cmpLabel(p) === v) || list.find((p) => p.x.name.toLowerCase() === v.trim().toLowerCase());
   ps.forEach((p, i) => { const el = $("#cmp" + i);
+    if (el.tagName === "SELECT") { el.addEventListener("change", () => { const n = [...ids]; n[i] = Number(el.value); setCmpIds([...new Set(n)]); drawCompare(D); }); return; }
     const go = () => { const q = find(el.value); if (q && q.x.id !== ids[i]) { const n = [...ids]; n[i] = q.x.id; setCmpIds([...new Set(n)]); drawCompare(D); } };
     el.addEventListener("change", go); el.addEventListener("input", () => { if (find(el.value)) go(); }); el.addEventListener("focus", () => el.select()); });
   inBox.querySelectorAll("[data-rm]").forEach((b) => b.addEventListener("click", () => { const n = ids.filter((_, j) => j !== Number(b.dataset.rm)); setCmpIds(n); drawCompare(D); }));
-  const add = $("#cmpAdd"); if (add) add.addEventListener("click", () => { const next = D.fas.find((f) => !ids.includes(f.id) && !f.out); if (next) { setCmpIds([...ids, next.id]); drawCompare(D); } });
+  const add = $("#cmpAdd"); if (add) add.addEventListener("click", () => { const pool = mvo ? [...D.oppRoster].sort((a, b) => b.proj - a.proj) : D.fas; const next = pool.find((f) => !ids.includes(f.id) && !f.out); if (next) { setCmpIds([...ids, next.id]); drawCompare(D); } });
   $("#cmpOut").innerHTML = compareTable(D, ps);
   drawCmpChart(D, ps);
 }
 function setupCompare(D) {
   if (!$("#cmpInputs")) return;
-  document.querySelectorAll(".preset[data-ids]").forEach((b) => b.addEventListener("click", () => { setCmpIds(b.dataset.ids.split(",").map(Number)); drawCompare(D); }));
+  document.querySelectorAll(".preset[data-ids]").forEach((b) => b.addEventListener("click", () => { store("cmpMode", b.dataset.mode || ""); setCmpIds(b.dataset.ids.split(",").map(Number)); drawCompare(D); }));
   drawCompare(D);
   setupTrade(D);
 }
@@ -1521,6 +1535,33 @@ function openFuture(ti, p) {
     </table></div>
     <p class="note">預估是每人「今年平均和近 15 場各半」，依位置排出最好的 ${D.seats.length} 人。</p>`;
 }
+
+// ---------- 最佳先發建議：只在當天有比賽、能上場的人超過先發名額時才建議 ----------
+function lineupCard(D, A) {
+  const days = A.days.filter((d) => D.myRoster.filter((x) => x.games.has(d.p) && !x.out).length > D.seats.length);
+  if (!days.length) return "";
+  const order = (s) => SLOT_ORDER.indexOf(s);
+  const blocks = days.map((d) => {
+    const playing = D.myRoster.filter((x) => x.games.has(d.p) && !x.out);
+    const lu = bestLineup(playing, D.seats), ids = new Set(lu.map((x) => x.id));
+    const sit = playing.filter((x) => !ids.has(x.id)).sort((a, b) => b.proj - a.proj);
+    const slots = D.dailySlots[d.p] || {}, onEspn = (x) => slots[x.id] != null && slots[x.id] !== BENCH && slots[x.id] !== IR;
+    const toStart = lu.filter((x) => !onEspn(x)), toSit = sit.filter(onEspn);
+    const ok = !toStart.length && !toSit.length;
+    const rows = [...lu].sort((a, b) => order(lu.seatOf.get(a)) - order(lu.seatOf.get(b)) || b.proj - a.proj);
+    return `<div class="lu">
+      <div class="luhead"><b>${d.label}</b><span class="sub">${playing.length} 人能上場，先發只有 ${D.seats.length} 個位置</span>${ok ? '<span class="atag ok">ESPN 已經排好</span>' : '<span class="atag bad">要調整</span>'}</div>
+      ${ok ? "" : `<p class="warnline">${toStart.length ? `換上先發：${toStart.map((x) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>（${f1(x.proj)}）`).join("、")}` : ""}${toStart.length && toSit.length ? "；" : ""}${toSit.length ? `移到板凳：${toSit.map((x) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>（${f1(x.proj)}）`).join("、")}` : ""}</p>`}
+      <div class="lugrid">${rows.map((x) => `<span class="luslot"><i>${SLOT_LABEL[lu.seatOf.get(x)] || ""}</i><span class="pname" data-pid="${x.id}">${esc(x.name)}</span><small class="sub">${f1(x.proj)}</small></span>`).join("")}</div>
+      <p class="sub" style="margin:6px 0 0">坐板凳：${sit.map((x) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>（${f1(x.proj)}）`).join("、")}</p>
+    </div>`;
+  });
+  return `<section class="card${nw("lineup")}">
+    <h2>最佳先發建議 <small>只列出能上場超過 ${D.seats.length} 人的日子</small></h2>
+    ${blocks.join("")}
+    <p class="note">依預估分數（今年平均和近 15 場各半）由高到低，照位置限制排出最好的 ${D.seats.length} 人。OUT 和傷兵名單的人不算。「要調整」是跟 ESPN 上那天目前的先發比較；ESPN 要在當天比賽開打前改才有效。</p>
+  </section>`;
+}
 let activeTab = store("tab") || "p1";
 function render(D, A) {
   const LK = linkNames(D); window.LKN = LK; // 給增補建議的文字用
@@ -1573,7 +1614,7 @@ function render(D, A) {
     <button role="tab" data-pane="p8">更新紀錄</button>
   </nav>
 
-  <div class="pane" id="p1">${todayCard(D, A)}${weekBattle(D, A)}
+  <div class="pane" id="p1">${todayCard(D, A)}${lineupCard(D, A)}${weekBattle(D, A)}
   <section class="card">
       <h2>本週對決 <small>${esc(D.me.name)} vs ${esc(D.opp.name)}</small></h2>
       <table class="vs">
