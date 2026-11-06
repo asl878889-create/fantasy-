@@ -96,20 +96,19 @@ def make_fa_verdict(worst):
 
     def verdict(x):
         a, l7, ly = f(x.avg), f(x.last7), f(x.last_year)
-        wv = "（在 waiver，要等處理才拿得到）" if getattr(x, "status", None) == "WAIVERS" else ""
         if x.injury == "DAY_TO_DAY":
-            return "mid", f"每日觀察中，撿之前先確認能不能上場。今年 {a}。{wv}"
+            return "mid", f"每日觀察中，撿之前先確認能不能上場。今年 {a}。"
         if worst and x.proj > worst.proj + 3:
             if x.week_games == 0:
-                return "mid", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，但本週沒比賽了，可以下週再撿。{wv}"
-            return "good", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，本週還有 {x.week_games} 場，值得撿。{wv}"
+                return "mid", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，但本週沒比賽了，可以下週再撿。"
+            return "good", f"比你的 {worst.name}（今年 {f(worst.avg)}）好，本週還有 {x.week_games} 場，值得撿。"
         if x.last7 is not None and x.last7 >= x.avg + 5:
-            return "good", f"近 7 場 {l7}，比今年 {a} 高，手感正熱，可以觀察。{wv}"
+            return "good", f"近 7 場 {l7}，比今年 {a} 高，手感正熱，可以觀察。"
         if x.last7 is not None and x.last7 <= x.avg - 5:
-            return "bad", f"近 7 場 {l7}，比今年 {a} 低，先不要撿。{wv}"
+            return "bad", f"近 7 場 {l7}，比今年 {a} 低，先不要撿。"
         if x.last_year is not None and x.last_year >= x.avg + 5:
-            return "mid", f"去年 {ly}，今年 {a} 還沒回到水準，有反彈空間。{wv}"
-        return "mute", f"跟你現有的人差不多，不急著撿。{wv}"
+            return "mid", f"去年 {ly}，今年 {a} 還沒回到水準，有反彈空間。"
+        return "mute", f"跟你現有的人差不多，不急著撿。"
     return verdict
 
 

@@ -86,6 +86,9 @@ tr.me td { font-weight: 700; color: var(--accent); }
 th.sortable { cursor: pointer; color: var(--accent); text-decoration: underline dotted; text-underline-offset: 3px; }
 th.sortable::after { content: " ⇅"; font-size: 11px; opacity: .6; }
 th.sortable.on::after { content: " ▼"; opacity: 1; }
+.wv { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--warn-bg); color: var(--warn); margin-left: 4px; white-space: nowrap; font-weight: 600; }
+td.name.core { color: var(--accent); font-weight: 700; } td.name.good { color: var(--ok); font-weight: 700; }
+td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(--bad); font-weight: 700; } td.name.mute { color: var(--muted); }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -317,16 +320,15 @@ function verdict(x, A) {
 
 function faVerdict(f, A) {
   const a = f1(f.avg), l7 = f1(f.last7), ly = f1(f.lastYear), w = A.worst;
-  const wv = f.status === "WAIVERS" ? "（在 waiver，要等處理才拿得到）" : "";
-  if (f.injury === "DAY_TO_DAY") return ["mid", `每日觀察中，撿之前先確認能不能上場。今年 ${a}。${wv}`];
+  if (f.injury === "DAY_TO_DAY") return ["mid", `每日觀察中，撿之前先確認能不能上場。今年 ${a}。`];
   if (w && f.proj > w.proj + 3) {
-    if (f.weekGames === 0) return ["mid", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，但本週沒比賽了，可以下週再撿。${wv}`];
-    return ["good", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，本週還有 ${f.weekGames} 場，值得撿。${wv}`];
+    if (f.weekGames === 0) return ["mid", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，但本週沒比賽了，可以下週再撿。`];
+    return ["good", `比你的 ${w.name}（今年 ${f1(w.avg)}）好，本週還有 ${f.weekGames} 場，值得撿。`];
   }
-  if (f.last7 != null && f.last7 >= f.avg + 5) return ["good", `近 7 場 ${l7}，比今年 ${a} 高，手感正熱，可以觀察。${wv}`];
-  if (f.last7 != null && f.last7 <= f.avg - 5) return ["bad", `近 7 場 ${l7}，比今年 ${a} 低，先不要撿。${wv}`];
-  if (f.lastYear != null && f.lastYear >= f.avg + 5) return ["mid", `去年 ${ly}，今年 ${a} 還沒回到水準，有反彈空間。${wv}`];
-  return ["mute", `跟你現有的人差不多，不急著撿。${wv}`];
+  if (f.last7 != null && f.last7 >= f.avg + 5) return ["good", `近 7 場 ${l7}，比今年 ${a} 高，手感正熱，可以觀察。`];
+  if (f.last7 != null && f.last7 <= f.avg - 5) return ["bad", `近 7 場 ${l7}，比今年 ${a} 低，先不要撿。`];
+  if (f.lastYear != null && f.lastYear >= f.avg + 5) return ["mid", `去年 ${ly}，今年 ${a} 還沒回到水準，有反彈空間。`];
+  return ["mute", `跟你現有的人差不多，不急著撿。`];
 }
 const limitText = (D) => { const l = D.acq.matchupAcquisitionLimit; return l > 0 ? `聯盟規定每${D.acq.matchupLimitPerScoringPeriod ? "天" : "週"}最多加 ${l} 人。` : ""; };
 
@@ -364,8 +366,8 @@ function render(D, A) {
   const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
   const standings = [...D.teams].sort((a, b) => b.record.overall.wins - a.record.overall.wins || a.record.overall.losses - b.record.overall.losses || b.record.overall.pointsFor - a.record.overall.pointsFor);
   const HEAD = `<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
-  const row = (x, slot, v) => `<tr>
-    <td class="slot">${esc(slot)}</td><td>${esc(x.name)}${inj(x)}</td>
+  const row = (x, slot, v, fa) => `<tr>
+    <td class="slot">${esc(slot)}</td><td class="${fa ? "name " + v[0] : ""}">${esc(x.name)}${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
     <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
     <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
     <td class="n">${D.nextWeek.filter((p) => x.games.has(p)).length} 場</td>
@@ -425,7 +427,7 @@ function render(D, A) {
     <h2>自由球員 <small>本週已加 ${A.adds} 人</small></h2>
     <div class="scroll"><table class="roster" id="t-fa">
       ${HEAD}
-      ${A.faList.map((f) => row(f, f.pos, faVerdict(f, A))).join("")}
+      ${A.faList.map((f) => row(f, f.pos, faVerdict(f, A), true)).join("")}
     </table></div>
     <p class="note">依預估分數排序，位置欄是球員的主要位置。${A.worst ? `判斷是跟你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）比較。` : ""}${limitText(D)}表格可以左右滑。</p>
   </section></div>
