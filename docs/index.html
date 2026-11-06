@@ -136,8 +136,13 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
 const LEAGUE_ID = 406470928;
 const SEASON = 2027;
 const DEFAULT_TEAM = "Podcast P";
-// 聯盟每週最多可以加幾個人（ESPN 回傳的設定值不準，所以手動填；null = 不顯示上限）
-const WEEKLY_ADD_LIMIT = null;
+// 每週增補上限 = 這週有 NBA 比賽的天數 × 每個比賽日的額度（ESPN 設定：matchupAcquisitionLimit，按比賽日累計）
+function weeklyLimit(D) {
+  const per = D.acq.matchupAcquisitionLimit;
+  if (!(per > 0)) return null;
+  if (!D.acq.matchupLimitPerScoringPeriod) return per;
+  return per * D.weekPeriods.filter((p) => D.gameDays.has(p)).length;
+}
 const BASE = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/${SEASON}`;
 const LEAGUE = `${BASE}/segments/0/leagues/${LEAGUE_ID}`;
 const BENCH = 12, IR = 13;
@@ -274,7 +279,8 @@ async function load(teamPick) {
     .sort((a, b) => b.proj - a.proj);
 
   const nextWeek = weekPeriods.map((p) => p + 7);
-  return { lg, teams, me, opp, period, week, base, monday, remaining, nextWeek, seats, myRoster, oppRoster,
+  const gameDays = new Set(Object.values(teamGames).flatMap((g) => [...g]));
+  return { lg, teams, me, opp, period, week, base, monday, remaining, nextWeek, weekPeriods, gameDays, seats, myRoster, oppRoster,
     dailySlots, fas, rosters, weekScores, myScore: pts(mySide), oppScore: pts(oppSide), acq: lg.settings.acquisitionSettings };
 }
 
@@ -327,7 +333,7 @@ function analyse(D) {
     todos.push(["ok", "建議", `可以考慮用 ${f.name} 換掉 ${worst.name}`,
       `${f.name} 平均 ${f1(f.avg)}、近 7 場 ${f1(f.last7)}、去年 ${f1(f.lastYear)}，本週還有 ${f.weekGames} 場；` +
       `${worst.name} 平均 ${f1(worst.avg)}、近 7 場 ${f1(worst.last7)}。本週你已經加了 ${adds} 人` +
-      (WEEKLY_ADD_LIMIT ? `（每週最多 ${WEEKLY_ADD_LIMIT} 人，還可以加 ${Math.max(0, WEEKLY_ADD_LIMIT - adds)} 人）` : "") + "。"]);
+      (weeklyLimit(D) ? `（本週上限 ${weeklyLimit(D)} 人，還可以加 ${Math.max(0, weeklyLimit(D) - adds)} 人）` : "") + "。"]);
   }
 
   const threats = D.oppRoster.filter((x) => !x.out && [...x.games].some((g) => remSet.has(g)))
@@ -392,7 +398,7 @@ function faVerdict(f, A) {
   if (f.lastYear != null && f.lastYear >= f.avg + 5) return ["mid", `去年 ${ly}，今年 ${a} 還沒回到水準，有反彈空間。`];
   return ["mute", `跟你現有的人差不多，不急著撿。`];
 }
-const limitText = () => WEEKLY_ADD_LIMIT ? `聯盟規定每週最多加 ${WEEKLY_ADD_LIMIT} 人。` : "";
+const limitText = (D) => { const l = weeklyLimit(D); return l ? `本週增補上限 ${l} 人（這週有 ${l / D.acq.matchupAcquisitionLimit} 天有 NBA 比賽，每個比賽日 ${D.acq.matchupAcquisitionLimit} 人）。` : ""; };
 
 
 // 點「今年 / 近7場 / 去年」標題：由高到低排序；再點一次恢復原本順序
@@ -545,7 +551,7 @@ function render(D, A) {
   </div>
 
   <div class="pane" id="p5"><section class="card">
-    <h2>自由球員 <small>本週已加 ${A.adds} 人</small></h2>
+    <h2>自由球員 <small>本週已加 ${A.adds} 人${weeklyLimit(D) ? ` / 上限 ${weeklyLimit(D)} 人` : ""}</small></h2>
     ${(() => { const order = [...D.teams].filter((t) => t.waiverRank).sort((a, b) => a.waiverRank - b.waiverRank);
       return D.me.waiverRank ? `<div class="wbox"><span>你的 waiver 順位</span><span class="big">第 ${D.me.waiverRank} 順位</span><span class="sub">（共 ${order.length} 隊，數字越小越先拿到）</span>
       <div class="order">${order.map((t) => `<span>${t.id === D.me.id ? `<b>${t.waiverRank}. ${esc(t.name)}</b>` : `${t.waiverRank}. ${esc(t.name)}`}</span>`).join("")}</div></div>` : ""; })()}
@@ -553,7 +559,7 @@ function render(D, A) {
       ${HEAD}
       ${A.faList.map((f) => row(f, f.pos, faVerdict(f, A), true)).join("")}
     </table></div>
-    <p class="note">依預估分數排序，位置欄是球員的主要位置。${A.worst ? `判斷是跟你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）比較。` : ""}${limitText()}表格可以左右滑。</p>
+    <p class="note">依預估分數排序，位置欄是球員的主要位置。${A.worst ? `判斷是跟你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）比較。` : ""}${limitText(D)}表格可以左右滑。</p>
   </section></div>
 
   <div class="pane" id="p6">
