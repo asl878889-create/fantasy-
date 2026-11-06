@@ -107,6 +107,10 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .wbox .order { font-size: 12px; color: var(--muted); width: 100%; }
 .wbox .order b { color: var(--accent); }
 .wbox .order span { white-space: nowrap; margin-right: 12px; display: inline-block; }
+.deal { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.dline { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.deal p { margin: 6px 0 0; }
+.trade { min-width: 600px; } .trade td.tname { white-space: nowrap; } .trade td.big { font-weight: 800; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -347,7 +351,7 @@ function analyse(D) {
   teamViews.forEach((v) => (v.core = D.rosters[v.t.id].filter((x) => verdict(x, v)[0] === "core").length));
   teamViews.sort((a, b) => (b.t.id === D.opp.id) - (a.t.id === D.opp.id) || b.power - a.power);
   teamViews.forEach((v) => (v.report = teamReport(v, D, teamViews)));
-  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews };
+  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews, trade: tradeAnalysis(D) };
 }
 
 const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
@@ -403,6 +407,41 @@ function setupSort() {
     }));
     if (sortState[table.id] != null) applySort(table);
   });
+}
+
+// 交易分析：你的高點球員 vs 別隊的低點球員
+// 「兩季平均」=（今年 + 去年）/ 2，當作球員比較實在的水準
+function tradeAnalysis(D) {
+  const base = (x) => (x.avg + x.lastYear) / 2;
+  const owner = {};
+  for (const t of D.teams) for (const x of D.rosters[t.id]) owner[x.id] = t;
+  const sell = D.myRoster.filter((x) => !x.out && x.lastYear != null && x.avg > 0)
+    .map((x) => Object.assign(Object.create(x), { gap: x.avg - x.lastYear, hot: (x.last7 ?? x.avg) - x.avg }))
+    .filter((x) => x.gap >= 5 || (x.gap >= 2 && x.hot >= 6))
+    .sort((a, b) => b.gap - a.gap);
+  const buy = D.teams.filter((t) => t.id !== D.me.id).flatMap((t) => D.rosters[t.id])
+    .filter((x) => !x.out && x.lastYear != null && x.lastYear >= 25 && x.avg > 0)
+    .map((x) => Object.assign(Object.create(x), { gap: x.lastYear - x.avg, hot: (x.last7 ?? x.avg) - x.avg, team: owner[x.id] }))
+    .filter((x) => x.gap >= 5)
+    .sort((a, b) => (b.gap + Math.max(b.hot, 0)) - (a.gap + Math.max(a.hot, 0)));
+  const ideas = [];
+  for (const b of buy) {
+    for (const m of sell) {
+      // 對方用今年數字看：你給的人今年至少不比他差太多，對方才會覺得公平
+      const fair = m.avg - b.avg;
+      const gain = base(b) - base(m);
+      if (fair >= -3 && gain >= 2) ideas.push({ m, b, fair, gain });
+    }
+  }
+  ideas.sort((a, b) => b.gain - a.gain);
+  const used = new Map(), picks = [];
+  for (const i of ideas) {
+    const n = used.get(i.m.id) || 0;
+    if (n >= 2 || picks.some((p) => p.b.id === i.b.id)) continue;
+    used.set(i.m.id, n + 1); picks.push(i);
+    if (picks.length >= 6) break;
+  }
+  return { sell, buy: buy.slice(0, 12), picks, base };
 }
 
 const openTeams = new Set();
@@ -507,6 +546,7 @@ function render(D, A) {
     <button role="tab" data-pane="p5">自由球員</button>
     <button role="tab" data-pane="p6">球隊比較</button>
     <button role="tab" data-pane="p7">各隊陣容</button>
+    <button role="tab" data-pane="p8">交易</button>
   </nav>
 
   <div class="pane" id="p1"><section class="card">
@@ -564,6 +604,37 @@ function render(D, A) {
       </table></div>
       <p class="note">預設依陣容實力排序。你的隊伍用藍色標示。</p>
     </section>
+  </div>
+
+  <div class="pane" id="p8">
+    ${(() => { const T = A.trade, sgn = (v) => (v >= 0 ? "+" : "") + f1(v); return `
+    <section class="card">
+      <h2>交易建議 <small>賣高買低</small></h2>
+      ${T.picks.length ? T.picks.map(({ m, b, fair, gain }) => `<div class="deal">
+        <div class="dline"><span class="tag bad">送出</span><b>${esc(m.name)}</b><span class="sub">今年 ${f1(m.avg)} · 去年 ${f1(m.lastYear)}</span></div>
+        <div class="dline"><span class="tag ok">換回</span><b>${esc(b.name)}</b><span class="sub">${esc(b.team.name)} · 今年 ${f1(b.avg)} · 去年 ${f1(b.lastYear)}</span></div>
+        <p class="sub">${fair >= 0 ? `用今年數字看，對方拿到的人比較高（${f1(m.avg)} 對 ${f1(b.avg)}），容易答應` : `用今年數字看差不多（${f1(m.avg)} 對 ${f1(b.avg)}），對方應該能接受`}。
+          以兩季平均看，${esc(b.name)} 是 ${f1(T.base(b))}、${esc(m.name)} 是 ${f1(T.base(m))}，你多賺約 <b class="up">${sgn(gain)}</b> 分。${b.hot > 0 ? `${esc(b.name)} 近 7 場 ${f1(b.last7)}，已經有回升跡象。` : ""}</p>
+      </div>`).join("") : '<p class="sub">目前找不到條件夠好的組合：你的高點球員和別隊的低點球員價值對不上。</p>'}
+      <p class="note">「兩季平均」是今年和去年平均的中間值，當作球員比較實在的水準。建議只看數據，交易前記得看傷病新聞和對方陣容需求。</p>
+    </section>
+    <section class="card">
+      <h2>你可以賣在高點的球員 <small>今年比去年好很多</small></h2>
+      ${T.sell.length ? `<div class="scroll"><table class="trade" id="t-sell">
+        <tr><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n sortable">高出</th><th>判斷</th></tr>
+        ${T.sell.map((x) => `<tr><td class="tname">${esc(x.name)}${inj(x)}</td><td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n up">${sgn(x.gap)}</td>
+          <td class="verdict ${x.hot >= 2 ? "good" : x.hot <= -3 ? "bad" : "mid"}">${x.hot >= 2 ? "還在往上，現在賣價值最高。" : x.hot <= -3 ? `近 7 場 ${f1(x.last7)} 已經開始往下，要賣要快。` : "維持在高點附近，可以開始找買家。"}</td></tr>`).join("")}
+      </table></div>` : '<p class="sub">你陣容裡沒有明顯「今年比去年好很多」的球員。</p>'}
+    </section>
+    <section class="card">
+      <h2>別隊低點、有機會反彈的球員 <small>今年比去年差很多</small></h2>
+      ${T.buy.length ? `<div class="scroll"><table class="trade" id="t-buy">
+        <tr><th>球員</th><th>隊伍</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n sortable">落差</th><th>判斷</th></tr>
+        ${T.buy.map((x) => `<tr><td class="tname">${esc(x.name)}${inj(x)}</td><td class="tname sub">${esc(x.team.name)}</td><td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n down">-${f1(x.gap)}</td>
+          <td class="verdict ${x.hot >= 3 ? "good" : x.hot <= -3 ? "bad" : "mid"}">${x.hot >= 3 ? `近 7 場 ${f1(x.last7)} 已經回升，趁還沒漲回去先買。` : x.hot <= -3 ? `近 7 場 ${f1(x.last7)} 還在往下，可以再等等。` : "還在低點盤整，對方可能願意便宜賣。"}</td></tr>`).join("")}
+      </table></div>` : '<p class="sub">目前沒有找到明顯在低點的球員。</p>'}
+      <p class="note">只列出去年平均 25 分以上、現在沒有受傷的球員。點標題可排序，表格可以左右滑。</p>
+    </section>`; })()}
   </div>
 
   <div class="pane" id="p7"><section class="card">
