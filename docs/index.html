@@ -4,27 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#0b0f17">
 <meta name="apple-mobile-web-app-title" content="Fantasy 日報">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Fantasy 日報</title>
 <style>
 :root {
-  --bg: #f3f5f9; --card: #ffffff; --ink: #141a26; --muted: #5b6577; --line: #dfe3ea;
-  --accent: #4f6fe0; --hero: #141a26; --hero-ink: #ffffff; --hero-muted: #b7bfcc;
-  --warn-bg: #fff1d6; --warn: #8a5a00; --ok-bg: #dff5e6; --ok: #17733a; --bad-bg: #fde2e2; --bad: #a32020;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1420; --card: #171e2d; --ink: #e8ecf3; --muted: #98a2b3; --line: #2a3346;
-    --accent: #8ea6ff; --hero: #e9edf4; --hero-ink: #10151f; --hero-muted: #4b5566;
-    --warn-bg: #3a2c10; --warn: #f2c063; --ok-bg: #12321f; --ok: #6fd391; --bad-bg: #3a1616; --bad: #ff8f8f;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0f1420; --card: #171e2d; --ink: #e8ecf3; --muted: #98a2b3; --line: #2a3346;
-  --accent: #8ea6ff; --hero: #e9edf4; --hero-ink: #10151f; --hero-muted: #4b5566;
-  --warn-bg: #3a2c10; --warn: #f2c063; --ok-bg: #12321f; --ok: #6fd391; --bad-bg: #3a1616; --bad: #ff8f8f;
+  /* 夜間球館：深色底、亮橘重點色（不論手機是淺色或深色模式都用這套） */
+  color-scheme: dark;
+  --bg: #0b0f17; --card: #151b26; --ink: #e6eaf2; --muted: #8f9aad; --line: #263043;
+  --accent: #ff8a3d; --hero: #1c2638; --hero-ink: #ffffff; --hero-muted: #8f9aad;
+  --warn-bg: #3a2a10; --warn: #f5c065; --ok-bg: #0f2e1c; --ok: #5fd38a; --bad-bg: #3a1414; --bad: #ff8080;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
