@@ -73,6 +73,16 @@ tr.me td { font-weight: 700; color: var(--accent); }
 .roster td.slot { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .roster td.big { font-weight: 800; font-size: 15px; }
 .up { color: var(--ok); } .down { color: var(--bad); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+.roster { min-width: 820px; }
+.roster th:nth-child(1), .roster td:nth-child(1) { position: sticky; left: 0; width: 46px; min-width: 46px; background: var(--card); z-index: 1; }
+.roster th:nth-child(2), .roster td:nth-child(2) { position: sticky; left: 46px; width: 128px; min-width: 128px; background: var(--card); z-index: 1; }
+.chips { display: inline-flex; gap: 4px; }
+.chip { font-size: 12px; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 5px; color: var(--muted); }
+.chip.on { background: var(--accent); color: var(--card); font-weight: 700; }
+.verdict { font-size: 13px; min-width: 240px; }
+.verdict.core { color: var(--accent); } .verdict.good { color: var(--ok); } .verdict.mid { color: var(--warn); }
+.verdict.bad { color: var(--bad); } .verdict.mute { color: var(--muted); }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -220,7 +230,8 @@ async function load(teamPick) {
     .map((f) => Object.assign(f, { weekGames: [...f.games].filter((g) => remSet.has(g)).length }))
     .sort((a, b) => b.proj - a.proj);
 
-  return { lg, teams, me, opp, period, week, base, monday, remaining, seats, myRoster, oppRoster,
+  const nextWeek = weekPeriods.map((p) => p + 7);
+  return { lg, teams, me, opp, period, week, base, monday, remaining, nextWeek, seats, myRoster, oppRoster,
     dailySlots, fas, myScore: pts(mySide), oppScore: pts(oppSide), acq: lg.settings.acquisitionSettings };
 }
 
@@ -282,6 +293,24 @@ function analyse(D) {
   return { days, todos, adds, worst, ideas, threats, remSet };
 }
 
+const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
+
+// 每位球員一句話的判斷：[顏色, 文字]
+function verdict(x, A) {
+  const a = f1(x.avg), l7 = f1(x.last7), ly = f1(x.lastYear);
+  if (x.out) return ["mute", `${INJURY[x.injury] || "傷兵"}，暫時不會得分。去年 ${ly}，回來後再看狀況。`];
+  if (A.worst && x.id === A.worst.id && A.ideas.length)
+    return ["bad", `今年 ${a}、去年 ${ly}，是陣容最弱的一環，可以換成 ${A.ideas[0].name}（今年 ${f1(A.ideas[0].avg)}）。`];
+  if (x.avg >= 38 || (x.lastYear != null && x.lastYear >= 40 && x.avg >= 33))
+    return ["core", `核心。今年 ${a}、去年 ${ly}，不要動。`];
+  if (x.lastYear == null) return ["good", `新秀或去年沒上場，沒有去年樣本。今年 ${a}、近 7 場 ${l7}。`];
+  if (x.last7 != null && x.last7 >= x.avg + 5) return ["good", `近 7 場 ${l7}，比今年 ${a} 高，手感正熱。`];
+  if (x.last7 != null && x.last7 <= x.avg - 5) return ["bad", `近 7 場 ${l7}，比今年 ${a} 低，要留意。`];
+  if (x.lastYear >= x.avg + 5) return ["mid", `今年 ${a}、去年 ${ly}，還沒回到去年水準，可以再等等。`];
+  if (x.avg >= x.lastYear + 5) return ["good", `今年 ${a} 比去年 ${ly} 好，進步明顯。`];
+  return ["mid", `表現穩定：今年 ${a}、去年 ${ly}。`];
+}
+
 let activeTab = store("tab") || "p1";
 function render(D, A) {
   const diff = D.myScore - D.oppScore;
@@ -334,13 +363,16 @@ function render(D, A) {
   <div class="pane" id="p2">
     <section class="card">
       <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
-      <table class="roster">
-        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th></tr>
-        ${[...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => `<tr>
-          <td class="slot">${SLOT_LABEL[x.lineupSlot] || ""}</td><td>${esc(x.name)}${inj(x)}</td>
-          <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : Math.round(x.own)}</td></tr>`).join("")}
-      </table>
-      <p class="note">位置欄是今天（${A.days[0] ? A.days[0].label : "本日"}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。</p>
+      <div class="scroll"><table class="roster">
+        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>
+        ${[...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => { const v = verdict(x, A); return `<tr>
+          <td class="slot">${SLOT_LABEL[x.lineupSlot] || ""}</td><td class="who">${esc(x.name)}${inj(x)}</td>
+          <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
+          <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
+          <td class="n">${D.nextWeek.filter((p) => x.games.has(p)).length} 場</td>
+          <td class="verdict ${v[0]}">${esc(v[1])}</td></tr>`; }).join("")}
+      </table></div>
+      <p class="note">位置欄是今天（${A.days[0] ? A.days[0].label : "本日"}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。「本週」亮起來的是剩下有比賽的日子。表格可以左右滑。</p>
     </section>
     <section class="card">
       <h2>自由球員推薦 <small>本週已加 ${A.adds} 人</small></h2>

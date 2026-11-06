@@ -67,6 +67,16 @@ tr.me td { font-weight: 700; color: var(--accent); }
 .roster td.slot { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .roster td.big { font-weight: 800; font-size: 15px; }
 .up { color: var(--ok); } .down { color: var(--bad); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+.roster { min-width: 820px; }
+.roster th:nth-child(1), .roster td:nth-child(1) { position: sticky; left: 0; width: 46px; min-width: 46px; background: var(--card); z-index: 1; }
+.roster th:nth-child(2), .roster td:nth-child(2) { position: sticky; left: 46px; width: 128px; min-width: 128px; background: var(--card); z-index: 1; }
+.chips { display: inline-flex; gap: 4px; }
+.chip { font-size: 12px; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 5px; color: var(--muted); }
+.chip.on { background: var(--accent); color: var(--card); font-weight: 700; }
+.verdict { font-size: 13px; min-width: 240px; }
+.verdict.core { color: var(--accent); } .verdict.good { color: var(--ok); } .verdict.mid { color: var(--warn); }
+.verdict.bad { color: var(--bad); } .verdict.mute { color: var(--muted); }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -120,16 +130,19 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     <section class="card">
       <h2>陣容評估 <small>今年 / 近 7 場 / 去年 平均得分</small></h2>
       {% set LABEL = {0:"PG",1:"SG",2:"SF",3:"PF",4:"C",5:"G",6:"F",7:"SG/SF",8:"G/F",9:"PF/C",10:"F/C",11:"UTIL",12:"BN",13:"IR"} %}
-      <table class="roster">
-        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th></tr>
-        {% for p in r.my_roster|sort(attribute='avg', reverse=True)|sort(attribute='lineup_slot') %}
+      <div class="scroll"><table class="roster">
+        <tr><th>位置</th><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>
+        {% for p in r.my_roster|sort(attribute='avg', reverse=True)|sort(attribute='lineup_slot') %}{% set v = verdict(p) %}
         <tr><td class="slot">{{ LABEL.get(p.lineup_slot, "") }}</td><td>{{ p.name }}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"缺陣","DAY_TO_DAY":"每日觀察","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
           <td class="n big">{{ p.avg }}</td>
           <td class="n {{ '' if p.last7 is none else ('up' if p.last7 > p.avg else ('down' if p.last7 < p.avg else '')) }}">{{ p.last7 or "-" }}</td>
-          <td class="n">{{ p.last_year or "-" }}</td><td class="n">{{ "%.0f"|format(p.own) if p.own is not none else "-" }}</td></tr>
+          <td class="n">{{ p.last_year or "-" }}</td><td class="n">{{ "%.1f"|format(p.own) if p.own is not none else "-" }}</td>
+          <td><span class="chips">{% for d in r.remaining %}<span class="chip{{ ' on' if d in p.games }}">{{ day_char[d] }}</span>{% endfor %}</span></td>
+          <td class="n">{{ next_week|select('in', p.games)|list|length }} 場</td>
+          <td class="verdict {{ v[0] }}">{{ v[1] }}</td></tr>
         {% endfor %}
-      </table>
-      <p class="note">位置欄是今天（{{ days[0].label if days else "本日" }}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。</p>
+      </table></div>
+      <p class="note">位置欄是今天（{{ days[0].label if days else "本日" }}）在 ESPN 上的陣容，每天可能不同。近 7 場是<span class="up">綠色</span>代表比今年平均好，<span class="down">紅色</span>代表比較差。「本週」亮起來的是剩下有比賽的日子。表格可以左右滑。</p>
     </section>
     <section class="card">
       <h2>自由球員推薦 <small>本週已加 {{ adds }} 人</small></h2>

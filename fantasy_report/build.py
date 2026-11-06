@@ -62,6 +62,35 @@ def todo_list(r: Report, days, ideas, worst, rest):
     return items
 
 
+INJ = {"OUT": "缺陣", "DAY_TO_DAY": "每日觀察", "SUSPENSION": "禁賽"}
+
+
+def make_verdict(worst, ideas):
+    """每位球員一句話的判斷：(顏色, 文字)。"""
+    f = lambda v: "-" if v is None else f"{v:.1f}"
+
+    def verdict(x):
+        a, l7, ly = f(x.avg), f(x.last7), f(x.last_year)
+        if x.out:
+            return "mute", f"{INJ.get(x.injury, '傷兵')}，暫時不會得分。去年 {ly}，回來後再看狀況。"
+        if worst and x.id == worst.id and ideas:
+            return "bad", f"今年 {a}、去年 {ly}，是陣容最弱的一環，可以換成 {ideas[0].name}（今年 {f(ideas[0].avg)}）。"
+        if x.avg >= 38 or (x.last_year is not None and x.last_year >= 40 and x.avg >= 33):
+            return "core", f"核心。今年 {a}、去年 {ly}，不要動。"
+        if x.last_year is None:
+            return "good", f"新秀或去年沒上場，沒有去年樣本。今年 {a}、近 7 場 {l7}。"
+        if x.last7 is not None and x.last7 >= x.avg + 5:
+            return "good", f"近 7 場 {l7}，比今年 {a} 高，手感正熱。"
+        if x.last7 is not None and x.last7 <= x.avg - 5:
+            return "bad", f"近 7 場 {l7}，比今年 {a} 低，要留意。"
+        if x.last_year >= x.avg + 5:
+            return "mid", f"今年 {a}、去年 {ly}，還沒回到去年水準，可以再等等。"
+        if x.avg >= x.last_year + 5:
+            return "good", f"今年 {a} 比去年 {ly} 好，進步明顯。"
+        return "mid", f"表現穩定：今年 {a}、去年 {ly}。"
+    return verdict
+
+
 def main():
     league_id = int(os.environ.get("ESPN_LEAGUE_ID", "406470928"))
     year = int(os.environ.get("ESPN_SEASON", "2027"))
@@ -77,6 +106,9 @@ def main():
         todos=todo_list(r, days, ideas, worst, rest),
         threats=r.threats(), injuries=r.injuries(), standings=r.standings(),
         adds=r.adds_this_week(r.me.team_id),
+        verdict=make_verdict(worst, ideas),
+        next_week=[p + 7 for p in r.week_periods],
+        day_char={p: r.day_label(p)[1] for p in r.remaining},
         now=dt.datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y-%m-%d %H:%M"),
     )
     out = ROOT / "output" / "report.html"
