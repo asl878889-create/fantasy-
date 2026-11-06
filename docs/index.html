@@ -702,7 +702,7 @@ function render(D, A) {
             const cm = dir && m !== o ? ((m - o) * dir > 0 ? "win" : "lose") : "", co = cm ? (cm === "win" ? "lose" : "win") : "";
             return `<tr><td>${name}</td><td class="n ${cm}">${fmt(m)}</td><td class="n ${co}">${fmt(o)}</td></tr>`; }).join("")}
       </table>
-      ${A.threats.length ? `<p class="sub" style="margin-top:10px">對手主力：${A.threats.map(({ x, n }) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>（平均 ${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
+      ${A.threats.length ? `<p class="sub" style="margin-top:10px">對手主力：${A.threats.map(({ x, n }) => `<span class="pname" data-pid="${x.id}">${esc(x.name)}</span>（${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
       <p class="note">本週勝率和預估最終比分在最上面。<span class="up">綠色</span>是這一項比較好的一方。陣容實力 = 健康球員中今年平均最高的 ${D.seats.length} 人加總；近 7 場實力用近 7 場平均算。剩餘出賽人次是剩下每天能排上先發的人數加總。</p>
     </section>
     <section class="card">
