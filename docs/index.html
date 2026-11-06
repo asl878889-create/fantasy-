@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fantasy 日報">
+<title>Fantasy 日報</title>
+<style>
+:root {
+  --bg: #f3f5f9; --card: #ffffff; --ink: #141a26; --muted: #5b6577; --line: #dfe3ea;
+  --accent: #4f6fe0; --hero: #141a26; --hero-ink: #ffffff; --hero-muted: #b7bfcc;
+  --warn-bg: #fff1d6; --warn: #8a5a00; --ok-bg: #dff5e6; --ok: #17733a; --bad-bg: #fde2e2; --bad: #a32020;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1420; --card: #171e2d; --ink: #e8ecf3; --muted: #98a2b3; --line: #2a3346;
+    --accent: #8ea6ff; --hero: #e9edf4; --hero-ink: #10151f; --hero-muted: #4b5566;
+    --warn-bg: #3a2c10; --warn: #f2c063; --ok-bg: #12321f; --ok: #6fd391; --bad-bg: #3a1616; --bad: #ff8f8f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1420; --card: #171e2d; --ink: #e8ecf3; --muted: #98a2b3; --line: #2a3346;
+  --accent: #8ea6ff; --hero: #e9edf4; --hero-ink: #10151f; --hero-muted: #4b5566;
+  --warn-bg: #3a2c10; --warn: #f2c063; --ok-bg: #12321f; --ok: #6fd391; --bad-bg: #3a1616; --bad: #ff8f8f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; }
+main { max-width: 640px; margin: 0 auto; padding: 16px; }
+.bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.bar select, .bar button { font: inherit; font-size: 14px; padding: 6px 10px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.bar select { flex: 1; min-width: 0; }
+.hero { background: var(--hero); color: var(--hero-ink); border-radius: 16px; padding: 22px 20px; }
+.hero h1 { margin: 0; font-size: 30px; letter-spacing: .5px; }
+.hero .meta { color: var(--hero-muted); font-size: 14px; margin-top: 4px; }
+.score { display: flex; align-items: flex-end; gap: 18px; margin: 18px 0 8px; flex-wrap: wrap; }
+.score .n { font-size: 46px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .who { font-size: 14px; color: var(--hero-muted); margin-top: 4px; }
+.score .vs { color: var(--hero-muted); font-weight: 700; padding-bottom: 22px; }
+.hero hr { border: 0; border-top: 1px solid var(--hero-muted); opacity: .4; margin: 14px 0; }
+.hero p { margin: 6px 0; font-size: 15px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-top: 16px; }
+.card h2 { margin: 0 0 12px; font-size: 19px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.card h2 small { font-size: 13px; color: var(--muted); font-weight: 400; }
+.todo { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin-bottom: 14px; }
+.todo:last-child { margin-bottom: 0; }
+.tag { font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 6px; height: fit-content; white-space: nowrap; }
+.tag.warn { background: var(--warn-bg); color: var(--warn); }
+.tag.ok { background: var(--ok-bg); color: var(--ok); }
+.tag.bad { background: var(--bad-bg); color: var(--bad); }
+.todo b { font-size: 16px; }
+.todo p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.tabs { display: flex; gap: 4px; margin-top: 20px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs button { background: none; border: 0; color: var(--muted); font: inherit; font-weight: 700;
+  padding: 10px 12px; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--accent); border-color: var(--accent); }
+.pane[hidden] { display: none; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.me td { font-weight: 700; color: var(--accent); }
+.day { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.day:last-child { border-bottom: 0; }
+.day .top { display: flex; justify-content: space-between; font-weight: 700; }
+.sub { color: var(--muted); font-size: 13px; }
+.pill { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--bad-bg); color: var(--bad); margin-left: 4px; white-space: nowrap; }
+.msg { text-align: center; padding: 40px 16px; color: var(--muted); }
+footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar">
+    <select id="team" aria-label="選擇隊伍"></select>
+    <button id="refresh">重新整理</button>
+  </div>
+  <div id="app"><div class="msg">正在讀取 ESPN 資料…</div></div>
+  <footer>資料來源：ESPN Fantasy Basketball · 每次打開都即時讀取 · 預估僅供參考</footer>
+</main>
+<script>
+"use strict";
+const LEAGUE_ID = 406470928;
+const SEASON = 2027;
+const DEFAULT_TEAM = "Podcast P";
+const BASE = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/${SEASON}`;
+const LEAGUE = `${BASE}/segments/0/leagues/${LEAGUE_ID}`;
+const BENCH = 12, IR = 13;
+const WEEKDAYS = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"];
+const INJURY = { OUT: "缺陣", DAY_TO_DAY: "每日觀察", SUSPENSION: "禁賽", QUESTIONABLE: "出賽成疑", DOUBTFUL: "可能缺陣", PROBABLE: "可能出賽" };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const r0 = (x) => Math.round(x);
+const f1 = (x) => (x == null ? "-" : (Math.round(x * 10) / 10).toFixed(1));
+
+async function get(url, filter) {
+  const res = await fetch(url, filter ? { headers: { "x-fantasy-filter": JSON.stringify(filter) } } : {});
+  if (!res.ok) throw new Error(`ESPN 回應 ${res.status}`);
+  return res.json();
+}
+const qs = (o) => Object.entries(o).flatMap(([k, v]) => [].concat(v).map((x) => `${k}=${encodeURIComponent(x)}`)).join("&");
+
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+
+// 美東日期（ESPN 的比賽日以美東為準）
+function etToday() {
+  const p = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  const [y, m, d] = p.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d));
+}
+const addDays = (d, n) => new Date(d.getTime() + n * 86400000);
+const weekdayIdx = (d) => (d.getUTCDay() + 6) % 7; // 週一 = 0
+
+function statAvg(pl, id) {
+  const s = (pl.stats || []).find((x) => x.id === id && x.statSourceId === 0);
+  return s && s.appliedAverage ? s.appliedAverage : null;
+}
+
+function toPlayer(pl, lineupSlot, teamGames, starterSlots, abbrev) {
+  const avg = statAvg(pl, "00" + SEASON) || 0;
+  const last15 = statAvg(pl, "02" + SEASON);
+  const injury = pl.injuryStatus || "ACTIVE";
+  return {
+    id: pl.id, name: pl.fullName, team: abbrev[pl.proTeamId] || "FA",
+    slots: (pl.eligibleSlots || []).filter((s) => starterSlots.has(s)),
+    lineupSlot, injury, avg,
+    last7: statAvg(pl, "01" + SEASON), last15,
+    lastYear: statAvg(pl, "00" + (SEASON - 1)),
+    games: teamGames[pl.proTeamId] || new Set(),
+    out: injury === "OUT" || injury === "SUSPENSION" || lineupSlot === IR,
+    proj: last15 != null ? (avg + last15) / 2 : avg,
+  };
+}
+
+// 當天能排上先發的最佳組合（依預估分數由高到低，用擴增路徑配位置）
+function bestLineup(players, seats) {
+  const owner = new Array(seats.length).fill(null);
+  const place = (p, seen) => {
+    for (let i = 0; i < seats.length; i++) {
+      if (p.slots.includes(seats[i]) && !seen.has(i)) {
+        seen.add(i);
+        if (owner[i] === null || place(owner[i], seen)) { owner[i] = p; return true; }
+      }
+    }
+    return false;
+  };
+  [...players].sort((a, b) => b.proj - a.proj).forEach((p) => place(p, new Set()));
+  return owner.filter(Boolean).sort((a, b) => b.proj - a.proj);
+}
+
+async function load(teamPick) {
+  const [lg, sched] = await Promise.all([
+    get(`${LEAGUE}?${qs({ view: ["mSettings", "mTeam", "mRoster", "mMatchupScore"] })}`),
+    get(`${BASE}?view=proTeamSchedules_wl`),
+  ]);
+
+  const abbrev = {}, teamGames = {};
+  for (const t of sched.settings.proTeams) {
+    abbrev[t.id] = t.abbrev;
+    teamGames[t.id] = new Set(Object.keys(t.proGamesByScoringPeriod || {}).map(Number));
+  }
+
+  const counts = lg.settings.rosterSettings.lineupSlotCounts;
+  const seats = [];
+  for (const [k, n] of Object.entries(counts)) {
+    const s = Number(k);
+    if (s !== BENCH && s !== IR) for (let i = 0; i < n; i++) seats.push(s);
+  }
+  const starterSlots = new Set(seats);
+
+  const teams = lg.teams;
+  const me = teams.find((t) => String(t.id) === String(teamPick)) ||
+             teams.find((t) => t.name === DEFAULT_TEAM) || teams[0];
+  const period = lg.scoringPeriodId;
+  const week = lg.status.currentMatchupPeriod;
+  const today = etToday();
+  const base = addDays(today, -period);
+  const monday = addDays(today, -weekdayIdx(today));
+  const weekPeriods = Array.from({ length: 7 }, (_, i) => period - weekdayIdx(today) + i);
+  const remaining = weekPeriods.filter((p) => p >= period);
+
+  const m = lg.schedule.find((x) => x.matchupPeriodId === week &&
+    (x.home.teamId === me.id || (x.away && x.away.teamId === me.id)));
+  const home = m.home.teamId === me.id;
+  const mySide = home ? m.home : m.away, oppSide = home ? m.away : m.home;
+  const opp = teams.find((t) => t.id === oppSide.teamId);
+  const pts = (s) => s.totalPointsLive != null ? s.totalPointsLive : (s.totalPoints || 0);
+
+  const roster = (t) => t.roster.entries.map((e) =>
+    toPlayer(e.playerPoolEntry.player, e.lineupSlotId, teamGames, starterSlots, abbrev));
+  const myRoster = roster(me), oppRoster = roster(opp);
+
+  // 每個剩下的比賽日，ESPN 上你的先發設定
+  const dailySlots = {};
+  await Promise.all(remaining.map(async (p) => {
+    const d = await get(`${LEAGUE}?${qs({ view: "mRoster", scoringPeriodId: p, forTeamId: me.id })}`);
+    const t = d.teams.find((x) => x.id === me.id);
+    dailySlots[p] = Object.fromEntries(t.roster.entries.map((e) => [e.playerId, e.lineupSlotId]));
+  }));
+
+  const faRaw = await get(`${LEAGUE}?${qs({ view: "kona_player_info", scoringPeriodId: period })}`,
+    { players: { filterStatus: { value: ["FREEAGENT", "WAIVERS"] }, limit: 120, sortPercOwned: { sortPriority: 1, sortAsc: false } } });
+  const remSet = new Set(remaining);
+  const fas = faRaw.players.map((x) => toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev))
+    .filter((f) => !f.out && f.avg > 0)
+    .map((f) => Object.assign(f, { weekGames: [...f.games].filter((g) => remSet.has(g)).length }))
+    .sort((a, b) => b.proj - a.proj);
+
+  return { lg, teams, me, opp, period, week, base, monday, remaining, seats, myRoster, oppRoster,
+    dailySlots, fas, myScore: pts(mySide), oppScore: pts(oppSide), acq: lg.settings.acquisitionSettings };
+}
+
+function analyse(D) {
+  const label = (p) => { const d = addDays(D.base, p); return `${WEEKDAYS[weekdayIdx(d)]} ${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
+  const playing = (ros, p) => ros.filter((x) => x.games.has(p) && !x.out);
+  const remSet = new Set(D.remaining);
+  const days = D.remaining.map((p) => {
+    const mine = bestLineup(playing(D.myRoster, p), D.seats);
+    const theirs = bestLineup(playing(D.oppRoster, p), D.seats);
+    const slots = D.dailySlots[p] || {};
+    const isStarter = (id) => slots[id] != null && slots[id] !== BENCH && slots[id] !== IR;
+    const ids = new Set(mine.map((x) => x.id));
+    return {
+      p, label: label(p), mine, theirs,
+      myProj: mine.reduce((s, x) => s + x.proj, 0), oppProj: theirs.reduce((s, x) => s + x.proj, 0),
+      benched: D.myRoster.filter((x) => ids.has(x.id) && !isStarter(x.id)),
+      injured: D.myRoster.filter((x) => isStarter(x.id) && x.out),
+      stream: D.fas.filter((f) => f.games.has(p)).slice(0, 3),
+    };
+  });
+
+  const todos = [];
+  const diff = D.myScore - D.oppScore;
+  for (const d of days) {
+    if (d.benched.length) todos.push(["bad", "要做", `${d.label} 把 ${d.benched.map((x) => x.name).join("、")} 換上先發`, "他們這天有比賽，但 ESPN 上現在排在替補。"]);
+    if (d.injured.length) todos.push(["bad", "要做", `${d.label} 先發有傷兵：${d.injured.map((x) => `${x.name}（${INJURY[x.injury] || x.injury}）`).join("、")}`, "受傷的球員不會得分，請換成健康、當天有比賽的人。"]);
+  }
+  if (!days.some((d) => d.benched.length || d.injured.length))
+    todos.push(["warn", "留意", "本週剩下的先發都排好了", "我逐日讀了 ESPN 的先發：每天有比賽、能排上的人都在先發。"]);
+
+  const myRest = days.reduce((s, d) => s + d.myProj, 0), oppRest = days.reduce((s, d) => s + d.oppProj, 0);
+  const final = diff + myRest - oppRest;
+  todos.push([final >= 0 ? "warn" : "bad", final >= 0 ? "留意" : "要做",
+    `目前${diff >= 0 ? "領先" : "落後"} ${r0(Math.abs(diff))} 分，預估最後${final >= 0 ? "贏" : "輸"} ${r0(Math.abs(final))} 分`,
+    `剩下 ${days.length} 天，預估你再拿 ${r0(myRest)} 分、對手 ${r0(oppRest)} 分（用今年平均和近 15 場各半估算）。`]);
+
+  for (const d of days) {
+    const empty = D.seats.length - d.mine.length;
+    if (empty > 0) todos.push(["ok", "建議", `${d.label} 你只有 ${d.mine.length} 人上場，先發空 ${empty} 格`,
+      `對手這天 ${d.theirs.length} 人。` + (d.stream.length ? `這天有比賽的自由球員：${d.stream.map((f) => `${f.name}（${f.team}，今年 ${f1(f.avg)}）`).join("、")}。` : "")]);
+  }
+
+  const tc = (D.me.transactionCounter || {}).matchupAcquisitionTotals || {};
+  const adds = Number(tc[D.week] || 0);
+  const worst = [...D.myRoster].filter((x) => !x.out).sort((a, b) => a.proj - b.proj)[0];
+  const ideas = worst ? D.fas.filter((f) => f.proj > worst.proj + 3).slice(0, 5) : [];
+  if (ideas.length) {
+    const f = ideas[0], lim = D.acq.matchupAcquisitionLimit;
+    todos.push(["ok", "建議", `可以考慮用 ${f.name} 換掉 ${worst.name}`,
+      `${f.name}（${f.team}）今年 ${f1(f.avg)}、近 7 場 ${f1(f.last7)}、去年 ${f1(f.lastYear)}，本週還有 ${f.weekGames} 場；` +
+      `${worst.name} 今年 ${f1(worst.avg)}、近 7 場 ${f1(worst.last7)}。本週你已經加了 ${adds} 人` +
+      (lim > 0 ? `（聯盟規定每${D.acq.matchupLimitPerScoringPeriod ? "天" : "週"}最多 ${lim} 人）` : "") + "。"]);
+  }
+
+  const threats = D.oppRoster.filter((x) => !x.out && [...x.games].some((g) => remSet.has(g)))
+    .sort((a, b) => b.proj - a.proj).slice(0, 3)
+    .map((x) => ({ x, n: [...x.games].filter((g) => remSet.has(g)).length }));
+  return { days, todos, adds, worst, ideas, threats, remSet };
+}
+
+let activeTab = store("tab") || "p1";
+function render(D, A) {
+  const diff = D.myScore - D.oppScore;
+  const end = addDays(D.monday, 6);
+  const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
+  const rec = (t) => `${t.record.overall.wins}-${t.record.overall.losses}`;
+  const gamesLeft = (x) => [...x.games].filter((g) => A.remSet.has(g)).length;
+  const inj = (x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `<span class="pill">${esc(INJURY[x.injury] || x.injury)}</span>` : "";
+  const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
+  const standings = [...D.teams].sort((a, b) => b.record.overall.wins - a.record.overall.wins || a.record.overall.losses - b.record.overall.losses || b.record.overall.pointsFor - a.record.overall.pointsFor);
+  const slotName = (s) => s === IR ? "傷兵名單" : s === BENCH ? "替補" : "先發";
+
+  $("#app").innerHTML = `
+  <section class="hero">
+    <h1>${esc(D.me.name)} 日報</h1>
+    <div class="meta">更新於 ${esc(now)}（台北時間）</div>
+    <div class="meta">${esc(D.lg.settings.name)} · ESPN H2H 積分 · 第 ${D.week} 週（${D.monday.getUTCMonth() + 1}/${D.monday.getUTCDate()}–${end.getUTCMonth() + 1}/${end.getUTCDate()}）· 戰績 ${rec(D.me)}</div>
+    <div class="score">
+      <div><div class="n">${r0(D.myScore)}</div><div class="who">${esc(D.me.name)}</div></div>
+      <div class="vs">VS</div>
+      <div><div class="n">${r0(D.oppScore)}</div><div class="who">${esc(D.opp.name)}</div></div>
+    </div>
+    <hr>
+    <p><b>${diff >= 0 ? "領先" : "落後"} ${diff >= 0 ? "+" : "-"}${r0(Math.abs(diff))} 分</b> · 剩餘 ${A.days.map((d) => d.label.split(" ")[0]).join("、") || "無"}</p>
+    ${A.threats.length ? `<p>對手主力：${A.threats.map(({ x, n }) => `${esc(x.name)}（平均 ${f1(x.avg)}，${esc(x.team)} 剩 ${n} 場）`).join("、")}</p>` : ""}
+  </section>
+
+  <section class="card">
+    <h2>今天要做的事 <small>依優先順序</small></h2>
+    ${A.todos.map(([c, tag, t, b]) => `<div class="todo"><span class="tag ${c}">${tag}</span><div><b>${esc(t)}</b><p>${esc(b)}</p></div></div>`).join("")}
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-pane="p1">戰況</button>
+    <button role="tab" data-pane="p2">陣容與增補</button>
+    <button role="tab" data-pane="p3">傷兵</button>
+    <button role="tab" data-pane="p4">聯盟排名</button>
+  </nav>
+
+  <div class="pane" id="p1"><section class="card">
+    <h2>剩下每天的上場人數 <small>你 vs 對手</small></h2>
+    ${A.days.map((d) => { const b = benchedIds(d); return `<div class="day">
+      <div class="top"><span>${d.label}</span><span>${d.mine.length} 人 vs ${d.theirs.length} 人</span></div>
+      <div class="sub">預估 ${r0(d.myProj)} vs ${r0(d.oppProj)} 分</div>
+      <div class="sub">你：${d.mine.map((x) => esc(x.name) + (b.has(x.id) ? '<span class="pill">在替補</span>' : "")).join("、") || "沒有人有比賽"}</div>
+      <div class="sub">對手：${d.theirs.map((x) => esc(x.name)).join("、") || "沒有人有比賽"}</div>
+    </div>`; }).join("") || '<p class="sub">本週比賽已經結束。</p>'}
+  </section></div>
+
+  <div class="pane" id="p2">
+    <section class="card">
+      <h2>我的陣容 <small>每場平均 fantasy 分</small></h2>
+      <table>
+        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">本週剩</th></tr>
+        ${[...D.myRoster].sort((a, b) => b.avg - a.avg).map((x) => `<tr><td>${esc(x.name)} <span class="sub">${esc(x.team)}</span>${inj(x)}</td>
+          <td class="n">${f1(x.avg)}</td><td class="n">${f1(x.last7)}</td><td class="n">${f1(x.lastYear)}</td><td class="n">${gamesLeft(x)}</td></tr>`).join("")}
+      </table>
+    </section>
+    <section class="card">
+      <h2>自由球員推薦 <small>本週已加 ${A.adds} 人</small></h2>
+      ${A.ideas.length ? `<table>
+        <tr><th>球員</th><th class="n">今年</th><th class="n">近7場</th><th class="n">去年</th><th class="n">本週剩</th></tr>
+        ${A.ideas.map((f) => `<tr><td>${esc(f.name)} <span class="sub">${esc(f.team)}</span>${inj(f)}</td><td class="n">${f1(f.avg)}</td><td class="n">${f1(f.last7)}</td><td class="n">${f1(f.lastYear)}</td><td class="n">${f.weekGames}</td></tr>`).join("")}
+      </table>
+      <p class="sub">比較對象：你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）。</p>`
+      : '<p class="sub">目前沒有明顯比你陣容更好的自由球員。</p>'}
+    </section>
+  </div>
+
+  <div class="pane" id="p3"><section class="card">
+    <h2>傷兵狀況</h2>
+    ${(() => { const l = D.myRoster.filter((x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL");
+      return l.length ? `<table><tr><th>球員</th><th>狀態</th><th>位置</th></tr>${l.map((x) => `<tr><td>${esc(x.name)} <span class="sub">${esc(x.team)}</span></td><td>${esc(INJURY[x.injury] || x.injury)}</td><td>${slotName(x.lineupSlot)}</td></tr>`).join("")}</table>`
+      : '<p class="sub">目前沒有傷兵。</p>'; })()}
+  </section></div>
+
+  <div class="pane" id="p4"><section class="card">
+    <h2>聯盟排名</h2>
+    <table>
+      <tr><th>#</th><th>隊伍</th><th class="n">戰績</th><th class="n">總得分</th></tr>
+      ${standings.map((t, i) => `<tr class="${t.id === D.me.id ? "me" : ""}"><td>${i + 1}</td><td>${esc(t.name)}</td><td class="n">${rec(t)}</td><td class="n">${r0(t.record.overall.pointsFor)}</td></tr>`).join("")}
+    </table>
+  </section></div>`;
+
+  const show = (id) => {
+    activeTab = id; store("tab", id);
+    document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.pane === id));
+    document.querySelectorAll(".pane").forEach((p) => (p.hidden = p.id !== id));
+  };
+  document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.pane)));
+  show(activeTab);
+}
+
+let busy = false;
+async function run() {
+  if (busy) return;
+  busy = true;
+  $("#refresh").textContent = "讀取中…";
+  try {
+    const pick = new URLSearchParams(location.search).get("team") || store("team");
+    const D = await load(pick);
+    const sel = $("#team");
+    sel.innerHTML = D.teams.map((t) => `<option value="${t.id}"${t.id === D.me.id ? " selected" : ""}>${esc(t.name)}</option>`).join("");
+    render(D, analyse(D));
+  } catch (e) {
+    $("#app").innerHTML = `<div class="msg">讀不到 ESPN 資料：${esc(e.message || e)}<br>請稍後按「重新整理」再試一次。</div>`;
+  } finally {
+    busy = false;
+    $("#refresh").textContent = "重新整理";
+  }
+}
+$("#team").addEventListener("change", (e) => { store("team", e.target.value); history.replaceState(null, "", location.pathname); run(); });
+$("#refresh").addEventListener("click", run);
+// 開著的時候每 2 分鐘自動更新；從背景切回來也會更新
+setInterval(() => { if (!document.hidden) run(); }, 120000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) run(); });
+run();
+</script>
+</body>
+</html>
