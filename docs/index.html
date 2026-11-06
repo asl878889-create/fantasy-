@@ -30,6 +30,14 @@
 body { margin: 0; background: var(--bg); color: var(--ink);
   font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; }
 main { max-width: 640px; margin: 0 auto; padding: 16px; }
+/* 電腦等寬螢幕：自動變寬，比分和今天要做的事並排，表格不用左右滑 */
+@media (min-width: 1000px) {
+  main { max-width: 1240px; padding: 24px; }
+  .top2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .top2 > .card { margin-top: 0; }
+  .tabs button { padding: 12px 18px; font-size: 16px; }
+  .roster td:nth-child(1) { position: static; box-shadow: none; }
+}
 .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
 .bar select, .bar button { font: inherit; font-size: 14px; padding: 6px 10px; border-radius: 8px;
   border: 1px solid var(--line); background: var(--card); color: var(--ink); }
@@ -484,6 +492,7 @@ function render(D, A) {
     <td class="verdict ${v[0]}">${esc(v[1])}</td></tr>`;
 
   $("#app").innerHTML = `
+  <div class="top2">
   <section class="hero">
     <h1>${esc(D.me.name)} 日報</h1>
     <div class="meta">更新於 ${esc(now)}（台北時間）</div>
@@ -502,6 +511,7 @@ function render(D, A) {
     <h2>今天要做的事 <small>依優先順序</small></h2>
     ${A.todos.map(([c, tag, t, b]) => `<div class="todo"><span class="tag ${c}">${tag}</span><div><b>${esc(t)}</b><p>${esc(b)}</p></div></div>`).join("")}
   </section>
+  </div>
 
   <nav class="tabs" role="tablist">
     <button role="tab" data-pane="p1">戰況</button>
