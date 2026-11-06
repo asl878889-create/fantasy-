@@ -117,6 +117,9 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .wbox .order { font-size: 12px; color: var(--muted); width: 100%; }
 .wbox .order b { color: var(--accent); }
 .wbox .order span { white-space: nowrap; margin-right: 12px; display: inline-block; }
+.step { display: grid; grid-template-columns: 26px 1fr; gap: 10px; margin-bottom: 12px; }
+.step .num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: var(--card); font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.step p { margin: 2px 0 0; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -278,9 +281,23 @@ async function load(teamPick) {
     .map((f) => Object.assign(f, { weekGames: [...f.games].filter((g) => remSet.has(g)).length }))
     .sort((a, b) => b.proj - a.proj);
 
+  // 傷兵的傷勢部位和預計回歸日（ESPN 球員卡資料）
+  const everyone = Object.values(rosters).flat();
+  const hurtIds = [...new Set(everyone.filter((x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL").map((x) => x.id))];
+  if (hurtIds.length) {
+    try {
+      const card = await get(`${LEAGUE}?view=kona_playercard`,
+        { players: { filterIds: { value: hurtIds }, filterStatsForTopScoringPeriodIds: { value: 1, additionalValue: ["00" + SEASON] } } });
+      const info = Object.fromEntries((card.players || []).map((p) => [p.player.id, p.player.injuryDetails]));
+      everyone.forEach((x) => { if (info[x.id]) x.injuryInfo = info[x.id]; });
+    } catch (e) { /* 讀不到就只顯示狀態 */ }
+  }
+
   const nextWeek = weekPeriods.map((p) => p + 7);
   const gameDays = new Set(Object.values(teamGames).flatMap((g) => [...g]));
-  return { lg, teams, me, opp, period, week, base, monday, remaining, nextWeek, weekPeriods, gameDays, seats, myRoster, oppRoster,
+  const nm = lg.schedule.find((x) => x.matchupPeriodId === week + 1 && x.away && [x.home.teamId, x.away.teamId].includes(me.id));
+  const nextOpp = nm ? teams.find((t) => t.id === (nm.home.teamId === me.id ? nm.away.teamId : nm.home.teamId)) : null;
+  return { lg, teams, me, opp, nextOpp, today, period, week, base, monday, remaining, nextWeek, weekPeriods, gameDays, seats, myRoster, oppRoster,
     dailySlots, fas, rosters, weekScores, myScore: pts(mySide), oppScore: pts(oppSide), acq: lg.settings.acquisitionSettings };
 }
 
@@ -365,7 +382,12 @@ function analyse(D) {
   teamViews.forEach((v) => (v.core = D.rosters[v.t.id].filter((x) => verdict(x, v)[0] === "core").length));
   teamViews.sort((a, b) => (b.t.id === D.opp.id) - (a.t.id === D.opp.id) || b.power - a.power);
   teamViews.forEach((v) => (v.report = teamReport(v, D, teamViews)));
-  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews };
+  const plan = streamPlan(D, adds);
+  if (plan.steps.length) todos.splice(todos.findIndex((t) => t[1] === "建議") >= 0 ? todos.findIndex((t) => t[1] === "建議") : todos.length, 0,
+    ["ok", "建議", `撿人排程：本週還可以加 ${plan.left} 人，照排程預估多拿 ${r0(plan.total)} 分`,
+     plan.steps.map((x) => `${label(x.p)} 撿 ${x.f.name}、丟 ${x.d.name}`).join("；") + "。詳細在「戰況」分頁。"]);
+  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews,
+    plan, label, next: nextWeekPreview(D), odds: playoffOdds(D, league) };
 }
 
 const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
@@ -373,7 +395,7 @@ const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
 // 每位球員一句話的判斷：[顏色, 文字]
 function verdict(x, A) {
   const a = f1(x.avg), l7 = f1(x.last7), ly = f1(x.lastYear);
-  if (x.out) return ["mute", `${INJURY[x.injury] || "傷兵"}，暫時不會得分。去年 ${ly}，回來後再看狀況。`];
+  if (x.out) { const i = injInfo(x, CUR); return ["mute", `${INJURY[x.injury] || "傷兵"}${i ? `，${i.long}` : ""}，暫時不會得分。去年 ${ly}，回來後再看狀況。`]; }
   if (A.worst && x.id === A.worst.id && A.ideas.length)
     return ["bad", `今年 ${a}、去年 ${ly}，是陣容最弱的一環，可以換成 ${A.ideas[0].name}（今年 ${f1(A.ideas[0].avg)}）。`];
   if (x.avg >= 38 || (x.lastYear != null && x.lastYear >= 40 && x.avg >= 33))
@@ -407,7 +429,7 @@ function applySort(table) {
   const col = sortState[table.id];
   const rows = [...table.querySelectorAll("tr")].slice(1);
   rows.forEach((r, i) => { if (r.dataset.i === undefined) r.dataset.i = i; });
-  const val = (r) => { const v = parseFloat(r.children[col].textContent); return isNaN(v) ? -Infinity : v; };
+  const val = (r) => { const v = parseFloat(r.children[col].textContent.replace(/[^\d.\-]/g, "")); return isNaN(v) ? -Infinity : v; };
   rows.sort((a, b) => col == null ? a.dataset.i - b.dataset.i : val(b) - val(a) || a.dataset.i - b.dataset.i);
   const body = rows[0] ? rows[0].parentNode : null;
   rows.forEach((r) => body.appendChild(r));
@@ -423,14 +445,123 @@ function setupSort() {
   });
 }
 
+const BODY = { Knee: "膝蓋", Ankle: "腳踝", Hamstring: "大腿後側", Back: "背部", Foot: "腳", Hip: "髖部", Shoulder: "肩膀",
+  Wrist: "手腕", Calf: "小腿", Groin: "鼠蹊部", Illness: "生病", Concussion: "腦震盪", Hand: "手", Finger: "手指",
+  Achilles: "阿基里斯腱", Toe: "腳趾", Elbow: "手肘", Quadriceps: "大腿前側", Quad: "大腿前側", Thumb: "拇指", Rest: "休息",
+  Personal: "個人因素", Abdomen: "腹部", Oblique: "側腹", Neck: "頸部", Thigh: "大腿", Leg: "腿", Shin: "脛骨", Chest: "胸部",
+  Rib: "肋骨", Heel: "腳跟", Knee_: "膝蓋", Face: "臉部", Eye: "眼睛", Nose: "鼻子", Head: "頭部", Lower_Leg: "小腿", Arm: "手臂",
+  "Not Injury Related": "非傷病", Undisclosed: "未公開", Suspension: "禁賽" };
+// 傷勢說明：{ short: 放在標籤上, long: 放在判斷裡 }
+function injInfo(x, D) {
+  const d = x.injuryInfo;
+  if (!d) return null;
+  const part = d.type ? (BODY[d.type] || d.type) : "";
+  if (d.outForSeason) return { short: "報銷", long: `${part ? part + "傷，" : ""}本季報銷` };
+  if (d.expectedReturnDate) {
+    const [y, m, dd] = d.expectedReturnDate, ret = new Date(Date.UTC(y, m - 1, dd));
+    const left = Math.round((ret - D.today) / 86400000);
+    return { short: `${m}/${dd}`, long: `${part ? part + "傷，" : ""}預計 ${m}/${dd} 回歸${left > 0 ? `（還有 ${left} 天）` : ""}` };
+  }
+  return part ? { short: "", long: `${part}傷，還沒有預計回歸日` } : null;
+}
+
+// 撿人排程：用本週剩下的增補額度，挑「哪天撿誰、丟誰」讓本週預估得分最多
+function streamPlan(D, adds) {
+  const limit = weeklyLimit(D);
+  let budget = limit == null ? 0 : Math.max(0, limit - adds);
+  const left = budget;
+  const rem = D.remaining;
+  const dayVal = (ros, p) => bestLineup(ros.filter((x) => x.games.has(p) && !x.out), D.seats).reduce((s, x) => s + x.proj, 0);
+  const pool = D.fas.filter((f) => f.status !== "WAIVERS" && f.weekGames > 0).slice(0, 25);
+  let roster = [...D.myRoster], start = 0;
+  const steps = [], taken = new Set();
+  while (budget > 0) {
+    const drops = roster.filter((x) => !x.out && x.lineupSlot !== IR).sort((a, b) => a.proj - b.proj).slice(0, 4);
+    let best = null;
+    for (let i = start; i < rem.length; i++) {
+      const days = rem.slice(i), base = days.map((p) => dayVal(roster, p));
+      for (const f of pool) {
+        if (taken.has(f.id) || !days.some((p) => f.games.has(p))) continue;
+        for (const d of drops) {
+          if (d.proj >= f.proj || d.avg >= f.avg) continue; // 只丟比撿進來的人差的，長期陣容才不會變弱
+          const next = roster.filter((x) => x.id !== d.id).concat(f);
+          const gain = days.reduce((s, p, j) => s + dayVal(next, p) - base[j], 0);
+          if (!best || gain > best.gain) best = { i, f, d, gain, next };
+        }
+      }
+    }
+    if (!best || best.gain < 3) break;
+    steps.push({ p: rem[best.i], f: best.f, d: best.d, gain: best.gain });
+    taken.add(best.f.id);
+    roster = best.next; start = best.i; budget--;
+  }
+  return { limit, left, steps, total: steps.reduce((s, x) => s + x.gain, 0) };
+}
+
+// 下週預覽：你和下週對手每天能排上先發的人數和預估分
+function nextWeekPreview(D) {
+  if (!D.nextOpp) return null;
+  const oppRos = D.rosters[D.nextOpp.id];
+  const day = (ros, p) => bestLineup(ros.filter((x) => x.games.has(p) && !x.out), D.seats);
+  const days = D.nextWeek.map((p) => {
+    const a = day(D.myRoster, p), b = day(oppRos, p);
+    return { p, games: D.gameDays.has(p), mine: a.length, theirs: b.length,
+      myProj: a.reduce((s, x) => s + x.proj, 0), oppProj: b.reduce((s, x) => s + x.proj, 0) };
+  });
+  const nextSet = new Set(D.nextWeek);
+  const fas = D.fas.map((f) => Object.assign(Object.create(f), { nextGames: [...f.games].filter((g) => nextSet.has(g)).length }))
+    .filter((f) => f.nextGames >= 3).sort((a, b) => b.nextGames * b.proj - a.nextGames * a.proj).slice(0, 5);
+  return { opp: D.nextOpp, days, fas,
+    my: days.reduce((s, d) => s + d.myProj, 0), their: days.reduce((s, d) => s + d.oppProj, 0),
+    myStarts: days.reduce((s, d) => s + d.mine, 0), theirStarts: days.reduce((s, d) => s + d.theirs, 0) };
+}
+
+// 季後賽機率：用每隊的平均週得分和陣容實力，把剩下的例行賽模擬 4000 次
+function playoffOdds(D, league) {
+  const S = D.lg.settings.scheduleSettings, reg = S.matchupPeriodCount, spots = S.playoffTeamCount;
+  const teams = D.teams, done = Math.max(1, D.week - 1);
+  const games = teams[0].record.overall.wins + teams[0].record.overall.losses + teams[0].record.overall.ties;
+  const bonus = games >= 2 * done; // 有「勝過聯盟中位數多一勝」的規則
+  const power = Object.fromEntries(league.map((x) => [x.t.id, x.power]));
+  const avgPF = teams.reduce((s, t) => s + t.record.overall.pointsFor, 0) / teams.length / done;
+  const avgPow = league.reduce((s, x) => s + x.power, 0) / league.length;
+  const mean = Object.fromEntries(teams.map((t) => [t.id, 0.5 * (t.record.overall.pointsFor / done) + 0.5 * (power[t.id] / avgPow * avgPF)]));
+  const frac = D.remaining.length / 7;
+  const randn = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const sched = D.lg.schedule.filter((x) => x.away && x.matchupPeriodId >= D.week && x.matchupPeriodId <= reg);
+  const N = 4000, res = Object.fromEntries(teams.map((t) => [t.id, { wins: 0, po: 0, top4: 0, first: 0 }]));
+  for (let n = 0; n < N; n++) {
+    const W = {}, PF = {};
+    teams.forEach((t) => { W[t.id] = t.record.overall.wins + t.record.overall.ties / 2; PF[t.id] = t.record.overall.pointsFor; });
+    for (let w = D.week; w <= reg; w++) {
+      const sc = {};
+      teams.forEach((t) => {
+        const m = mean[t.id];
+        sc[t.id] = w === D.week ? (D.weekScores[t.id] || 0) + m * frac + randn() * m * 0.12 * Math.sqrt(frac) : m + randn() * m * 0.12;
+        PF[t.id] += sc[t.id];
+      });
+      sched.filter((x) => x.matchupPeriodId === w).forEach((x) => { W[sc[x.home.teamId] >= sc[x.away.teamId] ? x.home.teamId : x.away.teamId]++; });
+      if (bonus) { const sorted = teams.map((t) => sc[t.id]).sort((a, b) => b - a), med = sorted[Math.floor(teams.length / 2) - 1];
+        teams.forEach((t) => { if (sc[t.id] >= med) W[t.id]++; }); }
+    }
+    const order = [...teams].sort((a, b) => W[b.id] - W[a.id] || PF[b.id] - PF[a.id]);
+    order.forEach((t, i) => { const r = res[t.id]; r.wins += W[t.id]; if (i < spots) r.po++; if (i < 4) r.top4++; if (i === 0) r.first++; });
+  }
+  const perWeek = bonus ? 2 : 1, total = reg * perWeek;
+  return { spots, reg, bonus, rows: teams.map((t) => { const r = res[t.id], w = r.wins / N;
+    return { t, w, l: total - w, po: r.po / N, top4: r.top4 / N, first: r.first / N }; }).sort((a, b) => b.po - a.po || b.w - a.w) };
+}
+
 const openTeams = new Set();
+let CUR = null; // 目前這次讀到的資料（給判斷文字用）
 const lastName = (n) => { const p = n.split(" "); return p.length > 1 ? p.slice(1).join(" ") : n; };
 const CN = ["零", "一", "兩", "三", "四", "五"];
 
 // 每隊的「核心 / 判斷 / 對你」三行重點，依數據自動產生
 function teamReport(v, D, views) {
   const ros = D.rosters[v.t.id], o = v.t.record.overall;
-  const flag = (x) => x.lineupSlot === IR ? `(IR ${INJURY[x.injury] || "OUT"})` : x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `(${INJURY[x.injury] || x.injury})` : "";
+  const flag = (x) => { const i = injInfo(x, D), r = i && i.short ? ` ${i.short}` : "";
+    return x.lineupSlot === IR ? `(IR ${INJURY[x.injury] || "OUT"}${r})` : x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `(${INJURY[x.injury] || x.injury}${r})` : ""; };
   const byAvg = [...ros].sort((a, b) => Math.max(b.avg, 0) - Math.max(a.avg, 0));
   let core = ros.filter((x) => verdict(x, v)[0] === "core").sort((a, b) => b.avg - a.avg);
   if (core.length < 2) core = byAvg.slice(0, 3);
@@ -489,8 +620,10 @@ function render(D, A) {
   const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
   const rec = (t) => `${t.record.overall.wins}-${t.record.overall.losses}`;
   const gamesLeft = (x) => [...x.games].filter((g) => A.remSet.has(g)).length;
-  const inj = (x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `<span class="pill">${esc(INJURY[x.injury] || x.injury)}</span>` : "";
+  const inj = (x) => { if (x.injury === "ACTIVE" || x.injury === "NORMAL") return "";
+    const i = injInfo(x, D); return `<span class="pill">${esc(INJURY[x.injury] || x.injury)}${i && i.short ? " · " + esc(i.short) : ""}</span>`; };
   const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
+  const pct = (v) => v >= 0.995 ? ">99%" : v > 0 && v < 0.005 ? "<1%" : `${Math.round(v * 100)}%`;
   const HEAD = `<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
   const row = (x, slot, v, fa) => `<tr>
     <td class="slot">${esc(slot)}</td><td class="${fa ? "name " + v[0] : ""}">${esc(x.name)}${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
@@ -537,7 +670,29 @@ function render(D, A) {
       <div class="sub">你：${d.mine.map((x) => esc(x.name) + (b.has(x.id) ? '<span class="pill">在替補</span>' : "")).join("、") || "沒有人有比賽"}</div>
       <div class="sub">對手：${d.theirs.map((x) => esc(x.name)).join("、") || "沒有人有比賽"}</div>
     </div>`; }).join("") || '<p class="sub">本週比賽已經結束。</p>'}
-  </section></div>
+  </section>
+    <section class="card">
+      <h2>撿人排程 <small>${A.plan.limit == null ? "" : `本週還可以加 ${A.plan.left} 人`}</small></h2>
+      ${A.plan.limit != null && A.plan.left === 0 ? '<p class="sub">本週的增補額度已經用完了，下週一會重新計算。</p>'
+        : A.plan.steps.length ? A.plan.steps.map((x, i) => `<div class="step"><span class="num">${i + 1}</span><div>
+          <b>${A.label(x.p)}：撿 ${esc(x.f.name)}、丟 ${esc(x.d.name)}</b>
+          <p class="sub">${esc(x.f.name)} 平均 ${f1(x.f.avg)}、近 7 場 ${f1(x.f.last7)}，從這天起本週還有 ${[...x.f.games].filter((g) => g >= x.p && A.remSet.has(g)).length} 場；${esc(x.d.name)} 平均 ${f1(x.d.avg)}。本週預估多 <b class="up">+${r0(x.gain)}</b> 分。</p></div></div>`).join("")
+          + `<p class="sub">照這個排程，本週預估總共多拿 <b class="up">+${r0(A.plan.total)}</b> 分。</p>`
+        : '<p class="sub">目前撿人對本週得分沒有明顯幫助，先不用動。</p>'}
+      <p class="note">只排「自由球員」（waiver 的人要等處理，不列入）。只會丟掉今年平均和預估分都比撿進來的人低的球員，所以長期陣容不會變弱。如果當天比賽已經開打，撿進來的人當天不會得分，請改成隔天撿。</p>
+    </section>
+    ${A.next ? `<section class="card">
+      <h2>下週預覽 <small>對手：${esc(A.next.opp.name)}</small></h2>
+      <table class="vs">
+        <tr><th>日期</th><th class="n">你</th><th class="n">${esc(A.next.opp.name)}</th></tr>
+        ${A.next.days.map((d) => `<tr><td>${A.label(d.p)}</td>${d.games ? `<td class="n ${d.mine > d.theirs ? "win" : ""}">${d.mine} 人 · ${r0(d.myProj)}</td><td class="n ${d.theirs > d.mine ? "win" : ""}">${d.theirs} 人 · ${r0(d.oppProj)}</td>` : '<td class="n sub" colspan="2">NBA 沒有比賽</td>'}</tr>`).join("")}
+        <tr><td><b>合計</b></td><td class="n ${A.next.my > A.next.their ? "win" : ""}"><b>${A.next.myStarts} 人次 · ${r0(A.next.my)}</b></td><td class="n ${A.next.their > A.next.my ? "win" : ""}"><b>${A.next.theirStarts} 人次 · ${r0(A.next.their)}</b></td></tr>
+      </table>
+      <p class="sub" style="margin-top:10px">${A.next.my >= A.next.their ? `照現在的陣容，下週預估贏 ${r0(A.next.my - A.next.their)} 分。` : `照現在的陣容，下週預估輸 ${r0(A.next.their - A.next.my)} 分，可以提早準備。`}</p>
+      ${A.next.fas.length ? `<p class="sub">下週比賽多的自由球員：${A.next.fas.map((f) => `${esc(f.name)}（${f.nextGames} 場，${f1(f.avg)}）`).join("、")}。</p>` : ""}
+      <p class="note">用現在的陣容估算（人次 = 每天能排上先發的人數加總，後面是預估分）。綠色是那天人數比較多的一方。</p>
+    </section>` : ""}
+  </div>
 
   <div class="pane" id="p2">
     <section class="card">
@@ -574,6 +729,15 @@ function render(D, A) {
             return `<tr><td>${name}</td><td class="n ${cm}">${fmt(m)}</td><td class="n ${co}">${fmt(o)}</td></tr>`; }).join("")}
       </table>
       <p class="note"><span class="up">綠色</span>是這一項比較好的一方。陣容實力 = 健康球員中今年平均最高的 ${D.seats.length} 人加總；近 7 場實力用近 7 場平均算。剩餘出賽人次是剩下每天能排上先發的人數加總。</p>
+    </section>
+    <section class="card">
+      <h2>季後賽機率 <small>前 ${A.odds.spots} 名進季後賽</small></h2>
+      <div class="scroll"><table class="teams" id="t-odds">
+        <tr><th>隊伍</th><th class="n">目前戰績</th><th class="n sortable">預估戰績</th><th class="n sortable">進季後賽</th><th class="n sortable">前 4 名</th><th class="n sortable">第 1 種子</th></tr>
+        ${A.odds.rows.map((x) => `<tr class="${x.t.id === D.me.id ? "me" : ""}"><td class="tname">${esc(x.t.name)}</td><td class="n">${rec(x.t)}</td><td class="n">${r0(x.w)}-${r0(x.l)}</td>
+          <td class="n">${pct(x.po)}</td><td class="n">${pct(x.top4)}</td><td class="n">${pct(x.first)}</td></tr>`).join("")}
+      </table></div>
+      <p class="note">把剩下到第 ${A.odds.reg} 週的例行賽模擬 4000 次算出來的。每隊每週得分用「目前平均週得分」和「陣容實力」各半估算${A.odds.bonus ? "，也算進「得分高於聯盟中位數多一勝」的規則" : ""}。同戰績先比總得分。陣容和傷兵變動後機率會跟著變。</p>
     </section>
     <section class="card">
       <h2>全聯盟比較 <small>點標題可排序</small></h2>
@@ -630,6 +794,7 @@ async function run() {
   try {
     const pick = new URLSearchParams(location.search).get("team") || store("team");
     const D = await load(pick);
+    CUR = D;
     const sel = $("#team");
     sel.innerHTML = D.teams.map((t) => `<option value="${t.id}"${t.id === D.me.id ? " selected" : ""}>${esc(t.name)}</option>`).join("");
     render(D, analyse(D));
