@@ -143,6 +143,30 @@ def compare(r: Report, days):
     return table, league
 
 
+def team_views(r: Report, league):
+    """其他每一隊的陣容和判斷（本週對手排第一個）。"""
+    ranked = [x["t"].team_id for x in league]  # league 已依陣容實力排序
+    fas = r.free_agents()
+    views = []
+    for t in r.lg.teams:
+        if t.team_id == r.me.team_id:
+            continue
+        ros = r.rosters[t.team_id]
+        healthy = sorted((p for p in ros if not p.out), key=lambda p: p.proj)
+        worst = healthy[0] if healthy else None
+        ideas = [f for f in fas if worst and f.proj > worst.proj + 3][:5]
+        v = make_verdict(worst, ideas)
+        rows = sorted(sorted(ros, key=lambda p: -p.avg), key=lambda p: p.lineup_slot)
+        lg_row = next(x for x in league if x["t"].team_id == t.team_id)
+        views.append({"t": t, "rows": [(p, v(p)) for p in rows], "power": lg_row["power"],
+                      "rank": ranked.index(t.team_id) + 1,
+                      "core": sum(1 for p in ros if v(p)[0] == "core"),
+                      "out": sum(1 for p in ros if p.injury == "OUT" or p.lineup_slot == 13),
+                      "is_opp": t.team_id == r.opp.team_id})
+    views.sort(key=lambda x: (not x["is_opp"], x["t"].team_name))
+    return views
+
+
 def main():
     league_id = int(os.environ.get("ESPN_LEAGUE_ID", "406470928"))
     year = int(os.environ.get("ESPN_SEASON", "2027"))
@@ -160,7 +184,8 @@ def main():
         adds=r.adds_this_week(r.me.team_id),
         verdict=make_verdict(worst, ideas),
         fa_verdict=make_fa_verdict(worst),
-        compare=compare(r, days),
+        compare=(cmp := compare(r, days)),
+        team_views=team_views(r, cmp[1]),
         fa_list=r.free_agents()[:20],
         next_week=[p + 7 for p in r.week_periods],
         day_char={p: r.day_label(p)[1] for p in r.remaining},

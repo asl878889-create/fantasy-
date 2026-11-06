@@ -129,18 +129,22 @@ class Report:
         self.opp_score = box.away_score if home else box.home_score
 
         self.my_roster = [to_p(x, year) for x in self.me.roster]
-        # espn-api 沒有去年平均和持有率，另外從 ESPN 原始資料補上
-        raw_me = lg.espn_request.league_get(params={"view": "mRoster", "forTeamId": self.me.team_id})
-        extra = {}
-        for e in next(t for t in raw_me["teams"] if t["id"] == self.me.team_id)["roster"]["entries"]:
-            pl = e["playerPoolEntry"]["player"]
-            ly = next((s.get("appliedAverage") for s in pl.get("stats", [])
-                       if s["id"] == f"00{year - 1}" and s["statSourceId"] == 0), None)
-            extra[pl["id"]] = (round(ly, 1) if ly else None, (pl.get("ownership") or {}).get("percentOwned"))
-        for p in self.my_roster:
-            p.last_year, p.own = extra.get(p.id, (None, None))
         self.opp_roster = [to_p(x, year) for x in self.opp.roster]
         self.rosters = {t.team_id: [to_p(x, year) for x in t.roster] for t in lg.teams}
+        self.rosters[self.me.team_id] = self.my_roster
+        self.rosters[self.opp.team_id] = self.opp_roster
+        # espn-api 沒有去年平均和持有率，另外從 ESPN 原始資料補上（所有隊伍）
+        raw_all = lg.espn_request.league_get(params={"view": "mRoster"})
+        extra = {}
+        for t in raw_all["teams"]:
+            for e in t["roster"]["entries"]:
+                pl = e["playerPoolEntry"]["player"]
+                ly = next((st.get("appliedAverage") for st in pl.get("stats", [])
+                           if st["id"] == f"00{year - 1}" and st["statSourceId"] == 0), None)
+                extra[pl["id"]] = (round(ly, 1) if ly else None, (pl.get("ownership") or {}).get("percentOwned"))
+        for ros in self.rosters.values():
+            for p in ros:
+                p.last_year, p.own = extra.get(p.id, (None, None))
         self.my_daily_slots = {p: self._lineup_on(self.me.team_id, p) for p in self.remaining}
         self.starters = sum(self.slot_counts.values())
 

@@ -86,6 +86,8 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .vs td:first-child { color: var(--muted); }
 .vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
 .teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
+.teamview { width: 100%; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); margin-bottom: 8px; }
+.teambox .names { margin: 4px 0 8px; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -120,7 +122,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     <button role="tab" aria-selected="false" data-pane="p2">陣容</button>
     <button role="tab" aria-selected="false" data-pane="p5">自由球員</button>
     <button role="tab" aria-selected="false" data-pane="p6">球隊比較</button>
-    <button role="tab" aria-selected="false" data-pane="p4">聯盟排名</button>
+    <button role="tab" aria-selected="false" data-pane="p7">各隊陣容</button>
   </nav>
 
   <div class="pane" id="p1">
@@ -191,21 +193,32 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     </section>
   </div>
 
-  <div class="pane" id="p4" hidden>
+  <div class="pane" id="p7" hidden>
     <section class="card">
-      <h2>聯盟排名</h2>
-      <table>
-        <tr><th>#</th><th>隊伍</th><th class="n">戰績</th><th class="n">總得分</th></tr>
-        {% for t in standings %}
-        <tr class="{{ 'me' if t.team_id == r.me.team_id }}"><td>{{ loop.index }}</td><td>{{ t.team_name }}</td><td class="n">{{ t.wins }}-{{ t.losses }}</td><td class="n">{{ "%.0f"|format(t.points_for) }}</td></tr>
-        {% endfor %}
-      </table>
+      <h2>各隊陣容判斷 <small>點標題可排序</small></h2>
+      <select id="teamview" class="teamview" aria-label="選擇要看的隊伍">
+        {% for v in team_views %}<option value="{{ v.t.team_id }}">{{ v.t.team_name }}{{ "（本週對手）" if v.is_opp }}</option>{% endfor %}
+      </select>
+      {% for v in team_views %}
+      <div class="teambox" data-team="{{ v.t.team_id }}"{{ " hidden" if not loop.first }}>
+        <p class="names">戰績 {{ v.t.wins }}-{{ v.t.losses }} · 陣容實力 {{ "%.0f"|format(v.power) }}（全聯盟第 {{ v.rank }}）· 核心 {{ v.core }} 人 · OUT {{ v.out }} 人</p>
+        <div class="scroll"><table class="roster" id="t-team-{{ v.t.team_id }}">
+          {{ head() }}
+          {% for p, vv in v.rows %}{{ row(p, LABEL.get(p.lineup_slot, ""), vv) }}{% endfor %}
+        </table></div>
+      </div>
+      {% endfor %}
+      <p class="note">判斷方式跟「陣容」分頁一樣；「可以換成」是跟目前的自由球員比較。表格可以左右滑。</p>
     </section>
   </div>
 
   <footer>資料來源：ESPN Fantasy Basketball · 預估僅供參考</footer>
 </main>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tv = document.getElementById("teamview");
+  if (tv) tv.addEventListener("change", () => document.querySelectorAll(".teambox").forEach((b) => (b.hidden = b.dataset.team !== tv.value)));
+});
 // 點「今年 / 近7場 / 去年」標題：由高到低排序；再點一次恢復原本順序
 const sortState = {};
 function applySort(table) {

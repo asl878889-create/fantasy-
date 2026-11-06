@@ -92,6 +92,8 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 .vs td:first-child { color: var(--muted); }
 .vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
 .teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
+.teamview { width: 100%; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); margin-bottom: 8px; }
+.teambox .sub { margin: 4px 0 8px; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -320,7 +322,18 @@ function analyse(D) {
   ];
   const league = D.teams.map((t) => ({ t, week: D.weekScores[t.id] || 0,
     power: strength(D.rosters[t.id], "avg"), hot: strength(D.rosters[t.id], "last7") }));
-  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league };
+  const ranked = [...league].sort((a, b) => b.power - a.power);
+  const teamViews = D.teams.filter((t) => t.id !== D.me.id).map((t) => {
+    const ros = D.rosters[t.id];
+    const w = [...ros].filter((x) => !x.out).sort((a, b) => a.proj - b.proj)[0];
+    const v = { t, worst: w, ideas: w ? D.fas.filter((f) => f.proj > w.proj + 3).slice(0, 5) : [] };
+    const l = league.find((x) => x.t.id === t.id);
+    return Object.assign(v, { power: l.power, rank: ranked.indexOf(l) + 1,
+      out: ros.filter((x) => x.injury === "OUT" || x.lineupSlot === IR).length });
+  });
+  teamViews.forEach((v) => (v.core = D.rosters[v.t.id].filter((x) => verdict(x, v)[0] === "core").length));
+  teamViews.sort((a, b) => (b.t.id === D.opp.id) - (a.t.id === D.opp.id) || a.t.name.localeCompare(b.t.name));
+  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews };
 }
 
 const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
@@ -378,8 +391,10 @@ function setupSort() {
   });
 }
 
+let teamView = null;
 let activeTab = store("tab") || "p1";
 function render(D, A) {
+  if (teamView == null || !A.teamViews.some((v) => v.t.id === teamView)) teamView = D.opp.id;
   const diff = D.myScore - D.oppScore;
   const end = addDays(D.monday, 6);
   const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
@@ -387,7 +402,6 @@ function render(D, A) {
   const gamesLeft = (x) => [...x.games].filter((g) => A.remSet.has(g)).length;
   const inj = (x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? `<span class="pill">${esc(INJURY[x.injury] || x.injury)}</span>` : "";
   const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
-  const standings = [...D.teams].sort((a, b) => b.record.overall.wins - a.record.overall.wins || a.record.overall.losses - b.record.overall.losses || b.record.overall.pointsFor - a.record.overall.pointsFor);
   const HEAD = `<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
   const row = (x, slot, v, fa) => `<tr>
     <td class="slot">${esc(slot)}</td><td class="${fa ? "name " + v[0] : ""}">${esc(x.name)}${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
@@ -421,7 +435,7 @@ function render(D, A) {
     <button role="tab" data-pane="p2">陣容</button>
     <button role="tab" data-pane="p5">自由球員</button>
     <button role="tab" data-pane="p6">球隊比較</button>
-    <button role="tab" data-pane="p4">聯盟排名</button>
+    <button role="tab" data-pane="p7">各隊陣容</button>
   </nav>
 
   <div class="pane" id="p1"><section class="card">
@@ -478,12 +492,18 @@ function render(D, A) {
     </section>
   </div>
 
-  <div class="pane" id="p4"><section class="card">
-    <h2>聯盟排名</h2>
-    <table>
-      <tr><th>#</th><th>隊伍</th><th class="n">戰績</th><th class="n">總得分</th></tr>
-      ${standings.map((t, i) => `<tr class="${t.id === D.me.id ? "me" : ""}"><td>${i + 1}</td><td>${esc(t.name)}</td><td class="n">${rec(t)}</td><td class="n">${r0(t.record.overall.pointsFor)}</td></tr>`).join("")}
-    </table>
+  <div class="pane" id="p7"><section class="card">
+    <h2>各隊陣容判斷 <small>點標題可排序</small></h2>
+    <select id="teamview" class="teamview" aria-label="選擇要看的隊伍">
+      ${A.teamViews.map((v) => `<option value="${v.t.id}"${v.t.id === teamView ? " selected" : ""}>${esc(v.t.name)}${v.t.id === D.opp.id ? "（本週對手）" : ""}</option>`).join("")}
+    </select>
+    ${A.teamViews.map((v) => `<div class="teambox" data-team="${v.t.id}"${v.t.id === teamView ? "" : " hidden"}>
+      <p class="sub">戰績 ${rec(v.t)} · 陣容實力 ${r0(v.power)}（全聯盟第 ${v.rank}）· 核心 ${v.core} 人 · OUT ${v.out} 人</p>
+      <div class="scroll"><table class="roster" id="t-team-${v.t.id}">
+        ${HEAD}
+        ${[...D.rosters[v.t.id]].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).map((x) => row(x, SLOT_LABEL[x.lineupSlot] || "", verdict(x, v))).join("")}
+      </table></div></div>`).join("")}
+    <p class="note">判斷方式跟「陣容」分頁一樣；「可以換成」是跟目前的自由球員比較。表格可以左右滑。</p>
   </section></div>`;
 
   const show = (id) => {
@@ -492,6 +512,14 @@ function render(D, A) {
     document.querySelectorAll(".pane").forEach((p) => (p.hidden = p.id !== id));
   };
   document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.pane)));
+  const tv = $("#teamview");
+  if (tv) {
+    teamView = Number(tv.value);
+    tv.addEventListener("change", () => {
+      teamView = Number(tv.value);
+      document.querySelectorAll(".teambox").forEach((b) => (b.hidden = Number(b.dataset.team) !== teamView));
+    });
+  }
   show(document.getElementById(activeTab) ? activeTab : "p1");
   setupSort();
 }
