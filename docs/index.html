@@ -89,6 +89,9 @@ th.sortable.on::after { content: " ▼"; opacity: 1; }
 .wv { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--warn-bg); color: var(--warn); margin-left: 4px; white-space: nowrap; font-weight: 600; }
 td.name.core { color: var(--accent); font-weight: 700; } td.name.good { color: var(--ok); font-weight: 700; }
 td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(--bad); font-weight: 700; } td.name.mute { color: var(--muted); }
+.vs td:first-child { color: var(--muted); }
+.vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
+.teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -115,7 +118,7 @@ const WEEKDAYS = ["週一", "週二", "週三", "週四", "週五", "週六", "�
 const SLOT_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const SLOT_LABEL = { 0: "PG", 1: "SG", 2: "SF", 3: "PF", 4: "C", 5: "G", 6: "F", 7: "SG/SF", 8: "G/F", 9: "PF/C", 10: "F/C", 11: "UTIL", 12: "BN", 13: "IR" };
 const trend = (x) => x.last7 == null ? "" : x.last7 > x.avg ? "up" : x.last7 < x.avg ? "down" : "";
-const INJURY = { OUT: "OUT", DAY_TO_DAY: "DTD", SUSPENSION: "禁賽", QUESTIONABLE: "出賽成疑", DOUBTFUL: "可能缺陣", PROBABLE: "可能出賽" };
+const INJURY = { OUT: "OUT", DAY_TO_DAY: "DTD", SUSPENSION: "SSPD", QUESTIONABLE: "Q", DOUBTFUL: "D", PROBABLE: "P" };
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -220,6 +223,12 @@ async function load(teamPick) {
   const roster = (t) => t.roster.entries.map((e) =>
     toPlayer(e.playerPoolEntry.player, e.lineupSlotId, teamGames, starterSlots, abbrev));
   const myRoster = roster(me), oppRoster = roster(opp);
+  const rosters = Object.fromEntries(teams.map((t) => [t.id, t.id === me.id ? myRoster : t.id === opp.id ? oppRoster : roster(t)]));
+  const weekScores = {};
+  for (const x of lg.schedule.filter((x) => x.matchupPeriodId === week)) {
+    weekScores[x.home.teamId] = pts(x.home);
+    if (x.away) weekScores[x.away.teamId] = pts(x.away);
+  }
 
   // 每個剩下的比賽日，ESPN 上你的先發設定
   const dailySlots = {};
@@ -239,7 +248,7 @@ async function load(teamPick) {
 
   const nextWeek = weekPeriods.map((p) => p + 7);
   return { lg, teams, me, opp, period, week, base, monday, remaining, nextWeek, seats, myRoster, oppRoster,
-    dailySlots, fas, myScore: pts(mySide), oppScore: pts(oppSide), acq: lg.settings.acquisitionSettings };
+    dailySlots, fas, rosters, weekScores, myScore: pts(mySide), oppScore: pts(oppSide), acq: lg.settings.acquisitionSettings };
 }
 
 function analyse(D) {
@@ -297,7 +306,21 @@ function analyse(D) {
   const threats = D.oppRoster.filter((x) => !x.out && [...x.games].some((g) => remSet.has(g)))
     .sort((a, b) => b.proj - a.proj).slice(0, 3)
     .map((x) => ({ x, n: [...x.games].filter((g) => remSet.has(g)).length }));
-  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20) };
+  const strength = (ros, key) => ros.filter((x) => !x.out).map((x) => x[key] || 0)
+    .sort((a, b) => b - a).slice(0, D.seats.length).reduce((s, v) => s + v, 0);
+  const addsOf = (t) => Number(((t.transactionCounter || {}).matchupAcquisitionTotals || {})[D.week] || 0);
+  const side = (t, ros, score, proj, starts) => ({
+    score, starts, proj, final: score + proj,
+    power: strength(ros, "avg"), hot: strength(ros, "last7"),
+    out: ros.filter((x) => x.injury === "OUT" || x.lineupSlot === IR).length, adds: addsOf(t),
+  });
+  const vs = [
+    side(D.me, D.myRoster, D.myScore, myRest, days.reduce((s, d) => s + d.mine.length, 0)),
+    side(D.opp, D.oppRoster, D.oppScore, oppRest, days.reduce((s, d) => s + d.theirs.length, 0)),
+  ];
+  const league = D.teams.map((t) => ({ t, week: D.weekScores[t.id] || 0,
+    power: strength(D.rosters[t.id], "avg"), hot: strength(D.rosters[t.id], "last7") }));
+  return { days, todos, adds, worst, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league };
 }
 
 const dayChar = (D, p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))].slice(1);
@@ -346,7 +369,7 @@ function applySort(table) {
   table.querySelectorAll("th.sortable").forEach((th) => th.classList.toggle("on", th.cellIndex === col));
 }
 function setupSort() {
-  document.querySelectorAll("table.roster[id]").forEach((table) => {
+  document.querySelectorAll("table[id]").forEach((table) => {
     table.querySelectorAll("th.sortable").forEach((th) => th.addEventListener("click", () => {
       sortState[table.id] = sortState[table.id] === th.cellIndex ? null : th.cellIndex;
       applySort(table);
@@ -372,7 +395,6 @@ function render(D, A) {
     <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
     <td class="n">${D.nextWeek.filter((p) => x.games.has(p)).length} 場</td>
     <td class="verdict ${v[0]}">${esc(v[1])}</td></tr>`;
-  const slotName = (s) => s === IR ? "傷兵名單" : s === BENCH ? "替補" : "先發";
 
   $("#app").innerHTML = `
   <section class="hero">
@@ -398,7 +420,7 @@ function render(D, A) {
     <button role="tab" data-pane="p1">戰況</button>
     <button role="tab" data-pane="p2">陣容</button>
     <button role="tab" data-pane="p5">自由球員</button>
-    <button role="tab" data-pane="p3">傷兵</button>
+    <button role="tab" data-pane="p6">球隊比較</button>
     <button role="tab" data-pane="p4">聯盟排名</button>
   </nav>
 
@@ -432,12 +454,29 @@ function render(D, A) {
     <p class="note">依預估分數排序，位置欄是球員的主要位置。${A.worst ? `判斷是跟你陣容裡預估最低的 ${esc(A.worst.name)}（今年 ${f1(A.worst.avg)}）比較。` : ""}${limitText(D)}表格可以左右滑。</p>
   </section></div>
 
-  <div class="pane" id="p3"><section class="card">
-    <h2>傷兵狀況</h2>
-    ${(() => { const l = D.myRoster.filter((x) => x.injury !== "ACTIVE" && x.injury !== "NORMAL");
-      return l.length ? `<table><tr><th>球員</th><th>狀態</th><th>位置</th></tr>${l.map((x) => `<tr><td>${esc(x.name)} <span class="sub">${esc(x.team)}</span></td><td>${esc(INJURY[x.injury] || x.injury)}</td><td>${slotName(x.lineupSlot)}</td></tr>`).join("")}</table>`
-      : '<p class="sub">目前沒有傷兵。</p>'; })()}
-  </section></div>
+  <div class="pane" id="p6">
+    <section class="card">
+      <h2>本週對決 <small>${esc(D.me.name)} vs ${esc(D.opp.name)}</small></h2>
+      <table class="vs">
+        <tr><th>項目</th><th class="n">${esc(D.me.name)}</th><th class="n">${esc(D.opp.name)}</th></tr>
+        ${[["目前得分", "score", 1, r0], ["剩餘出賽人次", "starts", 1, String], ["預估剩餘得分", "proj", 1, r0], ["預估最終得分", "final", 1, r0],
+           ["陣容實力", "power", 1, r0], ["近 7 場實力", "hot", 1, r0], ["OUT 人數", "out", -1, String], ["本週已加人數", "adds", 0, String]]
+          .map(([name, k, dir, fmt]) => { const [m, o] = [A.vs[0][k], A.vs[1][k]];
+            const cm = dir && m !== o ? ((m - o) * dir > 0 ? "win" : "lose") : "", co = cm ? (cm === "win" ? "lose" : "win") : "";
+            return `<tr><td>${name}</td><td class="n ${cm}">${fmt(m)}</td><td class="n ${co}">${fmt(o)}</td></tr>`; }).join("")}
+      </table>
+      <p class="note"><span class="up">綠色</span>是這一項比較好的一方。陣容實力 = 健康球員中今年平均最高的 ${D.seats.length} 人加總；近 7 場實力用近 7 場平均算。剩餘出賽人次是剩下每天能排上先發的人數加總。</p>
+    </section>
+    <section class="card">
+      <h2>全聯盟比較 <small>點標題可排序</small></h2>
+      <div class="scroll"><table class="teams" id="t-teams">
+        <tr><th>隊伍</th><th class="n">戰績</th><th class="n sortable">本週得分</th><th class="n sortable">陣容實力</th><th class="n sortable">近7場實力</th><th class="n sortable">總得分</th></tr>
+        ${[...A.league].sort((a, b) => b.power - a.power).map(({ t, week, power, hot }) => `<tr class="${t.id === D.me.id ? "me" : ""}">
+          <td class="tname">${esc(t.name)}</td><td class="n">${rec(t)}</td><td class="n">${r0(week)}</td><td class="n">${r0(power)}</td><td class="n">${r0(hot)}</td><td class="n">${r0(t.record.overall.pointsFor)}</td></tr>`).join("")}
+      </table></div>
+      <p class="note">預設依陣容實力排序。你的隊伍用藍色標示。</p>
+    </section>
+  </div>
 
   <div class="pane" id="p4"><section class="card">
     <h2>聯盟排名</h2>
@@ -453,7 +492,7 @@ function render(D, A) {
     document.querySelectorAll(".pane").forEach((p) => (p.hidden = p.id !== id));
   };
   document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.pane)));
-  show(activeTab);
+  show(document.getElementById(activeTab) ? activeTab : "p1");
   setupSort();
 }
 

@@ -62,7 +62,7 @@ def todo_list(r: Report, days, ideas, worst, rest):
     return items
 
 
-INJ = {"OUT": "OUT", "DAY_TO_DAY": "DTD", "SUSPENSION": "禁賽"}
+INJ = {"OUT": "OUT", "DAY_TO_DAY": "DTD", "SUSPENSION": "SSPD", "QUESTIONABLE": "Q", "DOUBTFUL": "D", "PROBABLE": "P"}
 
 
 def make_verdict(worst, ideas):
@@ -112,6 +112,37 @@ def make_fa_verdict(worst):
     return verdict
 
 
+def strength(roster, key, n):
+    """健康球員中，某項平均最高的 n 人加總。"""
+    vals = sorted((getattr(p, key) or 0 for p in roster if not p.out), reverse=True)
+    return sum(vals[:n])
+
+
+def compare(r: Report, days):
+    n = r.starters
+    def side(team, roster, score, proj, starts):
+        return {"score": score, "starts": starts, "proj": proj, "final": score + proj,
+                "power": strength(roster, "avg", n), "hot": strength(roster, "last7", n),
+                "out": sum(1 for p in roster if p.injury == "OUT" or p.lineup_slot == 13),
+                "adds": r.adds_this_week(team.team_id)}
+    vs = [side(r.me, r.my_roster, r.my_score, sum(d["my_proj"] for d in days), sum(len(d["mine"]) for d in days)),
+          side(r.opp, r.opp_roster, r.opp_score, sum(d["opp_proj"] for d in days), sum(len(d["theirs"]) for d in days))]
+    rows = [("目前得分", "score", 1), ("剩餘出賽人次", "starts", 1), ("預估剩餘得分", "proj", 1),
+            ("預估最終得分", "final", 1), ("陣容實力", "power", 1), ("近 7 場實力", "hot", 1),
+            ("OUT 人數", "out", -1), ("本週已加人數", "adds", 0)]
+    table = []
+    for name, k, d in rows:
+        m, o = vs[0][k], vs[1][k]
+        cm = ("win" if (m - o) * d > 0 else "lose") if d and m != o else ""
+        co = {"win": "lose", "lose": "win"}.get(cm, "")
+        table.append((name, f"{m:.0f}", cm, f"{o:.0f}", co))
+    league = sorted(({"t": t, "week": r.week_scores.get(t.team_id, 0),
+                      "power": strength(r.rosters[t.team_id], "avg", n),
+                      "hot": strength(r.rosters[t.team_id], "last7", n)} for t in r.lg.teams),
+                    key=lambda x: -x["power"])
+    return table, league
+
+
 def main():
     league_id = int(os.environ.get("ESPN_LEAGUE_ID", "406470928"))
     year = int(os.environ.get("ESPN_SEASON", "2027"))
@@ -129,6 +160,7 @@ def main():
         adds=r.adds_this_week(r.me.team_id),
         verdict=make_verdict(worst, ideas),
         fa_verdict=make_fa_verdict(worst),
+        compare=compare(r, days),
         fa_list=r.free_agents()[:20],
         next_week=[p + 7 for p in r.week_periods],
         day_char={p: r.day_label(p)[1] for p in r.remaining},

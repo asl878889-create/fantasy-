@@ -115,8 +115,14 @@ class Report:
         self.week_start, self.week_end = monday, monday + dt.timedelta(days=6)
         self.remaining = [p for p in self.week_periods if p >= self.period]
 
-        box = next(b for b in lg.box_scores(matchup_period=self.week)
-                   if self.me in (b.home_team, b.away_team))
+        boxes = lg.box_scores(matchup_period=self.week)
+        self.week_scores = {}
+        for b in boxes:
+            if b.home_team:
+                self.week_scores[b.home_team.team_id] = b.home_score
+            if b.away_team:
+                self.week_scores[b.away_team.team_id] = b.away_score
+        box = next(b for b in boxes if self.me in (b.home_team, b.away_team))
         home = box.home_team == self.me
         self.opp = box.away_team if home else box.home_team
         self.my_score = box.home_score if home else box.away_score
@@ -134,6 +140,7 @@ class Report:
         for p in self.my_roster:
             p.last_year, p.own = extra.get(p.id, (None, None))
         self.opp_roster = [to_p(x, year) for x in self.opp.roster]
+        self.rosters = {t.team_id: [to_p(x, year) for x in t.roster] for t in lg.teams}
         self.my_daily_slots = {p: self._lineup_on(self.me.team_id, p) for p in self.remaining}
         self.starters = sum(self.slot_counts.values())
 

@@ -83,6 +83,9 @@ th.sortable.on::after { content: " ▼"; opacity: 1; }
 .wv { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--warn-bg); color: var(--warn); margin-left: 4px; white-space: nowrap; font-weight: 600; }
 td.name.core { color: var(--accent); font-weight: 700; } td.name.good { color: var(--ok); font-weight: 700; }
 td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(--bad); font-weight: 700; } td.name.mute { color: var(--muted); }
+.vs td:first-child { color: var(--muted); }
+.vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
+.teams { min-width: 520px; } .teams td.tname { white-space: nowrap; }
 .note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
 .note .up, .note .down { font-weight: 700; }
 footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 0 8px; }
@@ -116,7 +119,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     <button role="tab" aria-selected="true" data-pane="p1">戰況</button>
     <button role="tab" aria-selected="false" data-pane="p2">陣容</button>
     <button role="tab" aria-selected="false" data-pane="p5">自由球員</button>
-    <button role="tab" aria-selected="false" data-pane="p3">傷兵</button>
+    <button role="tab" aria-selected="false" data-pane="p6">球隊比較</button>
     <button role="tab" aria-selected="false" data-pane="p4">聯盟排名</button>
   </nav>
 
@@ -139,7 +142,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
       {% set LABEL = {0:"PG",1:"SG",2:"SF",3:"PF",4:"C",5:"G",6:"F",7:"SG/SF",8:"G/F",9:"PF/C",10:"F/C",11:"UTIL",12:"BN",13:"IR"} %}
       {% macro head() %}<tr><th>位置</th><th>球員</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>{% endmacro %}
       {% macro row(p, slot, v, fa=false) %}
-        <tr><td class="slot">{{ slot }}</td><td class="{{ 'name ' ~ v[0] if fa }}">{{ p.name }}{% if fa and p.status == "WAIVERS" %}<span class="wv">waiver</span>{% endif %}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"OUT","DAY_TO_DAY":"DTD","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
+        <tr><td class="slot">{{ slot }}</td><td class="{{ 'name ' ~ v[0] if fa }}">{{ p.name }}{% if fa and p.status == "WAIVERS" %}<span class="wv">waiver</span>{% endif %}{% if p.injury not in ("ACTIVE","NORMAL") %}<span class="pill">{{ {"OUT":"OUT","DAY_TO_DAY":"DTD","SUSPENSION":"SSPD","QUESTIONABLE":"Q","DOUBTFUL":"D","PROBABLE":"P"}.get(p.injury, p.injury) }}</span>{% endif %}</td>
           <td class="n big">{{ p.avg }}</td>
           <td class="n {{ '' if p.last7 is none else ('up' if p.last7 > p.avg else ('down' if p.last7 < p.avg else '')) }}">{{ p.last7 or "-" }}</td>
           <td class="n">{{ p.last_year or "-" }}</td><td class="n">{{ "%.1f"|format(p.own) if p.own is not none else "-" }}</td>
@@ -167,17 +170,24 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     </section>
   </div>
 
-  <div class="pane" id="p3" hidden>
+  <div class="pane" id="p6" hidden>
+    {% set vs_table, league = compare %}
     <section class="card">
-      <h2>傷兵狀況</h2>
-      {% if injuries %}
-      <table>
-        <tr><th>球員</th><th>狀態</th><th>位置</th></tr>
-        {% for p in injuries %}
-        <tr><td>{{ p.name }} <span class="names">{{ p.team }}</span></td><td>{{ {"OUT":"OUT","DAY_TO_DAY":"DTD","SUSPENSION":"禁賽"}.get(p.injury, p.injury) }}</td><td>{{ "傷兵名單" if p.lineup_slot == 13 else ("替補" if p.lineup_slot == 12 else "先發") }}</td></tr>
-        {% endfor %}
+      <h2>本週對決 <small>{{ r.me.team_name }} vs {{ r.opp.team_name }}</small></h2>
+      <table class="vs">
+        <tr><th>項目</th><th class="n">{{ r.me.team_name }}</th><th class="n">{{ r.opp.team_name }}</th></tr>
+        {% for name, m, cm, o, co in vs_table %}<tr><td>{{ name }}</td><td class="n {{ cm }}">{{ m }}</td><td class="n {{ co }}">{{ o }}</td></tr>{% endfor %}
       </table>
-      {% else %}<p class="empty">目前沒有傷兵。</p>{% endif %}
+      <p class="note"><span class="up">綠色</span>是這一項比較好的一方。陣容實力 = 健康球員中今年平均最高的 {{ r.starters }} 人加總；近 7 場實力用近 7 場平均算。剩餘出賽人次是剩下每天能排上先發的人數加總。</p>
+    </section>
+    <section class="card">
+      <h2>全聯盟比較 <small>點標題可排序</small></h2>
+      <div class="scroll"><table class="teams" id="t-teams">
+        <tr><th>隊伍</th><th class="n">戰績</th><th class="n sortable">本週得分</th><th class="n sortable">陣容實力</th><th class="n sortable">近7場實力</th><th class="n sortable">總得分</th></tr>
+        {% for x in league %}<tr class="{{ 'me' if x.t.team_id == r.me.team_id }}"><td class="tname">{{ x.t.team_name }}</td><td class="n">{{ x.t.wins }}-{{ x.t.losses }}</td><td class="n">{{ "%.0f"|format(x.week) }}</td><td class="n">{{ "%.0f"|format(x.power) }}</td><td class="n">{{ "%.0f"|format(x.hot) }}</td><td class="n">{{ "%.0f"|format(x.t.points_for) }}</td></tr>
+        {% endfor %}
+      </table></div>
+      <p class="note">預設依陣容實力排序。你的隊伍用藍色標示。</p>
     </section>
   </div>
 
@@ -209,7 +219,7 @@ function applySort(table) {
   table.querySelectorAll("th.sortable").forEach((th) => th.classList.toggle("on", th.cellIndex === col));
 }
 function setupSort() {
-  document.querySelectorAll("table.roster[id]").forEach((table) => {
+  document.querySelectorAll("table[id]").forEach((table) => {
     table.querySelectorAll("th.sortable").forEach((th) => th.addEventListener("click", () => {
       sortState[table.id] = sortState[table.id] === th.cellIndex ? null : th.cellIndex;
       applySort(table);
