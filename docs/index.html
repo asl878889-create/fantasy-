@@ -306,8 +306,8 @@ function analyse(D) {
 
   for (const d of days) {
     const empty = D.seats.length - d.mine.length;
-    if (empty > 0) todos.push(["ok", "建議", `${d.label} 你只有 ${d.mine.length} 人上場，先發空 ${empty} 格`,
-      `對手這天 ${d.theirs.length} 人。` + (d.stream.length ? `這天有比賽的自由球員：${d.stream.map((f) => `${f.name}（${f.team}，今年 ${f1(f.avg)}）`).join("、")}。` : "")]);
+    if (empty > 0) todos.push(["ok", "建議", `${d.label} 你只有 ${d.mine.length} 人上場`,
+      `對手這天 ${d.theirs.length} 人。` + (d.stream.length ? `這天有比賽的自由球員：${d.stream.map((f) => `${f.name}（今年 ${f1(f.avg)}）`).join("、")}。` : "")]);
   }
 
   const tc = (D.me.transactionCounter || {}).matchupAcquisitionTotals || {};
@@ -317,7 +317,7 @@ function analyse(D) {
   if (ideas.length) {
     const f = ideas[0], lim = D.acq.matchupAcquisitionLimit;
     todos.push(["ok", "建議", `可以考慮用 ${f.name} 換掉 ${worst.name}`,
-      `${f.name}（${f.team}）今年 ${f1(f.avg)}、近 7 場 ${f1(f.last7)}、去年 ${f1(f.lastYear)}，本週還有 ${f.weekGames} 場；` +
+      `${f.name} 今年 ${f1(f.avg)}、近 7 場 ${f1(f.last7)}、去年 ${f1(f.lastYear)}，本週還有 ${f.weekGames} 場；` +
       `${worst.name} 今年 ${f1(worst.avg)}、近 7 場 ${f1(worst.last7)}。本週你已經加了 ${adds} 人` +
       (lim > 0 ? `（聯盟規定每${D.acq.matchupLimitPerScoringPeriod ? "天" : "週"}最多 ${lim} 人）` : "") + "。"]);
   }
@@ -532,7 +532,7 @@ function render(D, A) {
     </div>
     <hr>
     <p><b>${diff >= 0 ? "領先" : "落後"} ${diff >= 0 ? "+" : "-"}${r0(Math.abs(diff))} 分</b> · 剩餘 ${A.days.map((d) => d.label.split(" ")[0]).join("、") || "無"}</p>
-    ${A.threats.length ? `<p>對手主力：${A.threats.map(({ x, n }) => `${esc(x.name)}（平均 ${f1(x.avg)}，${esc(x.team)} 剩 ${n} 場）`).join("、")}</p>` : ""}
+    ${A.threats.length ? `<p>對手主力：${A.threats.map(({ x, n }) => `${esc(x.name)}（平均 ${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
   </section>
 
   <section class="card">

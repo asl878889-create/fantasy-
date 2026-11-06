@@ -124,7 +124,7 @@ footer { color: var(--muted); font-size: 12px; text-align: center; margin: 24px 
     </div>
     <hr>
     <p><b>{{ "領先" if diff >= 0 else "落後" }} {{ "%+.0f"|format(diff) }} 分</b> · 剩餘 {% for d in days %}{{ d.label.split(" ")[0] }}{{ "、" if not loop.last }}{% endfor %}</p>
-    {% if threats %}<p>對手主力：{% for p, g in threats %}{{ p.name }}（平均 {{ p.avg }}，{{ p.team }} 剩 {{ g }} 場）{{ "、" if not loop.last }}{% endfor %}</p>{% endif %}
+    {% if threats %}<p>對手主力：{% for p, g in threats %}{{ p.name }}（平均 {{ p.avg }}，剩 {{ g }} 場）{{ "、" if not loop.last }}{% endfor %}</p>{% endif %}
   </section>
 
   <section class="card">

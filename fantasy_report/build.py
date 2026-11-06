@@ -45,8 +45,8 @@ def todo_list(r: Report, days, ideas, worst, rest):
     for d in days:
         empty = r.starters - len(d["mine"])
         if empty > 0:
-            names = "、".join(f"{f.name}（{f.team}，今年 {f.avg}）" for f in r.stream_for(d["period"]))
-            items.append(("建議", f"{d['label']} 你只有 {len(d['mine'])} 人上場，先發空 {empty} 格",
+            names = "、".join(f"{f.name}（今年 {f.avg}）" for f in r.stream_for(d["period"]))
+            items.append(("建議", f"{d['label']} 你只有 {len(d['mine'])} 人上場",
                           f"對手這天 {len(d['theirs'])} 人。" + (f"這天有比賽的自由球員：{names}。" if names else "")))
 
     # 4. 換人建議
@@ -55,7 +55,7 @@ def todo_list(r: Report, days, ideas, worst, rest):
     if ideas and worst:
         f = ideas[0]
         items.append(("建議", f"可以考慮用 {f.name} 換掉 {worst.name}",
-                      f"{f.name}（{f.team}）今年 {f.avg}、近 7 場 {f.last7 or '-'}，本週還有 {f.week_games} 場；"
+                      f"{f.name} 今年 {f.avg}、近 7 場 {f.last7 or '-'}，本週還有 {f.week_games} 場；"
                       f"{worst.name} 今年 {worst.avg}、近 7 場 {worst.last7 or '-'}。"
                       f"本週你已經加了 {added} 人"
                       + (f"（聯盟規定每{'天' if r.acq.get('matchupLimitPerScoringPeriod') else '週'}最多 {limit:.0f} 人）" if limit and limit > 0 else "")
