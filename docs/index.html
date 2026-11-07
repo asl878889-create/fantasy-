@@ -80,16 +80,19 @@ table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th, td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { color: var(--muted); font-weight: 600; font-size: 13px; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-tr.me td { font-weight: 700; color: var(--accent); }
+tr.me td { font-weight: 700; color: var(--ink); background: color-mix(in srgb, var(--accent) 12%, transparent); } tr.me td.up { color: var(--ok); } tr.me td.down { color: var(--bad); } tr.me td.win { color: var(--ok); }
+/* 自己的隊伍：粗體加淡底色，不用橘紅字（會被當成警告） */
 .day { padding: 10px 0; border-bottom: 1px solid var(--line); }
 .day:last-child { border-bottom: 0; }
 .day .top { display: flex; justify-content: space-between; font-weight: 700; }
 .sub { color: var(--muted); font-size: 13px; }
-.mu-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin: 6px 0 10px; } .mu-nav b { min-width: 120px; white-space: nowrap; text-align: center; font-size: 16px; } .mu-nav button { background: var(--card2, #1b2231); color: var(--ink); border: 1px solid var(--line); border-radius: 50%; width: 38px; height: 38px; font-size: 22px; line-height: 1; padding: 0; cursor: pointer; } .mu-nav button:disabled { opacity: .3; cursor: default; } .mu-nav button.mu-today { width: auto; white-space: nowrap; border-radius: 16px; font-size: 13px; padding: 0 12px; }
+.mu-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin: 6px 0 10px; } .mu-nav b { min-width: 120px; white-space: nowrap; text-align: center; font-size: 16px; } .mu-nav button { background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 50%; width: 38px; height: 38px; font-size: 22px; line-height: 1; padding: 0; cursor: pointer; } .mu-nav button:disabled { opacity: .3; cursor: default; } .mu-nav button.mu-today { width: auto; white-space: nowrap; border-radius: 16px; font-size: 13px; padding: 0 12px; }
 .pill { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--bad-bg); color: var(--bad); margin-left: 4px; white-space: nowrap; }
 .msg { text-align: center; padding: 40px 16px; color: var(--muted); }
 .roster td { padding: 9px 4px; }
 .foldh { cursor: pointer; user-select: none; } .foldh::after { content: "▾"; float: right; color: var(--muted); font-size: 16px; margin-left: 8px; } .card.folded > .foldh::after { content: "▸"; } .card.folded > :not(h2) { display: none !important; } .card.folded > h2 { margin-bottom: 0; }
+a.golink { color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .card.flash { animation: flash 1.6s ease; } @keyframes flash { 0%, 60% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.rankrow { display: flex; align-items: center; justify-content: flex-start; gap: 10px; padding-right: 84px; } .rk { font-size: 12px; font-weight: 800; padding: 1px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); } .rk.first { background: var(--accent); border-color: var(--accent); color: var(--on-accent, #10151f); } .rankrow .gn { font-size: 15px; font-weight: 800; color: var(--ok); } .rankrow .gn.bench { color: var(--muted); font-weight: 600; font-size: 13px; }
 .roster .pill { white-space: nowrap; }
 .roster td.slot { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .roster td.big { font-weight: 800; font-size: 15px; }
@@ -149,11 +152,11 @@ td.logo { text-align: center; padding-left: 2px; padding-right: 2px; } td.logo i
 .agrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 12px 0; }
 .acard { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
 .acard.best { border-color: var(--c2); background: color-mix(in srgb, var(--c2) 12%, var(--card)); }
-.acard { position: relative; grid-row: span 5; grid-template-rows: subgrid; row-gap: 6px; } /* 同一排卡片的名字、標籤、數字、說明各自對齊 */ .acard .ahead { font-size: 16px; font-weight: 800; padding-right: 64px; } .acard .ahead .sub { display: block; white-space: nowrap; font-size: 13px; font-weight: 600; margin-top: 2px; } .acard .ahead .tocmp.sm { position: absolute; top: 10px; right: 10px; margin: 0; } .acard p { margin: 2px 0 0; font-size: 14px; line-height: 1.55; }
+.acard { position: relative; grid-row: span 6; grid-template-rows: subgrid; row-gap: 6px; } /* 同一排卡片的名字、標籤、數字、說明各自對齊 */ .acard .ahead { font-size: 16px; font-weight: 800; padding-right: 64px; } .acard .ahead .sub { display: block; white-space: nowrap; font-size: 13px; font-weight: 600; margin-top: 2px; } .acard .ahead .tocmp.sm { position: absolute; top: 10px; right: 10px; margin: 0; } .acard p { margin: 2px 0 0; font-size: 14px; line-height: 1.55; }
 .atags { display: flex; gap: 6px; flex-wrap: wrap; } .atag { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
 .atag.soft, .atag.ok, .atag.fa2 { background: var(--ok-bg); color: var(--ok); } .atag.hard, .atag.bad { background: var(--bad-bg); color: var(--bad); }
 .atag.mid, .atag.wv2 { background: var(--warn-bg); color: var(--warn); }
-table.contrib { font-size: 13px; } table.contrib td, table.contrib th { padding-left: 3px; padding-right: 3px; } table.contrib small.gp { display: block; font-size: 11px; } table.contrib small.pc { display: block; font-size: 11px; } .cbar { display: block; width: 44px; margin: 0 0 2px; height: 7px; border-radius: 4px; background: var(--line); vertical-align: middle; margin-right: 4px; overflow: hidden; } .cbar i { display: block; height: 100%; background: var(--c1); } table.contrib td small { color: var(--muted); }
+table.contrib { font-size: 13px; font-variant-numeric: tabular-nums; } table.contrib td { vertical-align: middle; padding-top: 7px; padding-bottom: 7px; height: 52px; } table.contrib { table-layout: fixed; width: 100%; } table.contrib th:nth-child(1) { width: auto; } table.contrib { min-width: 310px; } table.contrib th:nth-child(2) { width: 40px; } table.contrib th:nth-child(3) { width: 40px; } table.contrib th:nth-child(4) { width: 48px; } table.contrib th:nth-child(5) { width: 52px; } table.contrib th:nth-child(6) { width: 42px; } table.contrib th.n, table.contrib td.n { padding-left: 8px; padding-right: 3px; } table.contrib th, table.contrib td { overflow-wrap: anywhere; } table.contrib th:first-child, table.contrib td:first-child { text-align: left; } table.contrib td:first-child { line-height: 1.25; } table.contrib td .pill { display: inline-block; margin: 2px 0 0; } table.contrib td, table.contrib th { padding-left: 3px; padding-right: 3px; } table.contrib small.gp { display: block; font-size: 11px; } table.contrib small.pc { display: block; font-size: 11px; } table.contrib .pcw { width: 40px; margin-left: auto; text-align: left; } table.contrib .pcw b { text-align: left; } table.contrib .cbar { margin: 3px 0 0; width: 40px; } table.contrib td.n b { display: block; line-height: 1.2; } .cbar { display: block; width: 44px; margin: 0 0 2px; height: 7px; border-radius: 4px; background: var(--line); vertical-align: middle; margin-right: 4px; overflow: hidden; } .cbar i { display: block; height: 100%; background: var(--c1); } table.contrib td small { color: var(--muted); }
 table.hab td.tname { white-space: normal; } table.hab small.gp { display: block; font-size: 11px; color: var(--muted); } .hl { margin: 6px 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
 table.mvt { table-layout: fixed; font-size: 13px; } table.mvt th:nth-child(1), table.mvt td.tm { width: 62px; } table.mvt th:nth-child(2), table.mvt td.tn { width: 78px; }
 table.mvt td { vertical-align: top; padding-left: 3px; padding-right: 3px; } table.mvt td.tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; } table.mvt td.tm { white-space: nowrap; font-size: 12px; } table.mvt td div { margin: 1px 0; word-break: break-word; }
@@ -598,7 +601,7 @@ function analyse(D) {
     const [s0, ...rest] = plan.steps;
     todos.push(["ok", "建議", `照撿人排程：${label(s0.p)} 撿 ${s0.f.name}、丟 ${s0.d.name}`,
       (rest.length ? `接著 ${rest.map((x) => `${label(x.p)} 撿 ${x.f.name}、丟 ${x.d.name}`).join("；")}。` : "") +
-      `本週還可以加 ${plan.left} 人，照排程預估多拿 ${r0(plan.total)} 分。詳細在「陣容」分頁的「補強建議」。`]);
+      `本週還可以加 ${plan.left} 人，照排程預估多拿 ${r0(plan.total)} 分。詳細在「決策」分頁的「補強建議」。`]);
   }
   return { days, todos, myRest, oppRest, final, adds, worst, drop, ideas, threats, remSet, faList: D.fas.slice(0, 20), vs, league, teamViews,
     plan, label, next: nextWeekPreview(D), odds: playoffOdds(D, league), winProb };
@@ -917,6 +920,29 @@ function applyUi(k, save) {
 document.getElementById("uibtn").addEventListener("click", () => { document.getElementById("uimenu").hidden = !document.getElementById("uimenu").hidden; });
 document.getElementById("uimenu").addEventListener("click", (e) => { const b = e.target.closest("[data-ui]"); if (b) { applyUi(b.dataset.ui, true); document.getElementById("uimenu").hidden = true; } });
 applyUi(document.documentElement.dataset.ui || "A", false);
+// 文字裡提到「某某」分頁的「某張卡片」時，變成可以點的連結：切過去並捲到那張卡片
+const TAB_ID = { "戰況": "p1", "決策": "p11", "陣容": "p2", "球員": "p5", "聯盟": "p7" };
+function linkifyGo() {
+  const re = /「(戰況|決策|陣容|球員|聯盟)」分頁的「([^」]+)」/g;
+  const walker = document.createTreeWalker(document.getElementById("app"), NodeFilter.SHOW_TEXT);
+  const hits = []; while (walker.nextNode()) { const n = walker.currentNode; if (re.test(n.nodeValue) && !n.parentElement.closest("a, h2, button, .tabs")) hits.push(n); re.lastIndex = 0; }
+  for (const n of hits) {
+    const frag = document.createDocumentFragment(); let last = 0, m; const t = n.nodeValue; re.lastIndex = 0;
+    while ((m = re.exec(t))) {
+      frag.append(t.slice(last, m.index) + `「${m[1]}」分頁的「`); // 只有卡片名稱可以點，前後的字維持原樣
+      const a = document.createElement("a"); a.href = "#"; a.className = "golink"; a.dataset.go = TAB_ID[m[1]]; a.dataset.card = m[2]; a.textContent = m[2]; frag.append(a); frag.append("」"); last = m.index + m[0].length;
+    }
+    frag.append(t.slice(last)); n.replaceWith(frag);
+  }
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a.golink"); if (!a) return; e.preventDefault();
+  if (window.showTab) window.showTab(a.dataset.go);
+  const pane = document.getElementById(a.dataset.go); if (!pane || !a.dataset.card) { window.scrollTo({ top: 0 }); return; }
+  const h = [...pane.querySelectorAll("section.card > h2")].find((x) => x.textContent.trim().startsWith(a.dataset.card));
+  if (!h) return; const c = h.parentElement; c.classList.remove("folded");
+  setTimeout(() => { c.scrollIntoView({ behavior: "smooth", block: "start" }); c.classList.add("flash"); setTimeout(() => c.classList.remove("flash"), 1600); }, 60);
+});
 const MU = { p: null, per: null }; // Matchup 現在看哪一天（null＝今天）
 function todayCard(D, A) {
   if (MU.per !== D.period) { MU.per = D.period; MU.p = null; }
@@ -1003,7 +1029,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>
@@ -1028,10 +1054,10 @@ function strategyCard(D, A) {
     const left = ho.limit ? Math.max(0, ho.limit - ho.used) : null;
     if (ho.adds < 4) L.push(["", `對手整季只撿 ${ho.adds} 人，很少動陣容，預估分數比較準，不用防他臨時補強。`]);
     else if (left === 0) L.push(["", `對手本週撿人名額已經用完（${ho.used}/${ho.limit}），陣容固定，預估分數可以直接相信。`]);
-    else L.push(["", `對手是「${ho.style}」，每週約撿 ${f1(ho.rate)} 人${ho.limit ? `，本週還剩 ${left} 次` : ""}${ho.peak && ho.adds >= 5 ? `，常在週${ho.peak}動作` : ""}。${wp >= 0.5 && wp < 0.85 ? "你的領先可能被他補人追回，留一點緩衝。" : wp < 0.5 ? "他可能再補強，你更要早點動作。" : "你領先很多，他補人也很難追上。"}`]);
+    else L.push(["", `對手屬於「<span class="rec2" role="button" tabindex="0" data-hab="${D.opp.id}">${ho.style}</span>」，每週約撿 ${f1(ho.rate)} 人${ho.limit ? `，本週還剩 ${left} 次` : ""}${ho.peak && ho.adds >= 5 ? `，常在週${ho.peak}動作` : ""}。${wp >= 0.5 && wp < 0.85 ? "你的領先可能被他補人追回，留一點緩衝。" : wp < 0.5 ? "他可能再補強，你更要早點動作。" : "你領先很多，他補人也很難追上。"}`]);
   }
   if (hm && hm.limit) { const mleft = Math.max(0, hm.limit - hm.used);
-    L.push(["", mleft === 0 ? "你本週撿人名額用完了，只能靠調整先發。" : `你本週還剩 ${mleft} 次撿人，照「陣容」分頁的撿人排程；${wp >= 0.7 ? "領先時可以留到週末再用" : "落後或拉鋸時盡早用"}。`]); }
+    L.push(["", mleft === 0 ? "你本週撿人名額用完了，只能靠調整先發。" : `你本週還剩 ${mleft} 次撿人，照「決策」分頁的「補強建議」撿人排程；${wp >= 0.7 ? "領先時可以留到週末再用" : "落後或拉鋸時盡早用"}。`]); }
   return `<section class="card${nw("strategy")}">
     <h2>應對策略 <small>根據對手習慣、場次和勝率</small></h2>
     <ul class="hl">${L.map((l) => `<li>${l[1]}</li>`).join("")}</ul>
@@ -1165,13 +1191,13 @@ function contribCard(D) {
   return `<section class="card${nw("contrib")}">
     <h2>本週貢獻榜 <small>只算進先發的實際得分，已打完 ${C.days} 天</small></h2>
     <p class="sub" style="margin:0 0 8px">你這週到目前 ${r0(C.total)} 分，前 3 名（${top3.map((r) => esc(r.name)).join("、")}）佔 ${Math.round(share3 * 100)}%。${C.missed >= 1 ? `事後看，最佳先發可以多拿 <b class="down">${r0(C.missed)}</b> 分${miss && miss.bench.length ? `（最多是${wd(miss.p)}，${miss.bench.map((b) => `${esc(b.name)} ${r0(b.pts)} 分`).join("、")}在替補）` : ""}。` : "先發排得很好，沒有明顯錯過的分數。"}</p>
-    <div class="scroll"><table class="vs contrib"><tr><th>球員</th><th class="n">得分</th><th class="n">場均</th><th>佔比</th><th class="n">比預估</th><th class="n">替補</th></tr>
+    <div class="scroll"><table class="vs contrib"><tr><th>球員</th><th class="n">得分</th><th class="n">場均</th><th class="n">佔比</th><th class="n">+/-</th><th class="n">替補</th></tr>
     ${C.rows.map((r) => { const d = r.exp ? r.pts - r.exp : null; return `<tr><td><span class="pname" data-pid="${r.id}">${esc(r.name)}</span>${r.onRoster ? "" : ' <span class="pill">已不在陣容</span>'}</td>
       <td class="n"><b>${r0(r.pts)}</b><small class="gp">${r.played} 場</small></td><td class="n">${r.played ? f1(r.pts / r.played) : "-"}</td>
-      <td><span class="cbar"><i style="width:${Math.round(r.pts / max * 100)}%"></i></span><small class="pc">${C.total ? Math.round(r.pts / C.total * 100) : 0}%</small></td>
+      <td class="n"><div class="pcw"><b>${C.total ? Math.round(r.pts / C.total * 100) : 0}%</b><span class="cbar"><i style="width:${Math.round(r.pts / max * 100)}%"></i></span></div></td>
       <td class="n ${d == null ? "" : d >= 0 ? "up" : "down"}">${d == null ? "-" : (d >= 0 ? "+" : "") + r0(d)}</td><td class="n ${r.bench >= 30 ? "down" : ""}">${r.bench ? r0(r.bench) : "-"}</td></tr>`; }).join("")}
     </table></div>
-    <p class="note">得分是進先發、實際算分的分數。「比預估」是實際比「場均預估 × 上場場數」多或少。「替補」是他坐在替補時拿的分數（沒算進隊伍）。事後最佳先發是用當天每個人實際得分，重新排出最好的先發。</p>
+    <p class="note">得分是進先發、實際算分的分數。「+/-」是實際比「場均預估 × 上場場數」多或少。「替補」是他坐在替補時拿的分數（沒算進隊伍）。事後最佳先發是用當天每個人實際得分，重新排出最好的先發。</p>
   </section>`;
 }
 
@@ -1210,7 +1236,7 @@ function analyseHabits(D) {
     const waiver = mine.filter((x) => x.type === "WAIVER").length;
     const used = Number(((t.transactionCounter || {}).matchupAcquisitionTotals || {})[D.week] || 0);
     const rate = adds.length / weeks;
-    const style = adds.length <= 3 ? "很少動" : streams >= 2 && streams / adds.length >= 0.25 ? "串流型" : up != null && up >= 3 ? "升級型" : up != null && up <= -3 ? "亂換型" : "穩定型";
+    const style = adds.length <= 3 ? "很少動" : streams >= 2 && streams / adds.length >= 0.25 ? "試用派" : up != null && up >= 3 ? "升級派" : up != null && up <= -3 ? "亂換派" : "穩定派";
     const act = rate >= 3 ? "非常活躍" : rate >= 1.5 ? "還算活躍" : rate >= 0.7 ? "偶爾動" : "很少動";
     const notes = [];
     notes.push(`整季撿 ${adds.length} 人（每週約 ${f1(rate)} 人）${act === "很少動" ? "，很少動陣容" : ""}`);
@@ -1218,7 +1244,7 @@ function analyseHabits(D) {
     if (streams >= 2) notes.push(`有 ${streams} 個人撿來 4 天內就丟，偏串流`);
     if (adds.length >= 5 && peakShare >= 0.3) notes.push(`常在週${ZD[peak]}動作（${Math.round(peakShare * 100)}%）`);
     if (waiver >= 3 && waiver / mine.length >= 0.25) notes.push(`愛用 waiver（${waiver} 次）`);
-    const recent = mine.slice(-8).reverse().map((x) => { const a = x.items.find((i) => i.type === "ADD"), d = x.items.find((i) => i.type === "DROP");
+    const recent = mine.slice().reverse().map((x) => { const a = x.items.find((i) => i.type === "ADD"), d = x.items.find((i) => i.type === "DROP");
       return { at: x.proposedDate, type: x.type, add: a ? { name: nm(a.playerId), v: v(a.playerId), id: a.playerId } : null, drop: d ? { name: nm(d.playerId), v: v(d.playerId), id: d.playerId } : null }; });
     out[t.id] = { t, adds: adds.length, rate, used, limit, style, act, up, streams, peak: ZD[peak], notes, recent, waiver };
   }
@@ -1228,13 +1254,13 @@ function habitCard(D) {
   const H = D.habits; if (!H) return "";
   const order = [...D.teams].sort((a, b) => (b.id === D.opp.id) - (a.id === D.opp.id) || H[b.id].rate - H[a.id].rate);
   return `<section class="card${nw("habit")}">
-    <h2>對手撿人丟人習慣 <small>點隊伍看最近動作</small></h2>
+    <h2>對手撿人丟人習慣 <small>點下面的類型看每一筆</small></h2>
     <div class="scroll"><table class="vs hab"><tr><th>隊伍</th><th class="n">整季撿人</th><th class="n">本週用</th><th class="n">撿丟差</th></tr>
-    ${order.map((t) => { const h = H[t.id]; return `<tr class="${t.id === D.me.id ? "me" : ""}"><td class="tname"><span class="rec2" role="button" tabindex="0" data-hab="${t.id}">${esc(t.name)}</span>${t.id === D.opp.id ? ' <span class="tag bad">本週對手</span>' : ""}<div class="sub"><b>${h.style}</b>${h.adds >= 5 ? " · 常在週" + h.peak : ""}</div></td>
+    ${order.map((t) => { const h = H[t.id]; return `<tr class="${t.id === D.me.id ? "me" : ""}"><td class="tname">${esc(t.name)}${t.id === D.opp.id ? ' <span class="tag bad">本週對手</span>' : ""}<div class="sub"><b class="rec2" role="button" tabindex="0" data-hab="${t.id}">${h.style}</b>${h.adds >= 5 ? " · 常在週" + h.peak : ""}</div></td>
       <td class="n">${h.adds}<small class="gp">${f1(h.rate)}／週</small></td><td class="n">${h.used}${h.limit ? "/" + h.limit : ""}</td>
-      <td class="n ${h.up == null ? "" : h.up >= 1 ? "up" : h.up <= -1 ? "down" : ""}">${h.up == null ? "-" : (h.up >= 0 ? "+" : "") + f1(h.up)}</td></tr>`; }).join("")}
+      <td class="n ${h.up == null ? "" : Math.round(h.up * 10) > 0 ? "up" : Math.round(h.up * 10) < 0 ? "down" : ""}">${h.up == null ? "-" : (h.up >= 0 ? "+" : "") + f1(h.up)}</td></tr>`; }).join("")}
     </table></div>
-    <p class="note">撿丟差 = 每次「撿一個、丟一個」時，撿進來的人比丟掉的人的綜合評分平均多（或少）多少分，正的表示在升級。串流型是撿來 4 天內就丟的比例高。資料是整季所有已完成的撿人丟人。</p>
+    <p class="note">撿丟差 = 每次「撿一個、丟一個」時，撿進來的人比丟掉的人的綜合評分平均多（或少）多少分，正的表示在升級。試用派是撿來 4 天內就丟的比例高；升級派是撿進來的平均比丟掉的好；亂換派是撿進來的比丟掉的差。資料是整季所有已完成的撿人丟人。</p>
   </section>`;
 }
 function openHabit(id) {
@@ -1247,10 +1273,26 @@ function openHabit(id) {
     <p class="sub">本週用了 ${h.used}${h.limit ? " / " + h.limit : ""} 次增補。</p>
     <div class="scroll"><table class="vs"><tr><th>時間（台北）</th><th>撿</th><th>丟</th><th>方式</th></tr>
     ${h.recent.map((x) => `<tr><td>${d(x.at)}</td><td>${pn(x.add)}</td><td>${pn(x.drop)}</td><td>${x.type === "WAIVER" ? "waiver" : "FA"}</td></tr>`).join("")}</table></div>
-    <p class="note">括號是球員現在的綜合評分。最近 ${h.recent.length} 筆。</p>`;
+    <p class="note">括號是球員現在的綜合評分。整季共 ${h.recent.length} 筆，新的在上面。</p>`;
 }
 
 
+// 點貢獻榜的佔比：看這位球員這週每一天的得分
+function openShare(id) {
+  const D = CUR; if (!D) return;
+  const days = ((D.weekBox || {})[D.me.id]) || {};
+  const wd = (p) => { const d = addDays(D.base, p); return `${WEEKDAYS[weekdayIdx(d)]} ${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
+  const rows = Object.keys(days).map(Number).sort((a, b) => a - b).filter((p) => dayDone(p)).map((p) => ({ p, e: days[p].find((x) => x.id === id) })).filter((x) => x.e);
+  const name = (rows[0] && rows[0].e.name) || "球員";
+  const slotName = (e) => e.slot === BENCH ? "替補" : e.slot === IR ? "IR" : "先發";
+  const total = rows.filter((x) => x.e.slot !== BENCH && x.e.slot !== IR).reduce((t, x) => t + x.e.pts, 0);
+  $("#modal").hidden = false; document.body.style.overflow = "hidden";
+  $("#modal .box").innerHTML = `<h3>${esc(name)} <span class="sub">本週每天得分</span></h3>
+    <div class="scroll"><table class="vs"><tr><th>日期</th><th>位置</th><th class="n">得分</th></tr>
+    ${rows.map((x) => `<tr><td>${wd(x.p)}</td><td>${slotName(x.e)}</td><td class="n ${x.e.slot === BENCH ? "sub" : ""}"><b>${x.e.pts ? f1(x.e.pts) : "-"}</b></td></tr>`).join("")}
+    <tr><td colspan="2"><b>先發合計</b></td><td class="n"><b>${f1(total)}</b></td></tr></table></div>
+    <p class="note">只算已打完的日子。替補日的得分沒有算進隊伍，用灰色表示。</p>`;
+}
 function openRecord(id) {
   const D = CUR, O = CUR && CUR.odds; if (!O) return;
   const pct = (v) => v >= 0.995 ? ">99%" : v > 0 && v < 0.005 ? "<1%" : `${Math.round(v * 100)}%`;
@@ -1711,7 +1753,7 @@ let CONFIRMED = new Set(), CONF_DB = null;
 try { (JSON.parse(store("confirms") || "[]")).forEach((k) => CONFIRMED.add(k)); } catch (e) {}
 const nw = (k) => (k in NEW && !CONFIRMED.has(k) ? ` is-new" data-mark="${k}` : "");
 function applyMarks() {
-  const ub = document.getElementById("uibtn"); if (ub && ("uitheme" in NEW || "refreshicon" in NEW)) ub.dataset.mark = "uitheme"; // 換配色按鈕的更新標記
+  const ub = document.getElementById("uibtn"); if (ub && ("uitheme" in NEW || "refreshicon" in NEW || "golink" in NEW || "habtap" in NEW)) ub.dataset.mark = "uitheme"; // 換配色按鈕的更新標記
   document.querySelectorAll("[data-mark]").forEach((el) => {
     const k = el.dataset.mark, done = CONFIRMED.has(k);
     el.classList.toggle("is-new", !done);
@@ -1821,7 +1863,24 @@ function addCards(D, A) {
   const worst = A.worst;
   const wd = (p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))];
   const score = (f) => 0.4 * f.avg + 0.3 * (f.lastYear != null ? f.lastYear : f.avg) + 0.3 * (f.last7 != null ? f.last7 : f.avg) + 1.5 * f.weekGames + 0.8 * D.nextWeek.filter((g) => f.games.has(g)).length;
-  const list = D.fas.filter((f) => !f.out).sort((a, b) => b.val - a.val || score(b) - score(a)).slice(0, 6); // 跟其他地方一樣用綜合評分排序
+  // 依「你這隊」的缺口排序：每位自由球員試著換掉陣容裡的每一個人，看先發 10 人的綜合評分總和最多能增加多少（考慮位置）
+  const pool = D.myRoster.filter((x) => x.lineupSlot !== IR && !x.out);
+  const asItem = (x) => ({ id: x.id, slots: x.slots, proj: x.val, ref: x });
+  const lineVal = (ps) => bestLineup(ps, D.seats).reduce((t, x) => t + x.proj, 0);
+  const baseV = lineVal(pool.map(asItem));
+  const fit = new Map();
+  for (const f of D.fas.filter((x) => !x.out).sort((a, b) => b.val - a.val).slice(0, 40)) {
+    let best = { gain: -1, d: null };
+    for (const d of pool) { const g = lineVal([...pool.filter((x) => x.id !== d.id).map(asItem), asItem(f)]) - baseV; if (g > best.gain + 1e-9 || (Math.abs(g - best.gain) < 1e-9 && best.d && d.val < best.d.val)) best = { gain: g, d }; }
+    fit.set(f.id, best);
+  }
+  const ranked = [...fit.keys()].map((id) => D.fas.find((x) => x.id === id)).sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain || b.val - a.val || score(b) - score(a));
+  // 先每個位置（PG、SG、SF、PF、C）各挑這隊最需要的一個，再用增益最高的補滿：陣容缺哪個位置，就推薦那個位置的人
+  const picked = [];
+  for (const sl of [0, 1, 2, 3, 4]) { const c = ranked.find((f) => f.slots.includes(sl) && !picked.includes(f) && fit.get(f.id).gain > 0.05); if (c) picked.push(c); }
+  picked.sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain);
+  for (const f of ranked) if (picked.length < 6 && !picked.includes(f)) picked.push(f);
+  const list = picked.slice(0, 6).sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain || b.val - a.val); // 依對你這隊的增益排名，第 1 張就是最推薦
   if (!list.length) return "";
   const share = (a, b) => a.slots.some((s) => s <= 4 && b.slots.includes(s));
   const pos = (x) => [...new Set(x.slots.map((s) => SLOT_LABEL[s]).filter((s) => ["PG", "SG", "SF", "PF", "C"].includes(s)))].join("/") || x.pos;
@@ -1833,7 +1892,7 @@ function addCards(D, A) {
     else if (f.lastYear != null && f.avg >= f.lastYear + 5) t.push(`今年 ${f1(f.avg)} 比去年 ${f1(f.lastYear)} 好很多，可能是角色變重`);
     else if (f.lastYear != null) t.push(`今年 ${f1(f.avg)}、去年 ${f1(f.lastYear)}，兩季差不多`);
     if (f.last7 != null) t.push(f.last7 >= f.avg + 4 ? `近 7 場回升到 ${f1(f.last7)}` : f.last7 <= f.avg - 4 ? `近 7 場掉到 ${f1(f.last7)}，要小心` : `近 7 場 ${f1(f.last7)} 穩定`);
-    if (worst && share(f, worst)) t.push(`位置可以直接頂替 ${worst.name}`);
+    const ft = fit.get(f.id); if (ft && ft.d && ft.gain > 0.05) t.push(`放進你的先發能多 ${f1(ft.gain)} 分，補在 ${pos(f)} 位置、頂替 ${ft.d.name}`); else if (ft && ft.d) t.push("你的先發已經夠強，比較像替補人選");
     if (f.injury !== "ACTIVE" && f.injury !== "NORMAL") t.push(`目前 ${INJURY[f.injury] || f.injury}，先確認傷況`);
     if (f.weekGames <= 1 && D.nextWeek.filter((g) => f.games.has(g)).length >= 4) t.push("本週場次少，比較適合下週用");
     return t.join("，") + "。";
@@ -1842,7 +1901,9 @@ function addCards(D, A) {
     const st = schedTag(f, D), mins = f.min7 != null ? f.min7 : f.min;
     const role = mins == null ? null : mins >= 30 ? ["ok", "主力"] : mins >= 22 ? ["mid", "輪換"] : ["bad", "邊緣"];
     const days = [...f.games].filter((g) => A.remSet.has(g)).sort((a, b) => a - b);
-    return `<div class="acard${better && f.id === top.id ? " best" : ""}">
+    const ft = fit.get(f.id), gn = ft && ft.gain > 0.05 ? `先發 +${f1(ft.gain)}` : "替補人選";
+    return `<div class="acard${i === 0 ? " best" : ""}">
+      <div class="rankrow"><span class="rk${i === 0 ? " first" : ""}">${i === 0 ? "★ 最推薦" : "推薦 " + (i + 1)}</span><span class="gn${ft && ft.gain > 0.05 ? "" : " bench"}">${gn}</span></div>
       <div class="ahead"><span class="pname" data-pid="${f.id}">${esc(f.name)}</span> <span class="sub">${esc(pos(f))} · ${esc(f.team)}</span><button type="button" class="tocmp sm" data-cmp="${f.id}">⚖ 比較</button></div>
       <div class="atags">${st ? `<span class="atag ${st[0]}">${st[1]}</span>` : ""}${role ? `<span class="atag ${role[0]}">${role[1]}</span>` : ""}<span class="atag ${f.status === "WAIVERS" ? "wv2" : "fa2"}">${f.status === "WAIVERS" ? "Waiver" : "FA"}</span></div>
       <div class="sub">今年 ${f1(f.avg)} · 近7場 ${f1(f.last7)} · 去年 ${f1(f.lastYear)} · 持有 ${f.own == null ? "-" : f1(f.own) + "%"}</div>
@@ -1859,7 +1920,7 @@ function addCards(D, A) {
     ? `<b>長期換人：</b>放掉 ${esc(drop.name)}（綜合 ${f1(drop.val)}，今年 ${f1(drop.avg)}，去年 ${f1(drop.lastYear)}），加入 ${esc(top.name)}（綜合 ${f1(top.val)}）${top.status === "WAIVERS" ? "（在 waiver，要等處理）" : ""}。${alts.length ? `${alts.map((f) => esc(f.name)).join(" 和 ")} 是備選。` : ""}`
     : `<b>長期換人：</b>你的陣容目前沒有該換的人：沒有自由球員比你的人綜合評分多 ${UPG} 分以上${worst ? `（綜合最低的 ${esc(worst.name)} 是 ${f1(worst.val)}，建議先留）` : ""}。下面是值得觀察的名單。`;
   return `<section class="card${nw("addc")}">
-    <h2>補強建議 <small>依今年、去年、近 7 場與賽程排序</small></h2>
+    <h2>補強建議 <small>依你這隊的位置缺口排序</small></h2>
     <div class="warnline plan2${nw("logic")}"><p>${LKN(week)}</p>${banner ? `<p>${LKN(banner)}</p>` : ""}</div>
     <div class="agrid${nw("cmpcorner")}">${list.map(card).join("")}</div>
     <p class="note">「本週先撿」只算這週剩下幾天能多拿幾分，只排馬上撿得到的自由球員，而且只丟今年平均和預估都比較低的人；「長期換人」和下面的卡片看的是長期實力。如果當天比賽已經開打，撿進來的人當天不會得分，請改成隔天撿。${used ? "本週增補額度已經用完，以上名單可以等下週一新的一週再用。" : ""}賽程標籤看未來 5 場對手的平均勝率；角色標籤看近 7 場上場時間（30 分鐘以上主力、22 分鐘以上輪換）。Waiver 的球員要等 waiver 處理完才拿得到。這個網站只讀取資料，不會替你改陣容。</p>
@@ -1943,7 +2004,7 @@ function render(D, A) {
     </div>
     <hr>
     <p><b>${diff >= 0 ? "領先 +" : "落後 -"}${r0(Math.abs(diff))} 分</b> · 剩餘 ${A.days.map((d) => d.label.split(" ")[0]).join("、") || "無"}</p>
-    ${D.habits && D.habits[D.opp.id] ? `<p>對手習慣：${D.habits[D.opp.id].style}，${esc(D.habits[D.opp.id].notes[0])}${D.habits[D.opp.id].limit ? `；本週用了 ${D.habits[D.opp.id].used}/${D.habits[D.opp.id].limit} 次` : ""}</p>` : ""}
+    ${D.habits && D.habits[D.opp.id] ? `<p>對手習慣：<span class="rec2" role="button" tabindex="0" data-hab="${D.opp.id}">${D.habits[D.opp.id].style}</span>，${esc(D.habits[D.opp.id].notes[0])}${D.habits[D.opp.id].limit ? `；本週用了 ${D.habits[D.opp.id].used}/${D.habits[D.opp.id].limit} 次` : ""}</p>` : ""}
     ${A.threats.length ? `<p>對手主力：${A.threats.map(({ x, n }) => `${esc(x.name)}（${f1(x.avg)}，剩 ${n} 場）`).join("、")}</p>` : ""}
   </section>
 
@@ -2073,7 +2134,9 @@ function render(D, A) {
   }));
   if (activeTab === "p6") activeTab = "p7"; if (activeTab === "p9") activeTab = "p5";
   applyMarks(); // 未確認的更新：虛線框、「✓ 確認」按鈕、分頁小點
+  window.showTab = show;
   show(document.getElementById(activeTab) ? activeTab : "p1");
+  linkifyGo();
   setupSort();
   setupCompare(D);
   setupFold();
@@ -2184,6 +2247,8 @@ document.addEventListener("click", (e) => {
   if (hk) { document.querySelectorAll(".wchart .hit").forEach((h) => h.classList.toggle("on", h === hk));
     const r = document.querySelectorAll("#t-wk tr")[Number(hk.dataset.wk) + 1];
     $("#wk-tip").textContent = r ? [...r.children].map((c, i) => ["", "你 ", "對手 ", "中位數 ", "結果 "][i] + c.textContent.trim()).join("　") : ""; return; }
+  const sh = e.target.closest("[data-share]");
+  if (sh) { openShare(Number(sh.dataset.share)); return; }
   const hb = e.target.closest(".rec2[data-hab]");
   if (hb) { openHabit(Number(hb.dataset.hab)); return; }
   const rv = e.target.closest(".rec2[data-rec]");
