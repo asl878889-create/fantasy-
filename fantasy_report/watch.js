@@ -65,7 +65,7 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  await page.addInitScript(() => { window.__NOAUTH = true; }); // 網頁有密碼，這支程式在雲端自己打開，直接略過
+  await page.addInitScript((adv) => { window.__NOAUTH = true; if (adv) window.__ADV = adv; }, (() => { try { return JSON.parse(require("fs").readFileSync(path.resolve(__dirname, "../docs/adv.json"), "utf8")); } catch (e) { return null; } })()); // 網頁有密碼，這支程式在雲端自己打開，直接略過
   await page.goto("file://" + (process.env.REPORT_PAGE || path.resolve(__dirname, "../docs/index.html")) + (TEAM ? `?team=${TEAM}` : ""));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && document.querySelector(".tabs"), null, { timeout: 120000 });
   const res = await page.evaluate(IN_PAGE, { mode: MODE, now: NOW, since: SINCE, hours: HOURS, site: TEAM ? "" : SITE });

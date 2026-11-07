@@ -16,7 +16,7 @@ const DRY = process.argv.includes("--dry");
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  await page.addInitScript(() => { window.__NOAUTH = true; }); // 網頁有密碼，這支程式在雲端自己打開，直接略過
+  await page.addInitScript((adv) => { window.__NOAUTH = true; if (adv) window.__ADV = adv; }, (() => { try { return JSON.parse(require("fs").readFileSync(path.resolve(__dirname, "../docs/adv.json"), "utf8")); } catch (e) { return null; } })()); // 網頁有密碼，這支程式在雲端自己打開，直接略過
   await page.goto("file://" + path.resolve(__dirname, "../docs/index.html") + (TEAM ? `?team=${TEAM}` : ""));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && document.querySelector(".tabs"), null, { timeout: 120000 });
   const text = await page.evaluate(async (site) => {
