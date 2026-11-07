@@ -1030,7 +1030,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["修正與小調整\n• 修正：換配色的選單按 🎨 收不起來（現在按一次展開、再按收起，點旁邊也會收起）\n• Matchup 最上面的比分改成整數，不顯示小數點", false], ["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["修正：補強建議和「陣容評估」卡片的判斷不一致（陣容評估說「留下」，補強建議卻叫你換同一個人）。現在補強建議只會建議換掉陣容評估說「可以換掉」的人，而且自由球員綜合評分要多 3 分以上；每張卡片的標籤改成「綜合 +X」；沒有該換的人時，只列「觀察名單」，不標最推薦", false], ["修正與小調整\n• 修正：換配色的選單按 🎨 收不起來（現在按一次展開、再按收起，點旁邊也會收起）\n• Matchup 最上面的比分改成整數，不顯示小數點", false], ["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>
@@ -1864,24 +1864,25 @@ function addCards(D, A) {
   const worst = A.worst;
   const wd = (p) => WEEKDAYS[weekdayIdx(addDays(D.base, p))];
   const score = (f) => 0.4 * f.avg + 0.3 * (f.lastYear != null ? f.lastYear : f.avg) + 0.3 * (f.last7 != null ? f.last7 : f.avg) + 1.5 * f.weekGames + 0.8 * D.nextWeek.filter((g) => f.games.has(g)).length;
-  // 依「你這隊」的缺口排序：每位自由球員試著換掉陣容裡的每一個人，看先發 10 人的綜合評分總和最多能增加多少（考慮位置）
-  const pool = D.myRoster.filter((x) => x.lineupSlot !== IR && !x.out);
-  const asItem = (x) => ({ id: x.id, slots: x.slots, proj: x.val, ref: x });
-  const lineVal = (ps) => bestLineup(ps, D.seats).reduce((t, x) => t + x.proj, 0);
-  const baseV = lineVal(pool.map(asItem));
-  const fit = new Map();
-  for (const f of D.fas.filter((x) => !x.out).sort((a, b) => b.val - a.val).slice(0, 40)) {
-    let best = { gain: -1, d: null };
-    for (const d of pool) { const g = lineVal([...pool.filter((x) => x.id !== d.id).map(asItem), asItem(f)]) - baseV; if (g > best.gain + 1e-9 || (Math.abs(g - best.gain) < 1e-9 && best.d && d.val < best.d.val)) best = { gain: g, d }; }
-    fit.set(f.id, best);
+  // 跟「陣容評估」卡片同一套判斷：只有陣容評估說「可以換掉／可以放掉」的人才會被頂替，
+  // 而且自由球員的綜合評分要比他高 UPG 分以上（跟 upgrades() 一樣）。陣容評估說「留下」的人，這裡不會建議換。
+  const rosAll = D.rosters[D.me.id] || D.myRoster;
+  const swaps = rosAll.filter((x) => { const j = rosterJudge(x, rosAll, D); return j.tag === "bad" && j.alt; });
+  const fit = new Map(), chosen = [];
+  const sh = (x, y) => x.slots.some((sl) => sl <= 4 && y.slots.includes(sl)); // 同一個位置（PG、SG、SF、PF、C）
+  // 第一輪：陣容裡每一位「可以換掉」的人（從最弱的開始），各挑一個同位置、綜合評分最高的自由球員，所以不同隊伍會看到不同的人
+  for (const d of [...swaps].sort((a, b) => a.val - b.val)) {
+    const c = upgrades(d, D).filter((f) => !fit.has(f.id)).sort((a, b) => (sh(b, d) - sh(a, d)) || (b.val - a.val))[0];
+    if (c) { fit.set(c.id, { d, gain: c.val - d.val }); chosen.push(c); }
   }
-  const ranked = [...fit.keys()].map((id) => D.fas.find((x) => x.id === id)).sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain || b.val - a.val || score(b) - score(a));
-  // 先每個位置（PG、SG、SF、PF、C）各挑這隊最需要的一個，再用增益最高的補滿：陣容缺哪個位置，就推薦那個位置的人
-  const picked = [];
-  for (const sl of [0, 1, 2, 3, 4]) { const c = ranked.find((f) => f.slots.includes(sl) && !picked.includes(f) && fit.get(f.id).gain > 0.05); if (c) picked.push(c); }
-  picked.sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain);
-  for (const f of ranked) if (picked.length < 6 && !picked.includes(f)) picked.push(f);
-  const list = picked.slice(0, 6).sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain || b.val - a.val); // 依對你這隊的增益排名，第 1 張就是最推薦
+  // 第二輪：還沒滿 6 個，用綜合評分最高、而且夠格頂替某位「可以換掉」的人補滿
+  for (const f of D.fas.filter((x) => !x.out && !fit.has(x.id)).sort((a, b) => b.val - a.val)) {
+    if (chosen.length >= 6) break;
+    const ds = swaps.filter((d) => f.val >= d.val + UPG).sort((a, b) => (sh(b, f) - sh(a, f)) || (a.val - b.val));
+    if (ds.length) { fit.set(f.id, { d: ds[0], gain: f.val - ds[0].val }); chosen.push(f); }
+  }
+  let list = chosen.sort((a, b) => fit.get(b.id).gain - fit.get(a.id).gain || b.val - a.val).slice(0, 6);
+  if (!list.length) list = D.fas.filter((f) => !f.out).sort((a, b) => b.val - a.val || score(b) - score(a)).slice(0, 6); // 沒有該換的人：只列值得觀察的名單
   if (!list.length) return "";
   const share = (a, b) => a.slots.some((s) => s <= 4 && b.slots.includes(s));
   const pos = (x) => [...new Set(x.slots.map((s) => SLOT_LABEL[s]).filter((s) => ["PG", "SG", "SF", "PF", "C"].includes(s)))].join("/") || x.pos;
@@ -1893,7 +1894,7 @@ function addCards(D, A) {
     else if (f.lastYear != null && f.avg >= f.lastYear + 5) t.push(`今年 ${f1(f.avg)} 比去年 ${f1(f.lastYear)} 好很多，可能是角色變重`);
     else if (f.lastYear != null) t.push(`今年 ${f1(f.avg)}、去年 ${f1(f.lastYear)}，兩季差不多`);
     if (f.last7 != null) t.push(f.last7 >= f.avg + 4 ? `近 7 場回升到 ${f1(f.last7)}` : f.last7 <= f.avg - 4 ? `近 7 場掉到 ${f1(f.last7)}，要小心` : `近 7 場 ${f1(f.last7)} 穩定`);
-    const ft = fit.get(f.id); if (ft && ft.d && ft.gain > 0.05) t.push(`放進你的先發能多 ${f1(ft.gain)} 分，補在 ${pos(f)} 位置、頂替 ${ft.d.name}`); else if (ft && ft.d) t.push("你的先發已經夠強，比較像替補人選");
+    const ft = fit.get(f.id); if (ft) t.push(`陣容評估建議換掉 ${ft.d.name}（綜合 ${f1(ft.d.val)}），這位綜合 ${f1(f.val)}，多 ${f1(ft.gain)} 分`); else t.push("你的陣容目前沒有該換的人，先當觀察名單");
     if (f.injury !== "ACTIVE" && f.injury !== "NORMAL") t.push(`目前 ${INJURY[f.injury] || f.injury}，先確認傷況`);
     if (f.weekGames <= 1 && D.nextWeek.filter((g) => f.games.has(g)).length >= 4) t.push("本週場次少，比較適合下週用");
     return t.join("，") + "。";
@@ -1902,9 +1903,9 @@ function addCards(D, A) {
     const st = schedTag(f, D), mins = f.min7 != null ? f.min7 : f.min;
     const role = mins == null ? null : mins >= 30 ? ["ok", "主力"] : mins >= 22 ? ["mid", "輪換"] : ["bad", "邊緣"];
     const days = [...f.games].filter((g) => A.remSet.has(g)).sort((a, b) => a - b);
-    const ft = fit.get(f.id), gn = ft && ft.gain > 0.05 ? `先發 +${f1(ft.gain)}` : "替補人選";
-    return `<div class="acard${i === 0 ? " best" : ""}">
-      <div class="rankrow"><span class="rk${i === 0 ? " first" : ""}">${i === 0 ? "★ 最推薦" : "推薦 " + (i + 1)}</span><span class="gn${ft && ft.gain > 0.05 ? "" : " bench"}">${gn}</span></div>
+    const ft = fit.get(f.id), gn = ft ? `綜合 +${f1(ft.gain)}` : "觀察";
+    return `<div class="acard${ft && i === 0 ? " best" : ""}">
+      <div class="rankrow"><span class="rk${ft && i === 0 ? " first" : ""}">${!ft ? "觀察名單" : i === 0 ? "★ 最推薦" : "推薦 " + (i + 1)}</span><span class="gn${ft ? "" : " bench"}">${gn}</span></div>
       <div class="ahead"><span class="pname" data-pid="${f.id}">${esc(f.name)}</span> <span class="sub">${esc(pos(f))} · ${esc(f.team)}</span><button type="button" class="tocmp sm" data-cmp="${f.id}">⚖ 比較</button></div>
       <div class="atags">${st ? `<span class="atag ${st[0]}">${st[1]}</span>` : ""}${role ? `<span class="atag ${role[0]}">${role[1]}</span>` : ""}<span class="atag ${f.status === "WAIVERS" ? "wv2" : "fa2"}">${f.status === "WAIVERS" ? "Waiver" : "FA"}</span></div>
       <div class="sub">今年 ${f1(f.avg)} · 近7場 ${f1(f.last7)} · 去年 ${f1(f.lastYear)} · 持有 ${f.own == null ? "-" : f1(f.own) + "%"}</div>
@@ -1921,7 +1922,7 @@ function addCards(D, A) {
     ? `<b>長期換人：</b>放掉 ${esc(drop.name)}（綜合 ${f1(drop.val)}，今年 ${f1(drop.avg)}，去年 ${f1(drop.lastYear)}），加入 ${esc(top.name)}（綜合 ${f1(top.val)}）${top.status === "WAIVERS" ? "（在 waiver，要等處理）" : ""}。${alts.length ? `${alts.map((f) => esc(f.name)).join(" 和 ")} 是備選。` : ""}`
     : `<b>長期換人：</b>你的陣容目前沒有該換的人：沒有自由球員比你的人綜合評分多 ${UPG} 分以上${worst ? `（綜合最低的 ${esc(worst.name)} 是 ${f1(worst.val)}，建議先留）` : ""}。下面是值得觀察的名單。`;
   return `<section class="card${nw("addc")}">
-    <h2>補強建議 <small>依你這隊的位置缺口排序</small></h2>
+    <h2>補強建議 <small>依陣容評估：可以換掉的人，換成誰最好</small></h2>
     <div class="warnline plan2${nw("logic")}"><p>${LKN(week)}</p>${banner ? `<p>${LKN(banner)}</p>` : ""}</div>
     <div class="agrid${nw("cmpcorner")}">${list.map(card).join("")}</div>
     <p class="note">「本週先撿」只算這週剩下幾天能多拿幾分，只排馬上撿得到的自由球員，而且只丟今年平均和預估都比較低的人；「長期換人」和下面的卡片看的是長期實力。如果當天比賽已經開打，撿進來的人當天不會得分，請改成隔天撿。${used ? "本週增補額度已經用完，以上名單可以等下週一新的一週再用。" : ""}賽程標籤看未來 5 場對手的平均勝率；角色標籤看近 7 場上場時間（30 分鐘以上主力、22 分鐘以上輪換）。Waiver 的球員要等 waiver 處理完才拿得到。這個網站只讀取資料，不會替你改陣容。</p>
