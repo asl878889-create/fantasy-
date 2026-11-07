@@ -143,6 +143,16 @@ table.hab td.tname { white-space: normal; } table.hab small.gp { display: block;
 table.mvt { table-layout: fixed; font-size: 13px; } table.mvt th:nth-child(1), table.mvt td.tm { width: 62px; } table.mvt th:nth-child(2), table.mvt td.tn { width: 78px; }
 table.mvt td { vertical-align: top; padding-left: 3px; padding-right: 3px; } table.mvt td.tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; } table.mvt td.tm { white-space: nowrap; font-size: 12px; } table.mvt td div { margin: 1px 0; word-break: break-word; }
 .move.chg span { white-space: pre-line; }
+#qaFab { position: fixed; right: 16px; bottom: 16px; z-index: 30; width: 54px; height: 54px; border-radius: 50%; border: 0; background: var(--accent); color: #1a1208; font-size: 24px; line-height: 1; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.45); } #qaFab.on { background: var(--card); color: var(--ink); border: 1px solid var(--line); font-size: 20px; }
+#qaPanel { position: fixed; right: 16px; bottom: 82px; z-index: 30; width: min(400px, calc(100vw - 32px)); height: min(72vh, 600px); background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.55); display: flex; flex-direction: column; overflow: hidden; } #qaPanel[hidden] { display: none; }
+.qahead { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); } .qahead .sub { flex: 1; font-size: 12px; } .qahead button { background: none; border: 0; color: var(--muted); font-size: 16px; cursor: pointer; padding: 0 4px; }
+#qaBox { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 8px 12px 10px; overflow-y: auto; } #qaBox > p { margin: 6px 0; }
+.qamsgs { display: grid; gap: 8px; margin: 8px 0; align-content: start; flex: 1; overflow-y: auto; min-height: 80px; } .qm { padding: 9px 12px; border-radius: 12px; line-height: 1.6; font-size: 14.5px; max-width: 92%; word-break: break-word; }
+.qm.u { justify-self: end; background: color-mix(in srgb, var(--accent) 22%, var(--card)); border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); } .qm.a { justify-self: start; background: var(--bg); border: 1px solid var(--line); } .qm.a.err { color: var(--bad); }
+.qm .cur { display: inline-block; width: 7px; height: 14px; background: var(--accent); margin-left: 2px; vertical-align: -2px; animation: qblink 1s steps(2) infinite; } @keyframes qblink { 50% { opacity: 0; } }
+.qain { display: flex; gap: 8px; align-items: flex-end; } .qain textarea { flex: 1; font: inherit; font-size: 15px; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); resize: vertical; min-width: 0; }
+.qachips { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; } .qatools { display: flex; gap: 12px; align-items: center; margin-top: 8px; flex-wrap: wrap; } .cmpclr2 { font: inherit; font-size: 12px; background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 0; }
+.qakey { display: flex; gap: 8px; } .qakey input { flex: 1; font: inherit; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); min-width: 0; } #p10 .err { color: var(--bad); font-size: 13px; min-height: 18px; }
 .plan2 p { margin: 4px 0; } table.wk2 td.n, table.wk2 th.n { text-align: center; } table.wk2 td.n .dif, table.wk2 .dif.fut small { display: block; font-size: 12px; } table.wk2 .dif.fut { display: inline-block; } table.wk2 .dif.fut b { font-size: 14px; } /* 本週對戰：分數一行、差多少（或人數）下一行，上下對齊 */ .dif.fut { color: var(--ink); }
 .presets { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 12px; }
 .preset, .tocmp { font: inherit; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
@@ -431,7 +441,7 @@ async function load(teamPick) {
   const faRaw = await get(`${LEAGUE}?${qs({ view: "kona_player_info", scoringPeriodId: period })}`,
     { players: { filterStatus: { value: ["FREEAGENT", "WAIVERS"] }, limit: 120, sortPercOwned: { sortPriority: 1, sortAsc: false } } });
   const remSet = new Set(remaining);
-  const fas = faRaw.players.map((x) => Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status }))
+  const fas = faRaw.players.map((x) => Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status, waiverAt: x.waiverProcessDate || null }))
     .filter((f) => !f.out && f.avg > 0)
     .map((f) => Object.assign(f, { weekGames: [...f.games].filter((g) => remSet.has(g)).length }))
     .sort((a, b) => b.proj - a.proj);
@@ -470,7 +480,7 @@ async function load(teamPick) {
     const need = [...new Set(moves.flatMap((t) => t.items.map((i) => i.playerId)))].filter((id) => !known.has(id));
     if (need.length) {
       const r = await get(`${LEAGUE}?${qs({ view: "kona_player_info", scoringPeriodId: period })}`, { players: { filterIds: { value: need } } });
-      for (const x of r.players || []) EXTRA[x.player.id] = Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status });
+      for (const x of r.players || []) EXTRA[x.player.id] = Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status, waiverAt: x.waiverProcessDate || null });
     }
   } catch (e) { moves = []; }
 
@@ -482,7 +492,7 @@ async function load(teamPick) {
     const need2 = [...new Set(allTx.flatMap((t) => t.items.map((i) => i.playerId)))].filter((id) => !known2.has(id));
     for (let i = 0; i < need2.length; i += 60) {
       const r = await get(`${LEAGUE}?${qs({ view: "kona_player_info", scoringPeriodId: period })}`, { players: { filterIds: { value: need2.slice(i, i + 60) } } });
-      for (const x of r.players || []) EXTRA[x.player.id] = Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status });
+      for (const x of r.players || []) EXTRA[x.player.id] = Object.assign(toPlayer(x.player, BENCH, teamGames, starterSlots, abbrev), { status: x.status, waiverAt: x.waiverProcessDate || null });
     }
   } catch (e) { /* 補不到球員資料就先用現有的 */ }
   // 本週每天每位球員實際得分（先發、替補都有）：貢獻榜用
@@ -935,7 +945,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>
@@ -1154,6 +1164,142 @@ function openHabit(id) {
     <div class="scroll"><table class="vs"><tr><th>時間（台北）</th><th>撿</th><th>丟</th><th>方式</th></tr>
     ${h.recent.map((x) => `<tr><td>${d(x.at)}</td><td>${pn(x.add)}</td><td>${pn(x.drop)}</td><td>${x.type === "WAIVER" ? "waiver" : "FA"}</td></tr>`).join("")}</table></div>
     <p class="note">括號是球員現在的綜合評分。最近 ${h.recent.length} 筆。</p>`;
+}
+
+
+// ---------- 即時問答：用 Claude 回答跟你球隊有關的問題 ----------
+// 兩種連線方式：在 claude.ai 的 Artifact 裡用你自己的 Claude 帳號（不用金鑰）；在 GitHub 網頁上貼你自己的 Anthropic API 金鑰（只存在這台裝置）
+const qaAllowed = () => !!(AUTHED && AUTHED.role === "admin"); // 只有管理員看得到、用得到
+const QA = { msgs: [], busy: false, ctl: null, backend: undefined, draft: "", dirty: false };
+const QA_MODEL = "claude-sonnet-5-5";
+const QA_SYSTEM = `你是 Fantasy 籃球助理，幫使用者管理 ESPN 每日 H2H 積分制 Fantasy 籃球隊（TPBL 聯盟）。
+規則：
+1. 一律用繁體中文，語氣直接簡潔：先給結論，再用 2 到 4 點理由；不要長篇大論。
+2. 只根據下面「資料」回答。資料裡沒有的（例如某球員的傷勢細節、交易傳聞）就說「資料裡沒有」，不要編造數字。
+3. 球員名字用英文原名；引用數字時要講清楚是今年平均、近 7 場、近 15 場、去年平均還是綜合評分。
+4. 綜合評分是換人推薦用的分數（每分鐘效率 × 近 15 天上場時間 × 出賽機率）；「預估」是每場預估得分。
+5. 建議撿人、丟人時要考慮：本週增補次數上限、被丟掉的人要先過 waiver（每天台北 16:00 處理）、傷況、本週和下週的場次。
+6. 沒把握的地方直接說沒把握，並說明需要看什麼資料才能確定。`;
+function qaContext(D) {
+  const A = D.A, f1 = (v) => (v == null ? "-" : v.toFixed(1)), pc = (v) => (v == null ? "-" : v.toFixed(0) + "%");
+  const slot = (x) => SLOT_LABEL[x.lineupSlot] || "";
+  const wk = (x) => [...x.games].filter((g) => A.remSet.has(g)).length, nx = (x) => D.nextWeek.filter((g) => x.games.has(g)).length;
+  const inj = (x) => (x.injury !== "ACTIVE" && x.injury !== "NORMAL" ? INJURY[x.injury] || x.injury : "");
+  const tpe = (ms) => new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(ms));
+  const line = (x, fa) => [x.name, x.pos, fa ? (x.status === "WAIVERS" ? "waiver" + (x.waiverAt ? " " + tpe(x.waiverAt) + "處理" : "") : "FA") : slot(x), x.team,
+    `今年${f1(x.avg)} 近7場${f1(x.last7)} 近15場${f1(x.last15)} 去年${f1(x.lastYear)}`, `分鐘${f1(x.min15 != null ? x.min15 : x.min)}`, `綜合${f1(x.val)}`, inj(x) || "健康",
+    `本週剩${wk(x)}場 下週${nx(x)}場`, `持有${pc(x.own)}`, (() => { try { const j = keepAdvice(x, fa ? null : D.me, true); return j ? j[1] : ""; } catch (e) { return ""; } })()].join("｜");
+  const nm = (id) => { for (const t of D.teams) { const x = D.rosters[t.id].find((p) => p.id === id); if (x) return x.name; } const f = D.fas.find((p) => p.id === id) || EXTRA[id]; return f ? f.name : "某位球員"; };
+  const tn = (id) => (D.teams.find((t) => t.id === id) || {}).name || "";
+  const L = [];
+  L.push("【資料】（現在時間：" + new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", dateStyle: "full", timeStyle: "short" }).format(new Date()) + "，台北時間；比賽日 " + A.label(D.period) + "）");
+  L.push(`聯盟：${D.lg.settings.name}，10 隊，H2H 積分制，先發 ${D.seats.length} 人，每週增補上限 ${weeklyLimit(D) || "無"} 人（本週你已用 ${A.adds} 次）。`);
+  L.push(`我的隊伍：${D.me.name}，戰績 ${D.me.record.overall.wins}-${D.me.record.overall.losses}。本週（第 ${D.week} 週）對手 ${D.opp.name}：目前 ${Math.round(D.myScore)} : ${Math.round(D.oppScore)}，預估最終 ${Math.round(D.myScore + A.myRest)} : ${Math.round(D.oppScore + A.oppRest)}，本週勝率 ${Math.round(A.winProb * 100)}%。`);
+  L.push("", "我的陣容（名字｜位置｜今天位置｜球隊｜平均｜分鐘｜綜合評分｜傷況｜場次｜持有率｜系統判斷）：");
+  [...D.myRoster].sort((a, b) => SLOT_ORDER.indexOf(a.lineupSlot) - SLOT_ORDER.indexOf(b.lineupSlot) || b.avg - a.avg).forEach((x) => L.push(line(x, false)));
+  L.push("", `對手 ${D.opp.name} 主要球員：`);
+  [...D.oppRoster].sort((a, b) => b.avg - a.avg).slice(0, 8).forEach((x) => L.push(`${x.name}｜今年${f1(x.avg)} 近7場${f1(x.last7)}｜${inj(x) || "健康"}｜本週剩${wk(x)}場`));
+  L.push("", "自由球員（綜合評分前 25，不含受傷）：");
+  D.fas.filter((f) => !f.out).sort((a, b) => b.val - a.val).slice(0, 25).forEach((f) => L.push(line(f, true)));
+  if (A.drop) L.push("", `系統建議最該換掉：${A.drop.name}（綜合 ${f1(A.drop.val)}）；較好的自由球員：${A.ideas.slice(0, 3).map((f) => `${f.name}（綜合 ${f1(f.val)}）`).join("、") || "沒有"}。`);
+  else L.push("", "系統判斷目前沒有必須換掉的人。");
+  if (A.plan && A.plan.steps.length) L.push(`本週撿人排程：${A.plan.steps.map((s) => `${A.label(s.p)} 撿 ${s.f.name} 丟 ${s.d.name}（+${s.gain.toFixed(0)} 分）`).join("；")}。`);
+  const todo = A.todos.filter((t) => t[1] === "要做" || t[1] === "留意").slice(0, 6); if (todo.length) L.push("今天要做／留意：" + todo.map((t) => t[2]).join("；"));
+  L.push("", "聯盟各隊（戰績｜陣容實力排名｜進季後賽機率）：");
+  (A.odds && A.odds.rows ? A.odds.rows : []).forEach((x) => L.push(`${x.t.name}｜${x.t.record.overall.wins}-${x.t.record.overall.losses}｜進季後賽 ${Math.round(x.po * 100)}%`));
+  if (D.moves.length) { L.push("", "最近聯盟動態（台北時間）："); D.moves.slice(0, 10).forEach((t) => L.push(`${tpe(t.proposedDate)} ${tn(t.teamId)}：${t.items.filter((i) => i.type === "ADD").map((i) => "撿 " + nm(i.playerId)).concat(t.items.filter((i) => i.type === "DROP").map((i) => "丟 " + nm(i.playerId))).join("，")}`)); }
+  if (D.habits && D.habits[D.opp.id]) L.push("", `對手撿人習慣：${D.habits[D.opp.id].style}；${D.habits[D.opp.id].notes.join("；")}`);
+  return L.join("\n");
+}
+async function qaApi(key, system, msgs, onText, signal) {
+  const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", signal,
+    headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+    body: JSON.stringify({ model: QA_MODEL, max_tokens: 1500, system, messages: msgs, stream: true }) });
+  if (!r.ok) throw { code: r.status === 401 || r.status === 403 ? "bad_key" : r.status === 429 ? "rate_limited" : "error", message: (await r.text()).slice(0, 200) };
+  const rd = r.body.getReader(), dec = new TextDecoder(); let buf = "", text = "";
+  for (;;) {
+    const { done, value } = await rd.read(); if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i; while ((i = buf.indexOf("\n\n")) >= 0) {
+      const ev = buf.slice(0, i); buf = buf.slice(i + 2);
+      const m = ev.match(/^data: (.*)$/m); if (!m) continue;
+      let j; try { j = JSON.parse(m[1]); } catch (e) { continue; }
+      if (j.type === "content_block_delta" && j.delta && j.delta.text) { text += j.delta.text; onText(text); }
+      else if (j.type === "error") throw { code: "error", message: (j.error && j.error.message) || "" };
+    }
+  }
+  return text;
+}
+async function qaBackend() {
+  if (typeof claude !== "undefined" && claude && claude.use) { try { const fn = await claude.use("sample"); if (fn) return { kind: "sample", fn }; } catch (e) { /* 沒有這個功能 */ } }
+  const key = store("qaKey"); return key ? { kind: "api", key } : null;
+}
+const qaMd = (t) => {
+  let h = esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^(?:[-*•]) /gm, "• ").replace(/\n/g, "<br>");
+  return window.LKN ? window.LKN(h) : h;
+};
+function qaDrawMsgs() {
+  const box = $("#qaMsgs"); if (!box) return;
+  box.innerHTML = QA.msgs.map((m) => m.role === "user" ? `<div class="qm u">${esc(m.content)}</div>` : `<div class="qm a${m.err ? " err" : ""}">${m.content ? qaMd(m.content) : '<span class="sub">思考中…</span>'}${m.streaming ? '<span class="cur"></span>' : ""}</div>`).join("");
+}
+function drawQA() {
+  const box = $("#qaBox"); if (!box) return;
+  if (QA.backend === undefined) { box.innerHTML = '<p class="sub">正在連線…</p>'; return; }
+  if (!QA.backend) {
+    box.innerHTML = `<p>這個功能會把你球隊的資料交給 Claude，讓你用問的方式問「誰該換掉」「這週會不會贏」「Murphy 值不值得撿」。</p>
+      <p class="sub">第一次使用要貼上你自己的 Anthropic API 金鑰（<a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">在這裡建立</a>）。金鑰只存在這台裝置的瀏覽器裡，不會上傳到任何地方；費用算在你的 Anthropic 帳號。建議另外建一支專用金鑰，並在帳號裡設每月額度上限。</p>
+      <div class="qakey"><input id="qaKey" type="password" placeholder="sk-ant-..." autocomplete="off" aria-label="API 金鑰"><button type="button" id="qaSave" class="preset">儲存</button></div><div class="err" id="qaKeyErr"></div>`;
+    $("#qaSave").addEventListener("click", () => { const k = $("#qaKey").value.trim(); if (!/^sk-ant-/.test(k)) { $("#qaKeyErr").textContent = "金鑰要是 sk-ant- 開頭"; return; } store("qaKey", k); QA.backend = { kind: "api", key: k }; drawQA(); });
+    return;
+  }
+  const D = CUR, top = D && D.fas.filter((f) => !f.out).sort((a, b) => b.val - a.val)[0];
+  const chips = ["我這週會贏嗎？", "誰該換掉、換誰？", "今天要注意什麼？", top ? `${top.name} 值得撿嗎？` : "有誰值得撿？", "對手是什麼風格？", "這週撿人要怎麼排？"];
+  box.innerHTML = `<div class="qachips">${QA.msgs.length ? "" : chips.map((c) => `<button type="button" class="preset qc">${esc(c)}</button>`).join("")}</div>
+    <div id="qaMsgs" class="qamsgs"></div>
+    <div class="qain"><textarea id="qaInput" rows="2" placeholder="問任何跟你球隊有關的問題…（Enter 送出，Shift+Enter 換行）"></textarea><button type="button" id="qaSend" class="preset">${QA.busy ? "停止" : "送出"}</button></div>
+    <div class="qatools">${QA.msgs.length ? '<button type="button" id="qaClear" class="cmpclr2">清除對話</button>' : ""}${QA.backend.kind === "api" ? '<button type="button" id="qaKeyReset" class="cmpclr2">更換金鑰</button>' : ""}<span class="sub">回答依據目前網頁上的資料，僅供參考。</span></div>`;
+  qaDrawMsgs();
+  const inp = $("#qaInput"); inp.value = QA.draft; inp.addEventListener("input", () => { QA.draft = inp.value; });
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); qaSend(inp.value); } });
+  $("#qaSend").addEventListener("click", () => { if (QA.busy) { QA.ctl && QA.ctl.abort(); } else qaSend(inp.value); });
+  box.querySelectorAll(".qc").forEach((b) => b.addEventListener("click", () => qaSend(b.textContent)));
+  const cl = $("#qaClear"); if (cl) cl.addEventListener("click", () => { if (QA.busy && QA.ctl) QA.ctl.abort(); QA.msgs = []; drawQA(); });
+  const kr = $("#qaKeyReset"); if (kr) kr.addEventListener("click", () => { store("qaKey", ""); QA.backend = null; drawQA(); });
+}
+let qaRaf = 0;
+const qaTick = () => { if (!qaRaf) qaRaf = requestAnimationFrame(() => { qaRaf = 0; qaDrawMsgs(); }); };
+const QA_ERR = { not_granted: "你沒有允許使用 Claude。", rate_limited: "問太快了，請稍等一下再問。", bad_key: "API 金鑰不對或沒有權限，請按「更換金鑰」重新貼上。", error: "連線出了問題，請稍後再試。" };
+async function qaSend(q) {
+  q = (q || "").trim(); if (!q || QA.busy || !CUR || !QA.backend || !qaAllowed()) return;
+  QA.msgs.push({ role: "user", content: q }); const last = { role: "assistant", content: "", streaming: true }; QA.msgs.push(last);
+  QA.draft = ""; QA.busy = true; drawQA();
+  const sys = QA_SYSTEM + "\n\n" + qaContext(CUR);
+  let hist = QA.msgs.slice(0, -1).filter((m) => !m.err).slice(-9).map((m) => ({ role: m.role, content: m.content })); while (hist.length && hist[0].role !== "user") hist.shift();
+  QA.ctl = new AbortController(); const sig = QA.ctl.signal, on = (t) => { last.content = t; qaTick(); };
+  try {
+    const b = QA.backend;
+    if (b.kind === "sample") await b.fn([{ role: "user", content: sys + "\n\n（以上是規則和資料，請依此回答接下來的問題。）" }, { role: "assistant", content: "好的，我會依照這些規則和資料回答。" }, ...hist], { cache: false, signal: sig, onText: ({ text }) => on(text) });
+    else await qaApi(b.key, sys, hist, on, sig);
+    if (!last.content) last.content = "（沒有收到回答，請再問一次）";
+  } catch (e) {
+    if (e && (e.name === "AbortError" || e.code === "cancelled")) { if (!last.content) last.content = "（已停止）"; }
+    else { last.err = true; last.content = (last.content ? last.content + "\n\n" : "") + (QA_ERR[e && e.code] || QA_ERR.error); if (e && e.code === "bad_key") { store("qaKey", ""); QA.backend = null; } }
+  }
+  last.streaming = false; QA.busy = false; QA.ctl = null; drawQA();
+  const lm = $("#qaMsgs"); if (lm && lm.lastElementChild) lm.lastElementChild.scrollIntoView({ block: "nearest" });
+}
+// 右下角的對話泡按鈕 + 展開的對話框（放在整頁之外，兩分鐘一次的更新不會把它洗掉）
+function setupQA() {
+  if (!qaAllowed() || $("#qaFab")) return;
+  const fab = document.createElement("button"); fab.id = "qaFab"; fab.type = "button"; fab.setAttribute("aria-label", "即時問答"); fab.textContent = "💬";
+  const panel = document.createElement("div"); panel.id = "qaPanel"; panel.hidden = true;
+  panel.innerHTML = '<div class="qahead"><b>即時問答</b><span class="sub">問你的球隊、撿人、換人</span><button type="button" id="qaClose" aria-label="收起">✕</button></div><div id="qaBox"></div>';
+  document.body.append(fab, panel);
+  const set = (open) => { panel.hidden = !open; fab.textContent = open ? "✕" : "💬"; fab.classList.toggle("on", open); store("qaOpen", open ? "1" : ""); if (open) { drawQA(); const m = $("#qaMsgs"); if (m) m.scrollTop = m.scrollHeight; } };
+  fab.addEventListener("click", () => set(panel.hidden)); $("#qaClose").addEventListener("click", () => set(false));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden && $("#modal").hidden) set(false); });
+  drawQA(); qaBackend().then((b) => { QA.backend = b; drawQA(); });
+  if (store("qaOpen")) set(true);
 }
 
 function openRecord(id) {
@@ -1978,6 +2124,7 @@ function render(D, A) {
   show(document.getElementById(activeTab) ? activeTab : "p1");
   setupSort();
   setupCompare(D);
+  setupQA();
   // 本週對戰表格一打開就捲到右邊（今天和還沒打的日子）
   document.querySelectorAll("table.wk").forEach((t) => { const sc = t.closest(".scroll"); if (sc) sc.scrollLeft = sc.scrollWidth; });
   // 自由球員搜尋：沒輸入時顯示前 20 人，有輸入時從全部自由球員裡找
@@ -2183,7 +2330,7 @@ async function rosterWatch() {
   } catch (e) { /* 讀不到就等下一次 */ }
 }
 setInterval(rosterWatch, 20000);
-authInit().then(run);
+authInit().then(() => { run(); setupQA(); });
 </script>
 
 
