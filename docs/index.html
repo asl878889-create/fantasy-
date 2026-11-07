@@ -143,7 +143,9 @@ table.hab td.tname { white-space: normal; } table.hab small.gp { display: block;
 table.mvt { table-layout: fixed; font-size: 13px; } table.mvt th:nth-child(1), table.mvt td.tm { width: 62px; } table.mvt th:nth-child(2), table.mvt td.tn { width: 78px; }
 table.mvt td { vertical-align: top; padding-left: 3px; padding-right: 3px; } table.mvt td.tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; } table.mvt td.tm { white-space: nowrap; font-size: 12px; } table.mvt td div { margin: 1px 0; word-break: break-word; }
 .move.chg span { white-space: pre-line; }
-#qaFab { position: fixed; right: 16px; bottom: 16px; z-index: 30; width: 54px; height: 54px; border-radius: 50%; border: 0; background: var(--accent); color: #1a1208; font-size: 24px; line-height: 1; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.45); } #qaFab.on { background: var(--card); color: var(--ink); border: 1px solid var(--line); font-size: 20px; }
+#qaFab { position: fixed; right: 16px; bottom: 16px; z-index: 30; border: 0; cursor: pointer; display: grid; place-items: center; font: inherit; font-weight: 700; } #qaFab .i-x, #qaFab.on .i-chat { display: none; } #qaFab.on .i-x { display: block; } #qaFab .tx { display: none; }
+#qaFab { width: 54px; height: 54px; border-radius: 50%; background: rgba(21,27,38,.82); backdrop-filter: blur(8px); border: 1.5px solid var(--accent); color: var(--accent); box-shadow: 0 0 0 4px rgba(255,138,61,.12), 0 6px 18px rgba(0,0,0,.5); }
+#qaFab.on { color: var(--ink); border-color: var(--line); box-shadow: 0 6px 18px rgba(0,0,0,.5); }
 #qaPanel { position: fixed; right: 16px; bottom: 82px; z-index: 30; width: min(400px, calc(100vw - 32px)); height: min(72vh, 600px); background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.55); display: flex; flex-direction: column; overflow: hidden; } #qaPanel[hidden] { display: none; }
 .qahead { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); } .qahead .sub { flex: 1; font-size: 12px; } .qahead button { background: none; border: 0; color: var(--muted); font-size: 16px; cursor: pointer; padding: 0 4px; }
 #qaBox { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 8px 12px 10px; overflow-y: auto; } #qaBox > p { margin: 6px 0; }
@@ -945,7 +947,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>
@@ -1291,12 +1293,13 @@ async function qaSend(q) {
 // 右下角的對話泡按鈕 + 展開的對話框（放在整頁之外，兩分鐘一次的更新不會把它洗掉）
 function setupQA() {
   if (!qaAllowed() || $("#qaFab")) return;
-  const fab = document.createElement("button"); fab.id = "qaFab"; fab.type = "button"; fab.setAttribute("aria-label", "即時問答"); fab.textContent = "💬";
+  const fab = document.createElement("button"); fab.id = "qaFab"; fab.type = "button"; fab.setAttribute("aria-label", "即時問答");
+  fab.innerHTML = '<svg class="i-chat" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 1-4.2 17L3.4 21.2l1.3-4.4A9 9 0 0 1 12 3z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-width="2.6"/></svg><svg class="i-x" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="tx">問問題</span>';
   const panel = document.createElement("div"); panel.id = "qaPanel"; panel.hidden = true;
-  panel.innerHTML = '<div class="qahead"><b>即時問答</b><span class="sub">問你的球隊、撿人、換人</span><button type="button" id="qaClose" aria-label="收起">✕</button></div><div id="qaBox"></div>';
+  panel.innerHTML = '<div class="qahead"><b>即時問答</b><span class="sub">問你的球隊、撿人、換人</span></div><div id="qaBox"></div>';
   document.body.append(fab, panel);
-  const set = (open) => { panel.hidden = !open; fab.textContent = open ? "✕" : "💬"; fab.classList.toggle("on", open); store("qaOpen", open ? "1" : ""); if (open) { drawQA(); const m = $("#qaMsgs"); if (m) m.scrollTop = m.scrollHeight; } };
-  fab.addEventListener("click", () => set(panel.hidden)); $("#qaClose").addEventListener("click", () => set(false));
+  const set = (open) => { panel.hidden = !open; fab.classList.toggle("on", open); store("qaOpen", open ? "1" : ""); if (open) { drawQA(); const m = $("#qaMsgs"); if (m) m.scrollTop = m.scrollHeight; } };
+  fab.addEventListener("click", () => set(panel.hidden));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden && $("#modal").hidden) set(false); });
   drawQA(); qaBackend().then((b) => { QA.backend = b; drawQA(); });
   if (store("qaOpen")) set(true);
