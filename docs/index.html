@@ -18,17 +18,17 @@
   color-scheme: dark;
   --bg: #0b0f17; --card: #151b26; --ink: #e6eaf2; --muted: #8f9aad; --line: #263043;
   --accent: #ff8a3d; --hero: #1a1f2b; --hero-bg: linear-gradient(135deg, #3a2414 0%, #1a1f2b 60%); --hero-ink: #f1ede8; --hero-muted: #b3a89c; /* 最上面卡片：暗橘漸層 */
-  --warn-bg: #3a2a10; --warn: #f5c065; --ok-bg: #0f2e1c; --ok: #5fd38a; --bad-bg: #3a1414; --bad: #ff8080;
+  --core: #f2c94c; --obs: #ff8a1f; --warn-bg: #3a2a10; --warn: #f5c065; --ok-bg: #0f2e1c; --ok: #5fd38a; --bad-bg: #3a1414; --bad: #ff8080;
 }
 
 /* 配色：右上角 🎨 可以換，記在這支手機上 */
-:root[data-ui="B"] { color-scheme: light; --bg: #eef1f6; --card: #ffffff; --ink: #16202e; --muted: #5e6a7d; --line: #d6dce6; --accent: #d9480f; --on-accent: #ffffff; --hero: #17233a; --hero-bg: linear-gradient(135deg, #17233a 0%, #2a3d63 100%); --hero-ink: #ffffff; --hero-muted: #b8c4da; --hero-line: #2a3d63; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #d9480f; --c2: #2f6fd0; --c3: #14803c; --c4: #8a4fc0; }
-:root[data-ui="C"] { --bg: #0b0b0d; --card: #161618; --ink: #f2f0f0; --muted: #9c9496; --line: #2c2a2c; --accent: #ff3b3b; --on-accent: #ffffff; --hero: #161618; --hero-bg: linear-gradient(135deg, #7a0f14 0%, #161618 70%); --hero-ink: #fff1f1; --hero-muted: #e0b4b4; --hero-line: #5a1a1e; --c1: #ff5a4a; --c2: #4cc9f0; --c3: #5fd38a; --c4: #ffd166; }
-:root[data-ui="D"] { --bg: #000000; --card: #0e0e0e; --ink: #f1ede4; --muted: #9a958a; --line: #2a2722; --accent: #e8b64c; --on-accent: #1b1405; --hero: #0e0e0e; --hero-bg: linear-gradient(135deg, #2a2210 0%, #0e0e0e 70%); --hero-ink: #f6efd8; --hero-muted: #b8ad8c; --hero-line: #3a3010; }
-:root[data-ui="E"] { --bg: #09060f; --card: #140f22; --ink: #ece8ff; --muted: #9a92c2; --line: #2a2150; --accent: #c77dff; --on-accent: #14061f; --hero: #1b1233; --hero-bg: linear-gradient(135deg, #4a1d8c 0%, #140f22 65%); --hero-ink: #f3eeff; --hero-muted: #b9aee6; --hero-line: #5b2fa8; --c1: #c77dff; --c2: #4cc9f0; --c3: #5fd38a; --c4: #ff7eb6; }
-:root[data-ui="F"] { --bg: #13080b; --card: #1f0f13; --ink: #f6ecea; --muted: #a58c8a; --line: #3d1f26; --accent: #e8c56a; --on-accent: #2a1a02; --hero: #1f0f13; --hero-bg: linear-gradient(135deg, #7a1630 0%, #1f0f13 70%); --hero-ink: #fff3ea; --hero-muted: #d9b9a8; --hero-line: #5a2030; --c1: #e8c56a; --c2: #6fb7ff; --c3: #6ed39a; --c4: #ff8aa8; }
-:root[data-ui="G"] { --bg: #05141a; --card: #0b232c; --ink: #e3f6f8; --muted: #7fa5ad; --line: #144047; --accent: #26d9c4; --on-accent: #03211e; --hero: #0b232c; --hero-bg: linear-gradient(135deg, #0b6b73 0%, #0b232c 70%); --hero-ink: #e7fffd; --hero-muted: #9fd3d6; --hero-line: #145058; --c1: #26d9c4; --c2: #ffb454; --c3: #7be07e; --c4: #ff7eb6; }
-:root[data-ui="H"] { color-scheme: light; --bg: #eaf5f0; --card: #ffffff; --ink: #11231c; --muted: #587066; --line: #cfe3d9; --accent: #0b8f6a; --on-accent: #ffffff; --hero: #0d3b2e; --hero-bg: linear-gradient(135deg, #0d3b2e 0%, #17715a 100%); --hero-ink: #ffffff; --hero-muted: #bfe3d6; --hero-line: #17715a; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #0b8f6a; --c2: #2f6fd0; --c3: #d9480f; --c4: #8a4fc0; }
+:root[data-ui="B"] { --core: #a8780a; --obs: #d4560a; color-scheme: light; --bg: #eef1f6; --card: #ffffff; --ink: #16202e; --muted: #5e6a7d; --line: #d6dce6; --accent: #d9480f; --on-accent: #ffffff; --hero: #17233a; --hero-bg: linear-gradient(135deg, #17233a 0%, #2a3d63 100%); --hero-ink: #ffffff; --hero-muted: #b8c4da; --hero-line: #2a3d63; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #d9480f; --c2: #2f6fd0; --c3: #14803c; --c4: #8a4fc0; }
+:root[data-ui="C"] { --core: #f2c94c; --obs: #ff8a1f; --bg: #0b0b0d; --card: #161618; --ink: #f2f0f0; --muted: #9c9496; --line: #2c2a2c; --accent: #ff3b3b; --on-accent: #ffffff; --hero: #161618; --hero-bg: linear-gradient(135deg, #7a0f14 0%, #161618 70%); --hero-ink: #fff1f1; --hero-muted: #e0b4b4; --hero-line: #5a1a1e; --c1: #ff5a4a; --c2: #4cc9f0; --c3: #5fd38a; --c4: #ffd166; }
+:root[data-ui="D"] { --core: #f2c94c; --obs: #ff8a1f; --bg: #000000; --card: #0e0e0e; --ink: #f1ede4; --muted: #9a958a; --line: #2a2722; --accent: #e8b64c; --on-accent: #1b1405; --hero: #0e0e0e; --hero-bg: linear-gradient(135deg, #2a2210 0%, #0e0e0e 70%); --hero-ink: #f6efd8; --hero-muted: #b8ad8c; --hero-line: #3a3010; }
+:root[data-ui="E"] { --core: #f2c94c; --obs: #ff8a1f; --bg: #09060f; --card: #140f22; --ink: #ece8ff; --muted: #9a92c2; --line: #2a2150; --accent: #c77dff; --on-accent: #14061f; --hero: #1b1233; --hero-bg: linear-gradient(135deg, #4a1d8c 0%, #140f22 65%); --hero-ink: #f3eeff; --hero-muted: #b9aee6; --hero-line: #5b2fa8; --c1: #c77dff; --c2: #4cc9f0; --c3: #5fd38a; --c4: #ff7eb6; }
+:root[data-ui="F"] { --core: #f2c94c; --obs: #ff8a1f; --bg: #13080b; --card: #1f0f13; --ink: #f6ecea; --muted: #a58c8a; --line: #3d1f26; --accent: #e8c56a; --on-accent: #2a1a02; --hero: #1f0f13; --hero-bg: linear-gradient(135deg, #7a1630 0%, #1f0f13 70%); --hero-ink: #fff3ea; --hero-muted: #d9b9a8; --hero-line: #5a2030; --c1: #e8c56a; --c2: #6fb7ff; --c3: #6ed39a; --c4: #ff8aa8; }
+:root[data-ui="G"] { --core: #f2c94c; --obs: #ff8a1f; --bg: #05141a; --card: #0b232c; --ink: #e3f6f8; --muted: #7fa5ad; --line: #144047; --accent: #26d9c4; --on-accent: #03211e; --hero: #0b232c; --hero-bg: linear-gradient(135deg, #0b6b73 0%, #0b232c 70%); --hero-ink: #e7fffd; --hero-muted: #9fd3d6; --hero-line: #145058; --c1: #26d9c4; --c2: #ffb454; --c3: #7be07e; --c4: #ff7eb6; }
+:root[data-ui="H"] { --core: #a8780a; --obs: #d4560a; color-scheme: light; --bg: #eaf5f0; --card: #ffffff; --ink: #11231c; --muted: #587066; --line: #cfe3d9; --accent: #0b8f6a; --on-accent: #ffffff; --hero: #0d3b2e; --hero-bg: linear-gradient(135deg, #0d3b2e 0%, #17715a 100%); --hero-ink: #ffffff; --hero-muted: #bfe3d6; --hero-line: #17715a; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #0b8f6a; --c2: #2f6fd0; --c3: #d9480f; --c4: #8a4fc0; }
 .bar .ok-btn { padding: 2px 10px; white-space: nowrap; font-size: 12px; border: 0; } .bar .is-new::before { white-space: nowrap; }
 #uibtn { font-size: 16px; line-height: 1; padding: 6px 9px; }
 #uimenu[hidden] { display: none; } #uimenu { margin: -4px 0 12px; padding: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
@@ -116,14 +116,14 @@ a.golink { color: inherit; text-decoration: underline; text-underline-offset: 3p
 .chip { font-size: 12px; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 5px; color: var(--muted); }
 .chip.on { background: var(--accent); color: var(--card); font-weight: 700; }
 .verdict { font-size: 13px; min-width: 240px; }
-.verdict.core { color: var(--accent); } .verdict.good { color: var(--ok); } .verdict.mid { color: var(--warn); }
+.verdict.core { color: var(--core); } .verdict.good { color: var(--ok); } .verdict.mid { color: var(--obs); }
 .verdict.bad { color: var(--bad); } .verdict.mute { color: var(--muted); }
 th.sortable { cursor: pointer; color: var(--accent); text-decoration: underline dotted; text-underline-offset: 3px; }
 th.sortable::after { content: " ⇅"; font-size: 11px; opacity: .6; }
 th.sortable.on::after { content: " ▼"; opacity: 1; }
 .wv { font-size: 12px; padding: 1px 6px; border-radius: 5px; background: var(--warn-bg); color: var(--warn); margin-left: 4px; white-space: nowrap; font-weight: 600; }
-td.name.core { color: var(--accent); font-weight: 700; } td.name.good { color: var(--ok); font-weight: 700; }
-td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(--bad); font-weight: 700; } td.name.mute { color: var(--muted); }
+td.name.core { color: var(--core); font-weight: 700; } td.name.good { color: var(--ok); font-weight: 700; }
+td.name.mid { color: var(--obs); font-weight: 700; } td.name.bad { color: var(--bad); font-weight: 700; } td.name.mute { color: var(--muted); }
 .vs td:first-child { color: var(--muted); }
 .vs td.win { color: var(--ok); font-weight: 700; } .vs td.lose { color: var(--ink); }
 .teams { min-width: 560px; }
@@ -141,7 +141,7 @@ td.name.mid { color: var(--warn); font-weight: 700; } td.name.bad { color: var(-
 td.logo { text-align: center; padding-left: 2px; padding-right: 2px; } td.logo img { display: block; margin: 0 auto; }
 .advice { border-radius: 10px; padding: 10px 12px; margin: 10px 0; background: var(--line); }
 .advice > b { display: block; font-size: 15px; } .advice ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); } .advice li { margin: 2px 0; }
-.advice.core > b, .advice.good > b { color: var(--ok); } .advice.bad > b { color: var(--bad); } .advice.mid > b { color: var(--warn); } .advice.mute > b { color: var(--muted); }
+.advice.core > b, .advice.good > b { color: var(--ok); } .advice.bad > b { color: var(--bad); } .advice.mid > b { color: var(--obs); } .advice.mute > b { color: var(--muted); }
 .cmpin { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: end; margin-bottom: 12px; }
 .cmpin label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
 .cmpin input { font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; min-width: 0; box-sizing: border-box; }
@@ -631,11 +631,12 @@ const isCore = (x, rank) => x.avg >= 38 || (x.lastYear != null && x.lastYear >= 
 function rosterJudge(x, ros, D) {
   const sorted = [...ros].sort((a, b) => b.val - a.val), rank = sorted.findIndex((p) => p.id === x.id) + 1;
   const alt = upgrades(x, D)[0];
-  const ret = x.injuryInfo && x.injuryInfo.expectedReturnDate ? Math.round((Date.UTC(x.injuryInfo.expectedReturnDate[0], x.injuryInfo.expectedReturnDate[1] - 1, x.injuryInfo.expectedReturnDate[2]) - D.today) / 86400000) : null;
+  const ret0 = x.injuryInfo && x.injuryInfo.expectedReturnDate ? Math.round((Date.UTC(x.injuryInfo.expectedReturnDate[0], x.injuryInfo.expectedReturnDate[1] - 1, x.injuryInfo.expectedReturnDate[2]) - D.today) / 86400000) : null;
+  const ret = ret0 != null ? ret0 : (x.newsRet ? x.newsRet.left : null), retWhy = ret0 == null && x.newsRet ? `（${x.newsRet.why}）` : "";
   const pct = x.avg ? (x.last7 - x.avg) / x.avg : 0;
   const wv = (f) => (f.status === "WAIVERS" ? "，在 waiver 要等處理" : "");
   if (x.injuryInfo && x.injuryInfo.outForSeason) return { tag: "bad", line: "可以放掉：本季報銷，留著只佔名額。", alt };
-  if (x.out && ret != null && ret > 21 && x.avg < 38) return { tag: "bad", line: `可以考慮放掉：還要 ${ret} 天才回來，先撿健康的人來用${alt ? `，例如 ${alt.name}（綜合 ${f1(alt.val)}${wv(alt)}）` : ""}。`, alt };
+  if (x.out && ret != null && ret > 21 && x.avg < 38) return { tag: "bad", line: `可以考慮放掉：還要 ${ret >= 999 ? "很久" : ret + " 天"}才回來${retWhy}，先撿健康的人來用${alt ? `，例如 ${alt.name}（綜合 ${f1(alt.val)}${wv(alt)}）` : ""}。`, alt };
   if (isCore(x, rank)) return { tag: "core", line: x.out ? "留下：核心球員，等他傷癒回來。" : "留下：核心球員，不要動。" };
   if (x.out) return { tag: "mid", line: "留下：短期傷兵，等他回來。" };
   if (alt && x.lastYear != null && x.lastYear >= x.avg + 5 && x.lastYear >= alt.val) return { tag: "mid", line: `留下觀察：今年只有 ${f1(x.avg)}，但去年 ${f1(x.lastYear)}，比自由球員 ${alt.name}（綜合 ${f1(alt.val)}）還高，有反彈空間，先別急著丟。`, alt, hold: true };
@@ -691,7 +692,12 @@ function applySort(table) {
   const rows = [...table.querySelectorAll("tr")].slice(1);
   rows.forEach((r, i) => { if (r.dataset.i === undefined) r.dataset.i = i; });
   const val = (r) => { const c = r.children[col]; const v = parseFloat(c.dataset.v != null ? c.dataset.v : c.textContent.replace(/[^\d.\-]/g, "")); return isNaN(v) ? -Infinity : v; };
-  rows.sort((a, b) => col == null ? a.dataset.i - b.dataset.i : val(b) - val(a) || a.dataset.i - b.dataset.i);
+  const th = col == null ? null : table.querySelector("tr").children[col];
+  const RANK = { core: 4, good: 3, mid: 2, bad: 1, mute: 0 }; // 球員欄：金（核心）→ 綠（先發主力）→ 橘（觀察）→ 紅（可以換掉）→ 其他
+  const vrank = (r) => { const c = r.children[col]; const k = Object.keys(RANK).find((n) => c.classList.contains(n)); return k == null ? -1 : RANK[k]; };
+  const avg = (r) => { const c = r.children[3]; const v = parseFloat(c ? c.textContent : ""); return isNaN(v) ? -Infinity : v; };
+  if (th && th.dataset.order === "verdict") rows.sort((a, b) => vrank(b) - vrank(a) || avg(b) - avg(a) || a.dataset.i - b.dataset.i); // 同一種顏色裡，今年平均高的在前面
+  else rows.sort((a, b) => col == null ? a.dataset.i - b.dataset.i : val(b) - val(a) || a.dataset.i - b.dataset.i);
   const body = rows[0] ? rows[0].parentNode : null;
   rows.forEach((r) => body.appendChild(r));
   table.querySelectorAll("th.sortable").forEach((th) => th.classList.toggle("on", th.cellIndex === col));
@@ -777,7 +783,22 @@ function nextWeekPreview(D) {
   const nextSet = new Set(D.nextWeek);
   const fas = D.fas.map((f) => Object.assign(Object.create(f), { nextGames: [...f.games].filter((g) => nextSet.has(g)).length }))
     .filter((f) => f.nextGames >= 3).sort((a, b) => b.nextGames * b.proj - a.nextGames * a.proj).slice(0, 5);
-  return { opp: D.nextOpp, days, fas,
+  // 下週該先卡位誰：只丟「陣容評估說可以換掉」的人，撿進來的人綜合評分要多 3 分以上（跟陣容評估同一個門檻）；
+  // 再看下週每天排進先發後，總共能多拿幾分，挑最多的
+  const rosAll = D.rosters[D.me.id] || D.myRoster;
+  const dropsN = rosAll.filter((x) => { const j = rosterJudge(x, rosAll, D); return j.tag === "bad" && j.alt; }).sort((a, b) => a.val - b.val);
+  const dv = (ros, p) => bestLineup(ros.filter((x) => x.games.has(p) && !x.out), D.seats).reduce((t, x) => t + x.proj, 0);
+  const base = D.nextWeek.map((p) => dv(D.myRoster, p)), picks = [];
+  for (const d of dropsN) {
+    const best = upgrades(d, D).filter((f) => !f.out && [...f.games].filter((g) => nextSet.has(g)).length >= 2 && !picks.some((q) => q.f.id === f.id)).map((f) => {
+      const nx = D.myRoster.filter((x) => x.id !== d.id).concat(f), dg = D.nextWeek.map((p, i) => dv(nx, p) - base[i]);
+      return { f, d, gain: dg.reduce((t, v) => t + v, 0), days: D.nextWeek.filter((p, i) => dg[i] > 0.5 && f.games.has(p)), n: [...f.games].filter((g) => nextSet.has(g)).length };
+    }).filter((c) => c.gain >= 3).sort((a, b) => b.gain - a.gain)[0];
+    if (best) picks.push(best);
+  }
+  picks.sort((a, b) => b.gain - a.gain);
+  const gapDays = days.filter((d) => d.games && d.mine < D.seats.length).map((d) => d.p);
+  return { opp: D.nextOpp, days, fas, picks: picks.slice(0, 3), gapDays, hasDrop: dropsN.length > 0,
     my: days.reduce((s, d) => s + d.myProj, 0), their: days.reduce((s, d) => s + d.oppProj, 0),
     myStarts: days.reduce((s, d) => s + d.mine, 0), theirStarts: days.reduce((s, d) => s + d.theirs, 0) };
 }
@@ -1096,7 +1117,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["進階數據、預估 FPTS、預估比對與細節修正\n• 新增進階數據（使用率、真實命中率、每百回合得分，每天更新）：點球員的視窗多一塊進階數據和白話判斷；球員比較表多三列進階\n• 陣容評估參考進階數據：真實命中率明顯低於「他自己去年」、但球權不低的人，不再被評成「可以換掉」，改成「留下觀察」；建議換上的自由球員命中率偏高會提醒可能回落。出賽 5 場以下樣本太少，只顯示數字、不影響判斷\n• 點球員的「未來 5 場賽程」多一欄「預估 FPTS」：用 EPM 預期能力（模型預測的真實水準，跟今年預估混合，出賽越少越相信 EPM）、對手在得分／籃板／助攻／抄截／阻攻／失誤各類被打的程度、兩隊比賽節奏來換算；EPM 這次只用在賽程預估和球員視窗，不影響撿人排程和補強建議\n• 新增「預估比對（實驗）」：每天記錄兩種預估（原本的、混合 EPM 的），等比賽打完跟實際 FPTS 比，看哪個比較準（球員分頁最下面，預設收合）\n• 球員比較的搜尋欄：打名字就能找球員，打錯一兩個字母也找得到\n• 修正：本週得分排名「你的隊伍」那一列的名次格沒填滿；提醒文字最前面的 ⚠、🔥 小圖案拿掉", false], ["換配色擴充、球員比較長條圖\n• 換配色增加到 8 款：夜間球館、白天球館、鮮紅黑、黑金、暗夜霓虹、酒紅金、深海青、薄荷白（原本的「深藍數據」「極簡灰白」換掉）；選單改成 4 欄色塊，不用往下捲\n• 球員比較的「最近 10 場每場得分」折線圖，改成每個人一張卡片的長條圖：每根長條是一場比賽，實色是高於他今年平均、淡色是低於，虛線是今年平均，所有人用同一個高度比例；卡片下面直接寫最高、最低、起伏和高於平均幾場，點長條看那天的分數和上場分鐘", false], ["聯盟總表新增欄位、撿人排程跟陣容評估一致\n• 聯盟總表新增「榜首率」（模擬 4000 次中，例行賽結束排第 1 的機率）和「總失分」（對手累計得到的分數），兩欄都可以點標題排序\n• 修正：「今天要做的事」和「補強建議」的「本週先撿」（撿人排程）改成跟「陣容評估」同一套判斷：只丟陣容評估說可以換掉的人，而且撿進來的人綜合評分要多 3 分以上；陣容評估說「留下」「留下觀察」的人不會再被叫你丟", false], ["修正：補強建議和「陣容評估」卡片的判斷不一致（陣容評估說「留下」，補強建議卻叫你換同一個人）。現在補強建議只會建議換掉陣容評估說「可以換掉」的人，而且自由球員綜合評分要多 3 分以上；每張卡片的標籤改成「綜合 +X」；沒有該換的人時，只列「觀察名單」，不標最推薦", false], ["修正與小調整\n• 修正：換配色的選單按 🎨 收不起來（現在按一次展開、再按收起，點旁邊也會收起）\n• Matchup 最上面的比分改成整數，不顯示小數點", false], ["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["下週卡位、傷兵新聞與判斷顏色\n• 下週預覽新增「下週該先卡位」：只列陣容評估說可以換掉的人，換成綜合評分多 3 分以上、下週場次多的自由球員，算出下週預估多拿幾分，並標出補哪幾天的空缺、waiver 球員要在台北幾點前下 claim；沒有該換的人就明說不用動\n• 陣容評估讀傷兵新聞：ESPN 沒給預計回歸日時，從新聞抓「預計缺陣幾週」，用來判斷要不要放掉長期傷兵\n• 陣容判斷的顏色統一成四種：核心金色、先發主力綠色、觀察橘色、可以換掉紅色（八款配色都有各自調整），球員名字也跟著用同樣的顏色\n• 陣容評估表和自由球員表：點「球員」標題，依金、綠、橘、紅排序，同一種顏色裡今年平均高的排前面，再點一次回到原本順序", false], ["進階數據、預估 FPTS、預估比對與細節修正\n• 新增進階數據（使用率、真實命中率、每百回合得分，每天更新）：點球員的視窗多一塊進階數據和白話判斷；球員比較表多三列進階\n• 陣容評估參考進階數據：真實命中率明顯低於「他自己去年」、但球權不低的人，不再被評成「可以換掉」，改成「留下觀察」；建議換上的自由球員命中率偏高會提醒可能回落。出賽 5 場以下樣本太少，只顯示數字、不影響判斷\n• 點球員的「未來 5 場賽程」多一欄「預估 FPTS」：用 EPM 預期能力（模型預測的真實水準，跟今年預估混合，出賽越少越相信 EPM）、對手在得分／籃板／助攻／抄截／阻攻／失誤各類被打的程度、兩隊比賽節奏來換算；EPM 這次只用在賽程預估和球員視窗，不影響撿人排程和補強建議\n• 新增「預估比對（實驗）」：每天記錄兩種預估（原本的、混合 EPM 的），等比賽打完跟實際 FPTS 比，看哪個比較準（球員分頁最下面，預設收合）\n• 球員比較的搜尋欄：打名字就能找球員，打錯一兩個字母也找得到\n• 修正：本週得分排名「你的隊伍」那一列的名次格沒填滿；提醒文字最前面的 ⚠、🔥 小圖案拿掉", false], ["換配色擴充、球員比較長條圖\n• 換配色增加到 8 款：夜間球館、白天球館、鮮紅黑、黑金、暗夜霓虹、酒紅金、深海青、薄荷白（原本的「深藍數據」「極簡灰白」換掉）；選單改成 4 欄色塊，不用往下捲\n• 球員比較的「最近 10 場每場得分」折線圖，改成每個人一張卡片的長條圖：每根長條是一場比賽，實色是高於他今年平均、淡色是低於，虛線是今年平均，所有人用同一個高度比例；卡片下面直接寫最高、最低、起伏和高於平均幾場，點長條看那天的分數和上場分鐘", false], ["聯盟總表新增欄位、撿人排程跟陣容評估一致\n• 聯盟總表新增「榜首率」（模擬 4000 次中，例行賽結束排第 1 的機率）和「總失分」（對手累計得到的分數），兩欄都可以點標題排序\n• 修正：「今天要做的事」和「補強建議」的「本週先撿」（撿人排程）改成跟「陣容評估」同一套判斷：只丟陣容評估說可以換掉的人，而且撿進來的人綜合評分要多 3 分以上；陣容評估說「留下」「留下觀察」的人不會再被叫你丟", false], ["修正：補強建議和「陣容評估」卡片的判斷不一致（陣容評估說「留下」，補強建議卻叫你換同一個人）。現在補強建議只會建議換掉陣容評估說「可以換掉」的人，而且自由球員綜合評分要多 3 分以上；每張卡片的標籤改成「綜合 +X」；沒有該換的人時，只列「觀察名單」，不標最推薦", false], ["修正與小調整\n• 修正：換配色的選單按 🎨 收不起來（現在按一次展開、再按收起，點旁邊也會收起）\n• Matchup 最上面的比分改成整數，不顯示小數點", false], ["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>
@@ -1940,6 +1961,25 @@ function predEvalCard() {
     <div class="scroll"><table class="vs"><tr><th>範圍</th><th class="n">筆數</th><th class="n">原本預估誤差</th><th class="n">混合 EPM 誤差</th></tr>${row("全部", S.all)}${row("今年出賽 5 場以下", S.low)}${row("今年出賽 5 場以上", S.high)}</table></div>
     <p class="note">誤差 = 預估和實際 FPTS 差距的平均（越小越準）。只比對有上場的人，沒上場的不算。已記錄 ${S.days || 0} 天，更新於 ${esc(String(L.updated || "").slice(0, 10))}。</p></section>`;
 }
+// ---------- 傷兵新聞：從 ESPN／Rotowire 新聞抓「預計缺陣多久」，ESPN 沒給回歸日時拿來補 ----------
+function newsReturn(items, today) {
+  for (const n of (items || []).slice(0, 5)) {
+    const t = `${n.head} ${n.story}`.replace(/\s+/g, " "), age = Math.max(0, Math.round((today - n.when) / 86400000));
+    if (/out for the (?:season|year)|season-ending|ruled out for the season/i.test(t)) return { left: 999, why: "新聞說本季報銷" };
+    let m = t.match(/(\d+)\s*(?:-|–|to)\s*(\d+)\s*(week|month)s?/i);
+    if (m) { const d = ((+m[1] + +m[2]) / 2) * (/month/i.test(m[3]) ? 30 : 7); return { left: Math.max(0, Math.round(d - age)), why: `新聞預估缺陣 ${m[1]}–${m[2]} ${/month/i.test(m[3]) ? "個月" : "週"}` }; }
+    m = t.match(/(?:out|sidelined|miss(?:ing)?|absence of|return in|re-?evaluated in)[^.]{0,40}?(?:about|roughly|around|approximately)?\s*(\d+)\s*(week|month)s?/i);
+    if (m) { const d = +m[1] * (/month/i.test(m[2]) ? 30 : 7); return { left: Math.max(0, Math.round(d - age)), why: `新聞預估缺陣約 ${m[1]} ${/month/i.test(m[2]) ? "個月" : "週"}` }; }
+    if (/indefinitely/i.test(t)) return { left: 60, why: "新聞說缺陣沒有時間表" };
+    if (/day[- ]to[- ]day/i.test(t)) return { left: 2, why: "新聞說每天視情況" };
+  }
+  return null;
+}
+async function loadInjNews(D) {
+  const todo = [];
+  for (const t of D.teams) for (const x of D.rosters[t.id]) if (x.out && !(x.injuryInfo && (x.injuryInfo.outForSeason || x.injuryInfo.expectedReturnDate))) todo.push(x);
+  await Promise.all(todo.slice(0, 20).map(async (x) => { try { x.newsRet = newsReturn(await getNews(x.id), Date.now()); } catch (e) { /* 讀不到新聞就維持原本判斷 */ } }));
+}
 // ---------- EPM 預期能力 → 每場 FPTS（真實水準），跟今年預估混合 ----------
 const SCORE_W = { pts: 1, oreb: 1, reb: 1, ast: 2, stl: 4, blk: 4, tov: -2, pf: -1, fga: -1, fgm: 2, fta: -1, ftm: 1, tpa: -1, tpm: 2 }; // 這個聯盟的計分規則（statId 對照過）
 function epmOf(x) {
@@ -2183,9 +2223,9 @@ function render(D, A) {
     const i = injInfo(x, D); return `<span class="pill">${esc(INJURY[x.injury] || x.injury)}${i && i.short ? " · " + esc(i.short) : ""}</span>`; };
   const benchedIds = (d) => new Set(d.benched.map((x) => x.id));
   const pct = (v) => v >= 0.995 ? ">99%" : v > 0 && v < 0.005 ? "<1%" : `${Math.round(v * 100)}%`;
-  const HEAD = `<tr><th>位置</th><th>球員</th><th style="white-space:nowrap">球隊</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">分鐘</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
+  const HEAD = `<tr><th>位置</th><th class="sortable" data-order="verdict" title="點一下依金、綠、橘、紅排序">球員</th><th style="white-space:nowrap">球隊</th><th class="n sortable">今年</th><th class="n sortable">近7場</th><th class="n sortable">分鐘</th><th class="n sortable">去年</th><th class="n">持有%</th><th>本週</th><th class="n">下週</th><th>判斷</th></tr>`;
   const row = (x, slot, v, fa) => `<tr>
-    <td class="slot">${esc(slot)}</td><td class="${fa ? "name " + v[0] : ""}"><span class="pname" data-pid="${x.id}">${esc(x.name)}</span><button type="button" class="tocmp xs" data-cmp="${x.id}" aria-label="加入比較" title="加入比較">⚖</button>${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
+    <td class="slot">${esc(slot)}</td><td class="name ${v[0]}"><span class="pname" data-pid="${x.id}">${esc(x.name)}</span><button type="button" class="tocmp xs" data-cmp="${x.id}" aria-label="加入比較" title="加入比較">⚖</button>${fa && x.status === "WAIVERS" ? '<span class="wv">waiver</span>' : ""}${inj(x)}</td>
     <td class="logo">${teamLogo(x.team)}</td>
     <td class="n big">${f1(x.avg)}</td><td class="n ${trend(x)}">${f1(x.last7)}</td>${minCell(x)}<td class="n">${f1(x.lastYear)}</td><td class="n">${x.own == null ? "-" : f1(x.own)}</td>
     <td><span class="chips">${D.remaining.map((p) => `<span class="chip${x.games.has(p) ? " on" : ""}">${dayChar(D, p)}</span>`).join("")}</span></td>
@@ -2248,6 +2288,9 @@ function render(D, A) {
         <tr><td><b>合計</b></td><td class="n ${A.next.my > A.next.their ? "win" : ""}"><b>${A.next.myStarts} 人次 · ${r0(A.next.my)}</b></td><td class="n ${A.next.their > A.next.my ? "win" : ""}"><b>${A.next.theirStarts} 人次 · ${r0(A.next.their)}</b></td></tr>
       </table>
       <p class="sub" style="margin-top:10px">${A.next.my >= A.next.their ? `照現在的陣容，下週預估贏 ${r0(A.next.my - A.next.their)} 分。` : `照現在的陣容，下週預估輸 ${r0(A.next.their - A.next.my)} 分，可以提早準備。`}</p>
+      ${A.next.gapDays.length ? `<p class="sub">下週 ${A.next.gapDays.map((p) => A.label(p)).join("、")} 你能上場的人不到 ${D.seats.length} 人，這幾天有空缺。</p>` : ""}
+      <p class="sub"><b>下週該先卡位：</b>${A.next.picks.length ? "" : (A.next.hasDrop ? "目前沒有撿了有明顯幫助的人，先不用動。" : "陣容評估目前沒有建議可以丟的人，下週先不用卡位。")}</p>
+      ${A.next.picks.length ? `<ul class="hl">${A.next.picks.map((c) => `<li>${LK(esc(c.f.name))}（綜合 ${f1(c.f.val)}）下週 ${c.n} 場${c.days.length ? `，補 ${c.days.map((p) => A.label(p).split(" ")[0]).join("、")}` : ""}，預估多拿 <b class="up">+${r0(c.gain)}</b> 分；丟 ${LK(esc(c.d.name))}（綜合 ${f1(c.d.val)}，陣容評估說可以換掉）${c.f.status === "WAIVERS" ? `。<b>在 waiver${c.f.waiverAt ? "，台北 " + new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(c.f.waiverAt)) + " 處理" : ""}，要先下 claim</b>` : "，現在就能直接撿"}。</li>`).join("")}</ul>` : ""}
       ${A.next.fas.length ? `<p class="sub">下週比賽多的自由球員：${A.next.fas.map((f) => `${LK(esc(f.name))}（${f.nextGames} 場，${f1(f.avg)}）`).join("、")}。</p>` : ""}
       <p class="note">用現在的陣容估算（人次 = 每天能排上先發的人數加總，後面是預估分）。綠色是那天人數比較多的一方。</p>
     </section>` : ""}
@@ -2518,6 +2561,7 @@ async function run() {
     await loadAdv(); // 進階數據先讀好，陣容評估才用得到
     await loadPredLog();
     const D = await load(pick);
+    await loadInjNews(D); // 傷兵的預計缺陣時間（新聞）
     await teamRecords().catch(() => {}); // 先讀 NBA 戰績，賽程標籤才算得出來
     CUR = D;
     const sel = $("#team");
