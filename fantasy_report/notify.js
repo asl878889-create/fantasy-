@@ -63,9 +63,9 @@ const DRY = process.argv.includes("--dry");
       const dropped = [...new Set(lists.flatMap((l) => l.transactions || []).filter((t) => t.status === "EXECUTED")
         .flatMap((t) => t.items.filter((i) => i.type === "DROP").map((i) => i.playerId)))];
       const fa = new Map(D.fas.map((f) => [f.id, f]));
-      const bar = A.worst ? A.worst.proj + 3 : Infinity;
-      const steal = dropped.map((id) => fa.get(id)).filter((f) => f && f.proj > bar);
-      if (steal.length) L.push("", `🔥 **可以搶**：${steal.map((f) => `${f.name}（${f.avg.toFixed(1)}${f.status === "WAIVERS" ? "，waiver" : ""}）`).join("、")} 剛被丟掉，比你的 ${A.worst.name}（${A.worst.avg.toFixed(1)}）好`);
+      const bar = A.drop ? A.drop.val + UPG : Infinity; // 跟網頁同一套：綜合評分比你最該換掉的人多 3 分以上
+      const steal = dropped.map((id) => fa.get(id)).filter((f) => f && f.val >= bar);
+      if (steal.length) L.push("", `🔥 **可以搶**：${steal.map((f) => `${f.name}（${f.avg.toFixed(1)}${f.status === "WAIVERS" ? "，waiver" : ""}）`).join("、")} 剛被丟掉，比你的 ${A.drop.name}（綜合 ${A.drop.val.toFixed(1)}）好`);
     } catch (e) { /* 讀不到聯盟動態就略過 */ }
 
     L.push("", `詳細內容：${site}`);
