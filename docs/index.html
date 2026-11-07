@@ -390,7 +390,14 @@ async function load(teamPick) {
              teams.find((t) => t.name === DEFAULT_TEAM) || teams[0];
   const period = lg.scoringPeriodId;
   const week = lg.status.currentMatchupPeriod;
-  const today = etToday();
+  // 日期以 ESPN 的比賽日（scoringPeriodId）為準，不用電腦時鐘：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右）兩者會差一天
+  let today = etToday();
+  const anchor = Object.values(GAMES).find((g) => g.scoringPeriodId != null && g.date);
+  if (anchor) {
+    const [ay, am, ad] = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(anchor.date)).split("-").map(Number);
+    const fixed = addDays(new Date(Date.UTC(ay, am - 1, ad)), period - anchor.scoringPeriodId);
+    if (Math.abs(fixed - today) <= 2 * 86400000) today = fixed;
+  }
   const base = addDays(today, -period);
   const monday = addDays(today, -weekdayIdx(today));
   const weekPeriods = Array.from({ length: 7 }, (_, i) => period - weekdayIdx(today) + i);
@@ -928,7 +935,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>

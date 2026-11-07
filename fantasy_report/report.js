@@ -2,6 +2,7 @@
 // 用法：
 //   node fantasy_report/report.js --final  [--team N] [--channel ID] [--wait 分鐘] [--period 比賽日] [--dry]
 //   node fantasy_report/report.js --weekly [--team N] [--channel ID] [--wait 分鐘] [--week 週次]   [--dry]
+//   --force：不等了，現在就發（ESPN 有時要很久才把比賽標成「結算完成」，已經打完但還沒結算時用）
 // --final：等「今天所有 NBA 比賽打完」才發賽後日報；--weekly：等「這一週的對戰結果出來」才發週報。
 // --wait：還沒好時，每 4 分鐘重新讀一次，最多等這麼多分鐘（預設 0 = 不等，沒好就不發）。
 // --period / --week：測試用，指定要看哪一天／哪一週。--dry 只印出訊息，不發送。
@@ -17,7 +18,7 @@ const SITE = "https://asl878889-create.github.io/fantasy-/" + (TEAM ? `?team=${T
 const DRY = process.argv.includes("--dry");
 const MODE = process.argv.includes("--weekly") ? "weekly" : process.argv.includes("--final") ? "final" : null;
 const WAIT = Number(arg("--wait") || 0);
-const OPTS = { period: arg("--period") ? Number(arg("--period")) : null, week: arg("--week") ? Number(arg("--week")) : null };
+const OPTS = { period: arg("--period") ? Number(arg("--period")) : null, week: arg("--week") ? Number(arg("--week")) : null, force: process.argv.includes("--force") };
 if (!MODE) { console.error("請指定 --final 或 --weekly"); process.exit(1); }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -31,6 +32,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
   const sched = D.lg.schedule;
   const matchOf = (w, tid) => sched.find((m) => m.matchupPeriodId === w && m.away && [m.home.teamId, m.away.teamId].includes(tid));
   const side = (m, tid) => (m.home.teamId === tid ? m.home : m.away);
+  const wkPts = (sd) => (sd.totalPointsLive != null ? sd.totalPointsLive : sd.totalPoints || 0); // ESPN 的 totalPoints 有時會慢一步，優先用即時的
   const oppIdOf = (m, tid) => (m.home.teamId === tid ? m.away.teamId : m.home.teamId);
   const nameOf = (id) => { for (const t of D.teams) { const x = D.rosters[t.id].find((p) => p.id === id); if (x) return x.name; }
     const f = D.fas.find((p) => p.id === id) || EXTRA[id]; return f ? f.name : "某位球員"; };
@@ -49,8 +51,11 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     if (!P) return { ready: false, why: "找不到已經開打的比賽日" };
     const gs = Object.values(GAMES).filter((g) => g.scoringPeriodId === P);
     if (!gs.length) return { ready: true, skip: "那天沒有 NBA 比賽" };
-    const left = gs.filter((g) => !g.statsOfficial).length;
-    if (left) return { ready: false, why: `${lab(P)} 還有 ${left} 場沒打完` };
+    // 比賽開打 4 小時後就當作已經打完（ESPN 有時要很久才標成結算完成），不要一直等
+    const over = (g) => g.statsOfficial || Date.now() >= g.date + 4 * 3600000;
+    const left = gs.filter((g) => !over(g)).length;
+    if (left && !opts.force) return { ready: false, why: `${lab(P)} 還有 ${left} 場沒打完` };
+    const unsettled = gs.filter((g) => !g.statsOfficial).length;
 
     const W = wkOfPeriod(P), m = matchOf(W, meId);
     if (!m) return { ready: true, skip: "找不到這週的對手" };
@@ -63,12 +68,17 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     const L = [];
     L.push(`🌙 **${D.me.name} 賽後日報**　${lab(P)}`);
     L.push(`今天 ${f0(mine.total)} : ${f0(theirs.total)}（${teamName(oppId)}）`);
-    const a = side(m, meId).totalPoints || 0, b = side(m, oppId).totalPoints || 0;
+    const a = wkPts(side(m, meId)), b = wkPts(side(m, oppId));
     const weekDone = P >= periodsOf(W)[6];
     if (weekDone) L.push(`第 ${W} 週最終 ${f0(a)} : ${f0(b)}，${a > b ? "贏了 🎉" : a < b ? "輸了" : "平手"}（詳細看週報）`);
     else {
       L.push(`第 ${W} 週累計 ${f0(a)} : ${f0(b)}（${a >= b ? "領先" : "落後"} ${f0(Math.abs(a - b))}）`);
-      if (W === D.week) L.push(`預估最終 ${f0(a + A.myRest)} : ${f0(b + A.oppRest)}，本週勝率 ${pc(A.winProb)}`);
+      if (W === D.week) { // 只算 P 之後還沒打的日子（A.days 可能還包含剛打完的這一天）
+        const rem = A.days.filter((d) => d.p > P), mr = rem.reduce((t, d) => t + d.myProj, 0), orr = rem.reduce((t, d) => t + d.oppProj, 0);
+        const sdv = Math.sqrt(rem.reduce((t, d) => t + d.mine.reduce((u, x) => u + (0.3 * x.proj) ** 2, 0) + d.theirs.reduce((u, x) => u + (0.3 * x.proj) ** 2, 0), 0));
+        const wp = sdv > 0 ? normCdf((a - b + mr - orr) / sdv) : a > b ? 1 : a < b ? 0 : 0.5;
+        L.push(`預估最終 ${f0(a + mr)} : ${f0(b + orr)}，本週勝率 ${pc(wp)}`);
+      }
     }
     if (mine.st.length) {
       L.push("", `⭐ **今天最強**：${mine.st.slice(0, 3).map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
@@ -79,19 +89,24 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     if (md && md.miss >= 10) L.push(`🪑 **替補錯過**：事後最佳先發可以多 ${f0(md.miss)} 分${md.bench.length ? `（${md.bench.map((e) => `${nameOf(e.id)} ${f0(e.pts)} 分`).join("、")}在替補）` : ""}`);
     if (theirs.st.length) L.push(`對手今天最強：${theirs.st.slice(0, 2).map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
     // 接下來要做的事（D.period 通常已經是下一個比賽日）
-    const must = A.todos.filter((t) => t[1] === "要做");
+    const must = A.todos.filter((t) => t[1] === "要做" && !t[2].startsWith(lab(P)));
     if (!weekDone && must.length) { L.push("", "🚨 **接下來要做**"); must.slice(0, 4).forEach((t) => L.push(`• ${t[2]}`)); }
+    if (unsettled) L.push("", `（還有 ${unsettled} 場 ESPN 還沒結算完，分數可能再微調）`);
     L.push("", `詳細內容：${site}`);
     return { ready: true, text: L.join("\n") };
   }
 
   // ---------- 週報 ----------
-  let W = opts.week;
-  if (!W) { const done = sched.filter((m) => m.winner && m.winner !== "UNDECIDED" && m.matchupPeriodId <= D.week).map((m) => m.matchupPeriodId); W = done.length ? Math.max(...done) : null; }
-  if (!W) return { ready: false, why: "還沒有已經結束的週" };
+  const W = opts.week || D.week - 1; // 現在這一週的上一週
+  if (W < 1) return { ready: false, why: "還沒有已經結束的週" };
   const m = matchOf(W, meId);
-  if (!m || !m.winner || m.winner === "UNDECIDED") return { ready: false, why: `第 ${W} 週的對戰結果還沒出來` };
-  const oppId = oppIdOf(m, meId), a = side(m, meId).totalPoints || 0, b = side(m, oppId).totalPoints || 0;
+  if (!m) return { ready: false, why: `找不到第 ${W} 週的對手` };
+  // 結果出來了（winner 有值），或那週最後一天的比賽都打完了，就可以發
+  const lastP = periodsOf(W)[6], lastGames = Object.values(GAMES).filter((g) => g.scoringPeriodId === lastP);
+  const decided = m.winner && m.winner !== "UNDECIDED";
+  const over = lastGames.every((g) => g.statsOfficial || Date.now() >= g.date + 4 * 3600000);
+  if (!decided && !(over && D.period > lastP) && !opts.force) return { ready: false, why: `第 ${W} 週還沒結束` };
+  const oppId = oppIdOf(m, meId), a = wkPts(side(m, meId)), b = wkPts(side(m, oppId));
   const periods = periodsOf(W);
   const box = await loadWeekBox(W, periods);
   const C = contribution(D, meId, box, periods[6]);
