@@ -21,7 +21,11 @@ const round = (v, d) => (v == null || Number.isNaN(v) ? null : Math.round(v * 10
   // 聯盟平均：場均 20 分鐘以上的球員（太少上場時間的人命中率不穩，不算進去）
   const base = Object.values(players).filter((p) => p.min >= 20 && p.ts != null && p.usg != null);
   const avg = (k) => round(base.reduce((s, p) => s + p[k], 0) / base.length, 1);
-  const out = { generated: adv.meta.generated_at, season: adv.meta.season, source: "surennba.com", lg: { ts: avg("ts"), usg: avg("usg"), efg: avg("efg"), p100: avg("p100"), n: base.length }, players };
+  // 球隊數據（防守評分、進攻評分、節奏）：網頁用來估「這個球員對上這支球隊」的表現
+  const tm = JSON.parse(execFileSync("curl", ["-sS", "--max-time", "60", "-A", "Mozilla/5.0", "-f", `https://www.surennba.com/NBA/data/teams/${process.argv[2] || "2026-27"}-regular.json`], { maxBuffer: 50e6 }).toString());
+  const teams = Object.fromEntries(tm.teams.map((t) => [t.abbr, { g: t.games, off: round(t.off_rating, 1), def: round(t.def_rating, 1), pace: round(t.pace, 1) }]));
+  const tv = Object.values(teams), lgTeam = { off: round(tv.reduce((s, t) => s + t.off, 0) / tv.length, 1), def: round(tv.reduce((s, t) => s + t.def, 0) / tv.length, 1), pace: round(tv.reduce((s, t) => s + t.pace, 0) / tv.length, 1) };
+  const out = { generated: adv.meta.generated_at, teams, lgTeam, season: adv.meta.season, source: "surennba.com", lg: { ts: avg("ts"), usg: avg("usg"), efg: avg("efg"), p100: avg("p100"), n: base.length }, players };
   const file = path.resolve(__dirname, "../docs/adv.json");
   fs.writeFileSync(file, JSON.stringify(out));
   console.log(`已寫入 ${file}：${Object.keys(players).length} 位球員，聯盟平均 TS ${out.lg.ts}% 使用率 ${out.lg.usg}%`);
