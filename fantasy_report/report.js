@@ -92,7 +92,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     const must = A.todos.filter((t) => t[1] === "要做" && !t[2].startsWith(lab(P)));
     if (!weekDone && must.length) { L.push("", "🚨 **接下來要做**"); must.slice(0, 4).forEach((t) => L.push(`• ${t[2]}`)); }
     if (unsettled) L.push("", `（還有 ${unsettled} 場 ESPN 還沒結算完，分數可能再微調）`);
-    if (site) L.push("", `詳細內容：${site}`);
+   
     return { ready: true, text: L.join("\n") };
   }
 
@@ -142,7 +142,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     const th = D.rosters[nid].filter((x) => !x.out).sort((x, y) => y.avg - x.avg).slice(0, 3).map((x) => `${x.name} ${f1(x.avg)}`);
     L.push(`• 他的主力：${th.join("、")}`);
   }
-  if (site) L.push("", `詳細內容：${site}`);
+ 
   return { ready: true, text: L.join("\n") };
 };
 

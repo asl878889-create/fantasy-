@@ -69,7 +69,7 @@ const DRY = process.argv.includes("--dry");
       if (steal.length) L.push("", `🔥 **可以搶**：${steal.map((f) => `${f.name}（${f.avg.toFixed(1)}${f.status === "WAIVERS" ? "，waiver" : ""}）`).join("、")} 剛被丟掉，比你的 ${A.drop.name}（綜合 ${A.drop.val.toFixed(1)}）好`);
     } catch (e) { /* 讀不到聯盟動態就略過 */ }
 
-    if (site) L.push("", `詳細內容：${site}`); // 朋友的頻道沒有密碼，不附連結
+   
     return L.join("\n");
   }, TEAM ? "" : SITE);
   await browser.close();
