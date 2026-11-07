@@ -23,16 +23,19 @@
 
 /* 配色：右上角 🎨 可以換，記在這支手機上 */
 :root[data-ui="B"] { color-scheme: light; --bg: #eef1f6; --card: #ffffff; --ink: #16202e; --muted: #5e6a7d; --line: #d6dce6; --accent: #d9480f; --on-accent: #ffffff; --hero: #17233a; --hero-bg: linear-gradient(135deg, #17233a 0%, #2a3d63 100%); --hero-ink: #ffffff; --hero-muted: #b8c4da; --hero-line: #2a3d63; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #d9480f; --c2: #2f6fd0; --c3: #14803c; --c4: #8a4fc0; }
-:root[data-ui="C"] { --bg: #08111f; --card: #0f1c30; --ink: #dfe9f7; --muted: #8497b3; --line: #1d3150; --accent: #38d0e8; --on-accent: #05222a; --hero: #0f1c30; --hero-bg: linear-gradient(135deg, #0f3a52 0%, #0f1c30 70%); --hero-ink: #e8f6fb; --hero-muted: #9fc4d4; --hero-line: #1d3150; }
+:root[data-ui="C"] { --bg: #0b0b0d; --card: #161618; --ink: #f2f0f0; --muted: #9c9496; --line: #2c2a2c; --accent: #ff3b3b; --on-accent: #ffffff; --hero: #161618; --hero-bg: linear-gradient(135deg, #7a0f14 0%, #161618 70%); --hero-ink: #fff1f1; --hero-muted: #e0b4b4; --hero-line: #5a1a1e; --c1: #ff5a4a; --c2: #4cc9f0; --c3: #5fd38a; --c4: #ffd166; }
 :root[data-ui="D"] { --bg: #000000; --card: #0e0e0e; --ink: #f1ede4; --muted: #9a958a; --line: #2a2722; --accent: #e8b64c; --on-accent: #1b1405; --hero: #0e0e0e; --hero-bg: linear-gradient(135deg, #2a2210 0%, #0e0e0e 70%); --hero-ink: #f6efd8; --hero-muted: #b8ad8c; --hero-line: #3a3010; }
-:root[data-ui="E"] { color-scheme: light; --bg: #f4f4f2; --card: #ffffff; --ink: #161616; --muted: #6a6a66; --line: #dcdcd6; --accent: #0f9d58; --on-accent: #ffffff; --hero: #161616; --hero-bg: #161616; --hero-ink: #ffffff; --hero-muted: #b5b5b0; --hero-line: #161616; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #d9480f; --c2: #2f6fd0; --c3: #14803c; --c4: #8a4fc0; --c1: #0f9d58; }
+:root[data-ui="E"] { --bg: #09060f; --card: #140f22; --ink: #ece8ff; --muted: #9a92c2; --line: #2a2150; --accent: #c77dff; --on-accent: #14061f; --hero: #1b1233; --hero-bg: linear-gradient(135deg, #4a1d8c 0%, #140f22 65%); --hero-ink: #f3eeff; --hero-muted: #b9aee6; --hero-line: #5b2fa8; --c1: #c77dff; --c2: #4cc9f0; --c3: #5fd38a; --c4: #ff7eb6; }
+:root[data-ui="F"] { --bg: #13080b; --card: #1f0f13; --ink: #f6ecea; --muted: #a58c8a; --line: #3d1f26; --accent: #e8c56a; --on-accent: #2a1a02; --hero: #1f0f13; --hero-bg: linear-gradient(135deg, #7a1630 0%, #1f0f13 70%); --hero-ink: #fff3ea; --hero-muted: #d9b9a8; --hero-line: #5a2030; --c1: #e8c56a; --c2: #6fb7ff; --c3: #6ed39a; --c4: #ff8aa8; }
+:root[data-ui="G"] { --bg: #05141a; --card: #0b232c; --ink: #e3f6f8; --muted: #7fa5ad; --line: #144047; --accent: #26d9c4; --on-accent: #03211e; --hero: #0b232c; --hero-bg: linear-gradient(135deg, #0b6b73 0%, #0b232c 70%); --hero-ink: #e7fffd; --hero-muted: #9fd3d6; --hero-line: #145058; --c1: #26d9c4; --c2: #ffb454; --c3: #7be07e; --c4: #ff7eb6; }
+:root[data-ui="H"] { color-scheme: light; --bg: #eaf5f0; --card: #ffffff; --ink: #11231c; --muted: #587066; --line: #cfe3d9; --accent: #0b8f6a; --on-accent: #ffffff; --hero: #0d3b2e; --hero-bg: linear-gradient(135deg, #0d3b2e 0%, #17715a 100%); --hero-ink: #ffffff; --hero-muted: #bfe3d6; --hero-line: #17715a; --warn-bg: #fff3e0; --warn: #8a5200; --ok-bg: #e3f5ea; --ok: #14803c; --bad-bg: #fdeaea; --bad: #c62828; --on-ok: #ffffff; --c1: #0b8f6a; --c2: #2f6fd0; --c3: #d9480f; --c4: #8a4fc0; }
 .bar .ok-btn { padding: 2px 10px; white-space: nowrap; font-size: 12px; border: 0; } .bar .is-new::before { white-space: nowrap; }
 #uibtn { font-size: 16px; line-height: 1; padding: 6px 9px; }
-#uimenu[hidden] { display: none; } #uimenu { margin: -4px 0 12px; padding: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; display: grid; gap: 4px; }
-#uimenu button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 8px; border: 1px solid transparent; background: none; color: var(--ink); cursor: pointer; }
-#uimenu button[aria-checked="true"] { border-color: var(--accent); }
-#uimenu i { width: 34px; height: 22px; border-radius: 6px; border: 1px solid var(--line); flex: none; }
-#uimenu small { color: var(--muted); margin-left: auto; }
+#uimenu[hidden] { display: none; } #uimenu { margin: -4px 0 12px; padding: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+#uimenu button { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%; font: inherit; font-size: 12px; padding: 7px 2px 6px; border-radius: 10px; border: 1px solid transparent; background: none; color: var(--ink); cursor: pointer; }
+#uimenu button[aria-checked="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+#uimenu i { width: 100%; max-width: 54px; height: 26px; border-radius: 7px; border: 1px solid var(--line); flex: none; }
+#uimenu small { display: none; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
   font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; }
@@ -93,6 +96,12 @@ tr.me td { font-weight: 700; color: var(--ink); background: color-mix(in srgb, v
 .foldh { cursor: pointer; user-select: none; } .foldh::after { content: "▾"; float: right; color: var(--muted); font-size: 16px; margin-left: 8px; } .card.folded > .foldh::after { content: "▸"; } .card.folded > :not(h2) { display: none !important; } .card.folded > h2 { margin-bottom: 0; }
 a.golink { color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .card.flash { animation: flash 1.6s ease; } @keyframes flash { 0%, 60% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
 .rankrow { display: flex; align-items: center; justify-content: flex-start; gap: 10px; padding-right: 84px; } .rk { font-size: 12px; font-weight: 800; padding: 1px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); } .rk.first { background: var(--accent); border-color: var(--accent); color: var(--on-accent, #10151f); } .rankrow .gn { font-size: 15px; font-weight: 800; color: var(--ok); } .rankrow .gn.bench { color: var(--muted); font-weight: 600; font-size: 13px; }
+.pcard { margin: 10px 0; padding: 10px 10px 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); } .pcard .ph { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; } .pcard .ph .sub { margin-left: auto; }
+.pcard .bars { position: relative; display: flex; align-items: flex-end; gap: 3px; } .pcard .avgline { position: absolute; left: 0; right: 0; border-top: 1.5px dashed var(--pc); opacity: .75; pointer-events: none; z-index: 1; }
+.pcard .bcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 1px; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: var(--muted); }
+.pcard .bcol span { display: block; width: 100%; border-radius: 4px 4px 0 0; background: var(--pc); opacity: .38; } .pcard .bcol.up span { opacity: 1; } .pcard .bcol.on span { outline: 2px solid var(--ink); outline-offset: 1px; }
+.pcard .bcol em { font-style: normal; font-size: 10px; font-weight: 700; color: var(--ink); line-height: 1.1; } .pcard .bcol small { font-size: 9px; line-height: 1.3; color: var(--muted); white-space: nowrap; }
+.pcard .kv { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font-size: 12.5px; color: var(--muted); } .pcard .kv b { color: var(--ink); }
 .roster .pill { white-space: nowrap; }
 .roster td.slot { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .roster td.big { font-weight: 800; font-size: 15px; }
@@ -911,13 +920,13 @@ document.addEventListener("click", (e) => { // 按「加入比較」時，把球
 });
 
 // 換配色：五款，選了記在這支手機上
-const UI_THEMES = [["A", "夜間球館", "深色・暗橘", "#0b0f17", "#ff8a3d"], ["B", "白天球館", "淺色・藍橘", "#eef1f6", "#d9480f"], ["C", "深藍數據", "深色・青", "#08111f", "#38d0e8"], ["D", "黑金", "純黑・金", "#000000", "#e8b64c"], ["E", "極簡灰白", "淺色・綠", "#f4f4f2", "#0f9d58"]];
+const UI_THEMES = [["A", "夜間球館", "深色・暗橘", "#0b0f17", "#ff8a3d"], ["B", "白天球館", "淺色・藍橘", "#eef1f6", "#d9480f"], ["C", "鮮紅黑", "深色・熱血", "#0b0b0d", "#ff3b3b"], ["D", "黑金", "純黑・金", "#000000", "#e8b64c"], ["E", "暗夜霓虹", "深紫・霓虹紫", "#09060f", "#c77dff"], ["F", "酒紅金", "深酒紅・香檳金", "#13080b", "#e8c56a"], ["G", "深海青", "藍黑・海水青", "#05141a", "#26d9c4"], ["H", "薄荷白", "淺色・薄荷綠", "#eaf5f0", "#0b8f6a"]];
 function applyUi(k, save) {
   document.documentElement.dataset.ui = k;
   if (save) { try { localStorage.setItem("ui-theme", k); } catch (e) { /* 存不了就只換這次 */ } }
   const t = UI_THEMES.find((x) => x[0] === k) || UI_THEMES[0]; const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t[3];
   const box = document.getElementById("uimenu");
-  box.innerHTML = UI_THEMES.map((x) => `<button type="button" role="menuitemradio" aria-checked="${x[0] === k}" data-ui="${x[0]}"><i style="background:linear-gradient(90deg,${x[3]} 60%,${x[4]} 60%)"></i>${x[1]}<small>${x[2]}</small></button>`).join("");
+  box.innerHTML = UI_THEMES.map((x) => `<button type="button" role="menuitemradio" aria-checked="${x[0] === k}" data-ui="${x[0]}" title="${x[2]}"><i style="background:linear-gradient(90deg,${x[3]} 60%,${x[4]} 60%)"></i>${x[1]}<small>${x[2]}</small></button>`).join("");
 }
 document.getElementById("uibtn").addEventListener("click", (e) => { e.stopPropagation(); document.getElementById("uimenu").hidden = !document.getElementById("uimenu").hidden; });
 document.addEventListener("click", (e) => { const m = document.getElementById("uimenu"); if (!m.hidden && !e.target.closest("#uimenu")) m.hidden = true; }); // 點選單以外的地方也會收起
@@ -1032,7 +1041,7 @@ function playoffCard(D) {
 // ---------- 更新紀錄（新的在最上面；true = 試做中，還沒放到即時版） ----------
 const verName = (n) => `v${Math.floor(n / 100)}.${n % 100}`; // 版本號：前 100 版是 v0.1～v0.99，第 100 版起是 v1.0
 // 每一條的版本號：從最舊的往上數；有寫第三個值的就用那個版本號（例如幾版整合成一版）
-const CHANGES = [["聯盟總表新增欄位、撿人排程跟陣容評估一致\n• 聯盟總表新增「榜首率」（模擬 4000 次中，例行賽結束排第 1 的機率）和「總失分」（對手累計得到的分數），兩欄都可以點標題排序\n• 修正：「今天要做的事」和「補強建議」的「本週先撿」（撿人排程）改成跟「陣容評估」同一套判斷：只丟陣容評估說可以換掉的人，而且撿進來的人綜合評分要多 3 分以上；陣容評估說「留下」「留下觀察」的人不會再被叫你丟", false], ["修正：補強建議和「陣容評估」卡片的判斷不一致（陣容評估說「留下」，補強建議卻叫你換同一個人）。現在補強建議只會建議換掉陣容評估說「可以換掉」的人，而且自由球員綜合評分要多 3 分以上；每張卡片的標籤改成「綜合 +X」；沒有該換的人時，只列「觀察名單」，不標最推薦", false], ["修正與小調整\n• 修正：換配色的選單按 🎨 收不起來（現在按一次展開、再按收起，點旁邊也會收起）\n• Matchup 最上面的比分改成整數，不顯示小數點", false], ["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["新增「換配色」：右上角 🎨 按鈕可以選五款配色（A 夜間球館、B 白天球館、C 深藍數據、D 黑金、E 極簡灰白），選了會記在這支手機上", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
+const CHANGES = [["換配色擴充、球員比較長條圖\n• 換配色增加到 8 款：夜間球館、白天球館、鮮紅黑、黑金、暗夜霓虹、酒紅金、深海青、薄荷白（原本的「深藍數據」「極簡灰白」換掉）；選單改成 4 欄色塊，不用往下捲\n• 球員比較的「最近 10 場每場得分」折線圖，改成每個人一張卡片的長條圖：每根長條是一場比賽，實色是高於他今年平均、淡色是低於，虛線是今年平均，所有人用同一個高度比例；卡片下面直接寫最高、最低、起伏和高於平均幾場，點長條看那天的分數和上場分鐘", false], ["聯盟總表新增欄位、撿人排程跟陣容評估一致\n• 聯盟總表新增「榜首率」（模擬 4000 次中，例行賽結束排第 1 的機率）和「總失分」（對手累計得到的分數），兩欄都可以點標題排序\n• 修正：「今天要做的事」和「補強建議」的「本週先撿」（撿人排程）改成跟「陣容評估」同一套判斷：只丟陣容評估說可以換掉的人，而且撿進來的人綜合評分要多 3 分以上；陣容評估說「留下」「留下觀察」的人不會再被叫你丟", false], ["修正：補強建議和「陣容評估」卡片的判斷不一致（陣容評估說「留下」，補強建議卻叫你換同一個人）。現在補強建議只會建議換掉陣容評估說「可以換掉」的人，而且自由球員綜合評分要多 3 分以上；每張卡片的標籤改成「綜合 +X」；沒有該換的人時，只列「觀察名單」，不標最推薦", false], ["修正與小調整\n• 修正：換配色的選單按 🎨 收不起來（現在按一次展開、再按收起，點旁邊也會收起）\n• Matchup 最上面的比分改成整數，不顯示小數點", false], ["補強建議、對手習慣、貢獻榜與表格整理\n• 補強建議改成依「你這隊的陣容」排序：每位自由球員試著換掉你陣容裡的每一個人，看先發 10 人的綜合評分總和最多增加多少（有算位置），每個位置各挑一個最適合的；每張卡片標「★ 最推薦」「推薦 2」…和「先發 +X」，並寫出會頂替誰\n• 對手類型改名：串流型 → 試用派、升級型 → 升級派、亂換型 → 亂換派、穩定型 → 穩定派；點類型可以看他整季每一筆撿人丟人，隊伍名稱不能點\n• 撿丟差正數綠色、負數紅色；自己的隊伍不再用橘紅字，改成粗體加淡底色\n• 本週貢獻榜整理：欄寬固定、數字靠右對齊、每列一樣高；「比預估」改成「+/-」；佔比的百分比靠左、貼齊橘條\n• 文字裡的「『決策』分頁的『補強建議』」，點「補強建議」會切過去並捲到那張卡片\n• 修正：Matchup 的左右箭頭在淺色配色下看不到字", false], ["「重新整理」按鈕改成符號 ↻（讀取中顯示 …）", false], ["合併「自由球員」和「球員比較」成一個「球員」分頁（卡片可以點標題收合，預設只展開「自由球員」）（分頁從 7 個變 6 個）；新增「決策」分頁，把要做決定的卡片集中在一起：應對策略（新）、最佳先發建議、補強建議（撿人排程、長期換人）、熱門撿人，原本分散在戰況、陣容、自由球員分頁的這幾張搬過來。「應對策略」（決策分頁最上面）：根據對手的撿人習慣、剩餘場次和勝率，告訴你這週該保守、拉鋸還是主動，撿人名額什麼時候用、要不要防對手臨時補強", false], ["本週對戰：預估分數、和預估的差（括號）、最後一欄預估總分都改成整數，不顯示小數點", false], ["「今天的比賽」改名成 Matchup，上面加左右箭頭，可以看這一週每一天的先發和得分（過去幾天是當天實際得分，之後幾天是賽程），按「回到今天」跳回來", false], ["修正：今天的比賽打完之後，「預估最終」和「要做」不再把今天重複算一次；Discord 通知的「今天幾人有比賽」不算 IR，朋友的頻道不再附需要密碼的連結", false], ["取消「即時問答」功能（右下角對話泡拿掉），並清掉這台裝置上存過的 API 金鑰", false], ["即時問答修正：回答要和網頁上的系統結論一致（長期換人和本週撿人排程分開講）；並多給它今天和本週的實際得分", false], ["即時問答的對話泡改成圓形造型（深色半透明圓、橘色細框、圓形對話圖示），對話框右上角的 ✕ 拿掉（用右下角的圓形按鈕收起）", false], ["新增「即時問答」：右下角的對話泡按鈕，點開用 Claude 問跟你球隊有關的問題（誰該換掉、這週會不會贏、某球員值不值得撿…），回答會一個字一個字即時出現；只有管理員看得到", false], ["Discord 新增兩種通知：有人丟了對你有用的好球員（約每 2 小時檢查）、waiver 處理前提醒（每天台北 12:30）", false], ["修正：美東午夜到 ESPN 換日之間（台灣下午 1 點到 4 點左右），日期、星期、「今天」會差一天的問題；這段時間的賽後日報也會正確", false], ["新增密碼：打開網頁先輸入密碼；K-Town Ja Wick 的密碼只能看他自己那一隊，管理員可以看全部、可以切換隊伍；同一支手機輸入一次就記住，右上角可以登出", false], ["聯盟動態：改成表格（時間、隊伍、撿、丟 各自對齊，台北時間）；聯盟裡任何人撿人丟人，網頁約 20 秒內更新", false], ["第一個大版本：整合前 100 版\n【戰況】今天的比賽（兩隊合成一張表、位置放中間、手機左右對齊、開打時間、DTD 提醒）、最佳先發建議（超過 10 人出賽才出現）、本週對戰（每天實際和預估、點括號看球員差多少、剩餘賽程、連兩天比賽提醒）、本週對決、下週預覽\n【陣容】陣容評估（去年／近 7 場／持有率／分鐘、隊徽）、補強建議（本週先撿＋長期換人）、本週貢獻榜\n【自由球員】熱門撿人、聯盟動態（對齊的表格、約 20 秒內更新）、對手撿人丟人習慣、搜尋欄、waiver 順位\n【聯盟】本週得分排名、每週得分走勢、聯盟總表（點預估戰績看贏誰輸誰、季後賽機率）、各隊陣容判斷\n【球員比較】選球隊再選球員、即時比較（加入比較再按一次取消）、折線圖、交易試算\n【點球員】該不該留／值不值得撿（統一換人邏輯、綜合評分＝每分鐘效率×上場時間）、會不會反彈、未來 5 場賽程偏軟偏硬、球權／球風／教練適配、最近比賽和新聞\n【畫面】夜間球館配色、暗橘漸層主卡片、隊徽、主畫面圖示、電腦寬版、更新紀錄和版本號、更新標記與確認\n【Discord】每天凌晨賽前提醒、賽後日報、週一週報（三個頻道）\n【資料】ESPN 即時資料；你或對手換陣容、聯盟裡有人撿人丟人，約 20 秒內更新", false, 100]];
 const VER_NO = (() => { const n = []; let v = 0; for (let k = CHANGES.length - 1; k >= 0; k--) { v = CHANGES[k][2] || v + 1; n[k] = v; } return n; })();
 const changesPane = () => `<div class="pane" id="p8"><section class="card${nw("changelog")}">
     <h2>更新紀錄 <small>目前 ${verName(VER_NO[0])}</small></h2>
@@ -1597,7 +1606,7 @@ function compareTable(D, ps) {
       <tr><td><b>勝出項目</b></td>${wins.map((w) => `<td class="n ${w === Math.max(...wins) ? "win" : ""}"><b>${w}</b></td>`).join("")}</tr>
     </table></div>
     <div id="cmpChart"></div>
-    <p class="note">本週／下週預估總分 = 預估每場 × 場數（OUT 的人本週算 0）。<span class="up">綠色</span>是這一項最好的人（失誤是越少越好）。未來 5 場看對手平均勝率。折線圖是最近 10 場每場得分，虛線是今年平均；穩定度在圖下面。點名字看詳細分析。</p>`;
+    <p class="note">本週／下週預估總分 = 預估每場 × 場數（OUT 的人本週算 0）。<span class="up">綠色</span>是這一項最好的人（失誤是越少越好）。未來 5 場看對手平均勝率。下面的長條圖是最近 10 場每場得分，虛線是今年平均；穩定度在圖下面。點名字看詳細分析。</p>`;
 }
 function drawCompare(D) {
   const list = allPlayers(D), ids = cmpIds(D), ps = ids.map((id) => list.find((p) => p.x.id === id)).filter(Boolean);
@@ -1660,25 +1669,28 @@ async function drawCmpChart(D, ps) {
   const stab = S.map(([pl, l]) => { const v = l.map((g) => g.v), m = v.reduce((s, z) => s + z, 0) / v.length, sd = Math.sqrt(v.reduce((s, z) => s + (z - m) ** 2, 0) / v.length);
     return { pl, n: v.length, max: Math.max(...v), min: Math.min(...v), sd, cv: m ? sd / m : 0 }; });
   const steady = [...stab].sort((a, b) => a.cv - b.cv)[0], boom = [...stab].sort((a, b) => b.max - a.max)[0];
-  box.innerHTML = `<h4>最近 10 場每場得分</h4>
-    <div class="legend">${S.map(([p, , c]) => `<span><i style="border-top:2px solid ${c}"></i>${esc(p.name)}</span>`).join("")}<span><i style="border-top:2px dashed var(--muted)"></i>今年平均</span></div>
-    <svg viewBox="0 0 ${W} ${H}" class="wchart" role="img" aria-label="最近每場得分比較">
-      ${ticks.map((v) => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" class="grid"/><text x="${L - 6}" y="${y(v) + 4}" class="ax" text-anchor="end">${v}</text>`).join("")}
-      ${xt.map((p) => `<text x="${x(p)}" y="${H - 8}" class="ax" text-anchor="middle">${md(p)}</text>`).join("")}
-      ${S.map(([p, , c]) => `<line x1="${L}" x2="${W - R}" y1="${y(p.avg)}" y2="${y(p.avg)}" stroke="${c}" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>`).join("")}
-      ${S.map(([, l, c]) => `<path d="${path(l)}" fill="none" stroke="${c}" stroke-width="2"/>`).join("")}
-      ${S.map(([, l, c]) => l.map((g) => `<circle cx="${x(g.p)}" cy="${y(g.v)}" r="4" fill="${c}" stroke="var(--card)" stroke-width="2"/>`).join("")).join("")}
-      ${allP.map((p) => `<rect x="${x(p) - hitW / 2}" y="${T}" width="${hitW}" height="${H - T - B}" class="hit" data-cp="${p}"/>`).join("")}
-    </svg>
-    <p class="sub" id="cmpTip">點圖上的日期看當天每個人的分數。</p>
-    <h4>穩定度 <small class="sub">（最近 ${Math.max(...stab.map((s) => s.n))} 場）</small></h4>
-    <div class="scroll"><table class="vs"><tr><th>球員</th><th class="n">最高</th><th class="n">最低</th><th class="n">起伏</th></tr>
-      ${stab.map((s) => `<tr><td>${esc(s.pl.name)}</td><td class="n ${s === boom ? "win" : ""}">${f1(s.max)}</td><td class="n">${f1(s.min)}</td><td class="n ${s === steady ? "win" : ""}">±${f1(s.sd)}</td></tr>`).join("")}</table></div>
+  const mx = Math.max(10, ...all.map((g) => g.v), ...S.map(([x]) => x.avg)), BH = 96; // 所有人用同一個高度比例，才比得出誰高
+  const hi2 = (v) => Math.max(2, Math.round((v / mx) * BH));
+  const cards = S.map(([pl, l, c]) => {
+    const st = stab.find((q) => q.pl === pl), above = l.filter((g) => g.v >= pl.avg).length;
+    return `<div class="pcard" style="--pc:${c}">
+      <div class="ph"><i class="dot" style="background:${c}"></i><b>${esc(pl.name)}</b><span class="sub">今年平均 ${f1(pl.avg)}</span></div>
+      <div class="bars" style="height:${BH + 22}px">
+        <i class="avgline" style="bottom:${hi2(pl.avg) + 16}px"></i>
+        ${l.map((g) => `<button type="button" class="bcol${g.v >= pl.avg ? " up" : ""}" data-bp="${g.p}" data-bi="${pl.id}" aria-label="${md(g.p)} ${f1(g.v)} 分"><em>${Math.round(g.v)}</em><span style="height:${hi2(g.v)}px"></span><small>${md(g.p)}</small></button>`).join("")}
+      </div>
+      <div class="kv"><span>最高 <b>${f1(st.max)}</b></span><span>最低 <b>${f1(st.min)}</b></span><span>起伏 <b>±${f1(st.sd)}</b></span><span>高於平均 <b>${above}/${l.length}</b> 場</span></div>
+    </div>`; }).join("");
+  box.innerHTML = `<h4>最近 ${Math.max(...S.map(([, l]) => l.length))} 場每場得分</h4>
+    <p class="sub">每根長條是一場比賽的得分，<b>實色</b>是高於他今年平均，<b>淡色</b>是低於；虛線是今年平均。所有人用同一個高度比例。</p>
+    ${cards}
+    <p class="sub" id="cmpTip">點任何一根長條看那天的分數和上場分鐘。</p>
     <p class="sub">${stab.length > 1 ? `${esc(steady.pl.name)} 最穩定，領先時適合排他；${esc(boom.pl.name)} 爆發力最高，落後時可以賭他。` : ""}${missing.length ? `（讀不到 ${esc(missing.join("、"))} 的比賽紀錄）` : ""}</p>`;
-  box.querySelectorAll(".hit").forEach((h) => h.addEventListener("click", () => {
-    box.querySelectorAll(".hit").forEach((o) => o.classList.toggle("on", o === h));
-    const p = Number(h.dataset.cp);
-    $("#cmpTip").innerHTML = `<b>${md(p)}</b>　` + S.map(([pl, l]) => { const g = l.find((z) => z.p === p); return `${esc(pl.name)}：${g ? `${f1(g.v)} 分（${Math.round(g.min)} 分鐘）` : "沒出賽"}`; }).join("　");
+  box.querySelectorAll(".bcol").forEach((h) => h.addEventListener("click", () => {
+    box.querySelectorAll(".bcol").forEach((o) => o.classList.toggle("on", o === h));
+    const p = Number(h.dataset.bp), pl = S.find(([q]) => q.id === Number(h.dataset.bi));
+    const g = pl && pl[1].find((z) => z.p === p);
+    $("#cmpTip").innerHTML = pl && g ? `<b>${md(p)}</b>　${esc(pl[0].name)}：${f1(g.v)} 分（${Math.round(g.min)} 分鐘）` : "";
   }));
 }
 // 交易試算：送出你的球員、換來別隊的球員，算交易前後兩隊的陣容實力
