@@ -46,7 +46,7 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
       rows.push(`• **${f.name}**（今年 ${f1(f.avg)}、綜合 ${f1(f.val)}${dtd(f)}）被 ${teamName(d.by)} 丟掉：${how}；比你的 ${base.name}（綜合 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`);
     }
     if (!rows.length) return { text: null };
-    L.push(`🔥 **有人丟了好球員**　${tpe(end)} 前的 ${since} 分鐘`, ...rows.slice(0, 5), rank ? rank.slice(1, -1) : "", "", `詳細內容：${site}`);
+    L.push(`🔥 **有人丟了好球員**　最近 ${since >= 120 ? Math.round(since / 60) + " 小時" : since + " 分鐘"}（到台北 ${tpe(end)}）`, ...rows.slice(0, 5)); if (rank) L.push(rank.slice(1, -1)); if (site) L.push("", `詳細內容：${site}`);
     return { text: L.filter((x, i) => x !== "" || i > 0).join("\n") };
   }
 
@@ -58,7 +58,7 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   L.push(`⏰ **Waiver 提醒**　台北 ${tpe(at)} 處理，之前可以下 claim`);
   soon.forEach((f) => L.push(`• **${f.name}**（今年 ${f1(f.avg)}、綜合 ${f1(f.val)}${dtd(f)}）比你的 ${base.name}（綜合 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`));
   if (rank) L.push(rank.slice(1, -1));
-  L.push("沒人 claim 的話，處理後會變成自由球員，誰都能直接撿。", "", `詳細內容：${site}`);
+  L.push("沒人 claim 的話，處理後會變成自由球員，誰都能直接撿。"); if (site) L.push("", `詳細內容：${site}`);
   return { text: L.join("\n") };
 };
 
@@ -68,7 +68,7 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   await page.addInitScript(() => { window.__NOAUTH = true; }); // 網頁有密碼，這支程式在雲端自己打開，直接略過
   await page.goto("file://" + (process.env.REPORT_PAGE || path.resolve(__dirname, "../docs/index.html")) + (TEAM ? `?team=${TEAM}` : ""));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && document.querySelector(".tabs"), null, { timeout: 120000 });
-  const res = await page.evaluate(IN_PAGE, { mode: MODE, now: NOW, since: SINCE, hours: HOURS, site: SITE });
+  const res = await page.evaluate(IN_PAGE, { mode: MODE, now: NOW, since: SINCE, hours: HOURS, site: TEAM ? "" : SITE });
   await browser.close();
   if (!res.text) { console.log("沒有發送：沒有符合的"); return; }
   console.log(res.text);

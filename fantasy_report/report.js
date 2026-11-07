@@ -92,7 +92,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     const must = A.todos.filter((t) => t[1] === "要做" && !t[2].startsWith(lab(P)));
     if (!weekDone && must.length) { L.push("", "🚨 **接下來要做**"); must.slice(0, 4).forEach((t) => L.push(`• ${t[2]}`)); }
     if (unsettled) L.push("", `（還有 ${unsettled} 場 ESPN 還沒結算完，分數可能再微調）`);
-    L.push("", `詳細內容：${site}`);
+    if (site) L.push("", `詳細內容：${site}`);
     return { ready: true, text: L.join("\n") };
   }
 
@@ -142,7 +142,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     const th = D.rosters[nid].filter((x) => !x.out).sort((x, y) => y.avg - x.avg).slice(0, 3).map((x) => `${x.name} ${f1(x.avg)}`);
     L.push(`• 他的主力：${th.join("、")}`);
   }
-  L.push("", `詳細內容：${site}`);
+  if (site) L.push("", `詳細內容：${site}`);
   return { ready: true, text: L.join("\n") };
 };
 
@@ -155,7 +155,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     await page.addInitScript(() => { window.__NOAUTH = true; }); // 網頁有密碼，這支程式在雲端自己打開，直接略過
     await page.goto("file://" + (process.env.REPORT_PAGE || path.resolve(__dirname, "../docs/index.html")) + (TEAM ? `?team=${TEAM}` : ""));
     await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && document.querySelector(".tabs"), null, { timeout: 120000 });
-    res = await page.evaluate(IN_PAGE, { mode: MODE, opts: OPTS, site: SITE });
+    res = await page.evaluate(IN_PAGE, { mode: MODE, opts: OPTS, site: TEAM ? "" : SITE }); // 朋友的頻道沒有密碼，不附連結
     await page.close();
     if (res.ready || Date.now() + 240000 > deadline) break;
     console.log("還沒好：" + res.why + "，4 分鐘後再看");

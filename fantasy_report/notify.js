@@ -39,7 +39,7 @@ const DRY = process.argv.includes("--dry");
     const gameOf = (x, p) => Object.values(GAMES).find((g) => g.scoringPeriodId === p && (ABBR[g.homeProTeamId] === x.team || ABBR[g.awayProTeamId] === x.team));
     const slots = D.dailySlots[D.period] || {};
     const starter = (x) => slots[x.id] != null && slots[x.id] !== BENCH && slots[x.id] !== IR;
-    const today = D.myRoster.filter((x) => gameOf(x, D.period));
+    const today = D.myRoster.filter((x) => gameOf(x, D.period) && x.lineupSlot !== IR); // 跟網頁一樣，IR 的人不算
     if (today.length) {
       const first = Math.min(...today.map((x) => gameOf(x, D.period).date));
       L.push("", `📅 **今天** ${today.length} 人有比賽，最早 ${tpe(first)} 開打（台灣時間）`);
@@ -69,9 +69,9 @@ const DRY = process.argv.includes("--dry");
       if (steal.length) L.push("", `🔥 **可以搶**：${steal.map((f) => `${f.name}（${f.avg.toFixed(1)}${f.status === "WAIVERS" ? "，waiver" : ""}）`).join("、")} 剛被丟掉，比你的 ${A.drop.name}（綜合 ${A.drop.val.toFixed(1)}）好`);
     } catch (e) { /* 讀不到聯盟動態就略過 */ }
 
-    L.push("", `詳細內容：${site}`);
+    if (site) L.push("", `詳細內容：${site}`); // 朋友的頻道沒有密碼，不附連結
     return L.join("\n");
-  }, SITE);
+  }, TEAM ? "" : SITE);
   await browser.close();
 
   console.log(text);
