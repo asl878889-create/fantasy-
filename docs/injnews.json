@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-08T01:24:47.260Z",
+ "updated": "2026-11-08T07:08:10.438Z",
  "items": {
   "6430": {
    "n": "Jimmy Butler III",
@@ -127,13 +127,6 @@
    "story": "Isaac was assigned to Osceola but recalled again on the same day while he continued his recovery from a knee issue. Having yet to play this season, the forward is not expected to find a meaningful role in the short term, and he'll likely appear on the bench when he's available again.",
    "zh": "膝傷，已從發展聯盟召回，本季還沒出賽，回來後預計不會有重要角色。"
   },
-  "4065732": {
-   "n": "De'Andre Hunter",
-   "when": "2026-11-07T15:05Z",
-   "head": "Hunter (illness) is listed as out for Friday's game against San Antonio.",
-   "story": "Hunter was listed as questionable but has now been ruled out for the first time this season. His next opportunity to play will come Sunday versus the Heat. Without Hunter, Malik Monk might find his way into the starting lineup.",
-   "zh": "生病，週五對馬刺從 questionable 改為確定缺陣，下一次機會是週日對熱火。"
-  },
   "4066211": {
    "n": "Robert Williams III",
    "when": "2026-11-07T21:12Z",
@@ -197,6 +190,13 @@
    "story": "Collins was originally marked as probable for Sunday's contest, but he appears to be trending in the wrong direction as game day approaches. If Claxton needs to sit out another game, Jalen Smith (hand) would presumably continue to operate as the Bulls' starting center.",
    "zh": "大腿後肌，週日對七六人從 probable 降為 questionable，首度登場可能延後。"
   },
+  "4278129": {
+   "n": "Deandre Ayton",
+   "when": "2026-11-08T02:47Z",
+   "head": "Ayton won't return to Saturday's game against the Thunder due to a lower leg injury.",
+   "story": "Ayton will end his evening with two points (1-2 FG), one rebound and one turnover in seven minutes. For now, he should be considered questionable for Monday's game in Detroit.",
+   "zh": "小腿傷，週六對雷霆中途退場，週一對活塞列 questionable。"
+  },
   "4278402": {
    "n": "Jordan Goodwin",
    "when": "2026-11-08T01:08Z",
@@ -206,10 +206,10 @@
   },
   "4279888": {
    "n": "Ja Morant",
-   "when": "2026-10-30T18:45Z",
-   "head": "Morant has been diagnosed with a Grade 2 left hamstring strain and is expected to miss four weeks, Portland announced Friday.",
-   "story": "Morant left Thursday's game early with a hamstring injury, which has since been revealed to be a strain that will result in a monthlong absence. The star guard leaves a major void in the Trail Blazers' starting backcourt, one that figures to be filled by Jrue Holiday for the foreseeable future.",
-   "zh": "左大腿後肌 Grade 2 拉傷，球團說缺 4 週。"
+   "when": "2026-11-08T02:18Z",
+   "head": "Head coach Micah Nori said Morant met with a doctor in Los Angeles, who gave him a positive outlook on his recovery from the hamstring injury. While Nori declined to update Morant's timetable, he added Morant \"may not be out for as long as we thought,\" Trail Blazers Insider Sean Highkin reports.",
+   "story": "Morant was initially given a four-week timetable after he suffered a Grade 2 left hamstring strain on Oct. 30. It sounds like he's making solid progress, though it would be surprising to see him beat that timetable given the tricky nature of hamstring injuries. Scoot Henderson will continue to start in his absence and there will be more minutes available for Jrue Holiday.",
+   "zh": "左大腿後肌 Grade 2 拉傷，醫生看法正面，教練說可能不用缺原本預估的 4 週那麼久。"
   },
   "4395702": {
    "n": "Isaiah Joe",
@@ -294,13 +294,6 @@
    "head": "The Wizards announced Monday that Beekman sustained a right acromioclavicular joint injury and will be re-evaluated in approximately three weeks.",
    "story": "Beekman is set for an extended absence, with his re-evaluation timeline suggesting he could remain sidelined beyond the initial three-week window. The injury further limits Washington's backcourt depth, though Beekman's absence is unlikely to have a significant impact on standard fantasy leagues.",
    "zh": "右肩鎖關節受傷，約 3 週後重新評估，可能缺更久。"
-  },
-  "4432194": {
-   "n": "Day'Ron Sharpe",
-   "when": "2026-11-05T02:29Z",
-   "head": "Sharpe registered 15 points (5-7 FG, 1-1 3Pt, 4-5 FT), 13 rebounds and four assists across 26 minutes in Sunday's 98-90 win over the Pacers.",
-   "story": "Sharpe dominated the glass, collecting four offensive rebounds while shooting efficiently en route to his first double-double of the season. It was also the second time he scored in double digits this season. Sharpe's rebounding provides a useful foundation, although his ceiling will depend on whether Brooklyn consistently gives him enough touches and playing time -- he has played more than 25 minutes just twice all season long.",
-   "zh": "打出本季第一次雙十（15 分 13 籃板 4 助攻），已沒有傷勢影響。"
   },
   "4432573": {
    "n": "Paolo Banchero",
@@ -409,10 +402,10 @@
   },
   "4594327": {
    "n": "Keegan Murray",
-   "when": "2026-10-26T22:01Z",
-   "head": "Murray (ankle) will be re-evaluated in 10-to-14 days, NBA reporter Marc Stein reports.",
-   "story": "Murray has officially been diagnosed with left ankle capsulitis, and he's set to miss at least the next 10 days. Precious Achiuwa has been starting in Murray's absence, and he should continue to see opportunities along with De'Andre Hunter and Daeqwon Plowden.",
-   "zh": "左腳踝關節囊炎，10 到 14 天後重新評估。"
+   "when": "2026-11-08T01:30Z",
+   "head": "Murray (ankle) is questionable for Sunday's game against the Heat.",
+   "story": "Murray hasn't played since going down with an ankle injury on Oct. 25, so if he is cleared for Sunday's game, his minutes will likely be monitored. His return would likely push Precious Achiuwa back to the second unit.",
+   "zh": "腳踝傷（10/25 起），週日對熱火列 questionable，回來後上場時間可能受限。"
   },
   "4606840": {
    "n": "Jamir Watkins",
@@ -518,6 +511,13 @@
    "head": "Sorber (knee) is out for Wednesday's game against the Cavaliers.",
    "story": "Sorber remains in recovery mode due to knee surgery. Until the Thunder update his timetable for a return, Sorber can be deemed week-to-week.",
    "zh": "膝蓋手術後復健中，週三對騎士確定缺陣，以週為單位觀察。"
+  },
+  "5101761": {
+   "n": "Mikel Brown Jr.",
+   "when": "2026-11-08T04:04Z",
+   "head": "Brown, who finished with 18 points (5-13 FG, 3-8 3Pt, 5-7 FT), one rebound, three assists and one steal over 25 minutes in Saturday's 124-121 loss to Atlanta, won't play in Sunday's game against Dallas, Erik Slater of ClutchPoints.com reports.",
+   "story": "Brown logged his fifth consecutive double-digit scoring performance Saturday. However, his efforts weren't enough to help the Nets hold off a late Hawks comeback and earn their third win of the 2026-27 campaign. Head coach Jordi Fernandez mentioned after the game that the rookie won't suit up Sunday versus the Mavericks, the second game of a back-to-back. Without Brown in the lineup, Terance Mann should see more minutes off the bench. Keon Ellis, who didn't get on the floor versus Atlanta, might also get involved.",
+   "zh": "週日對獨行俠不上場（背靠背），週六剛拿 18 分。"
   },
   "5101845": {
    "n": "Jayden Quaintance",
