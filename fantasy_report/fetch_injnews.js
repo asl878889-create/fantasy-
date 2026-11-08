@@ -17,12 +17,12 @@ const IR = 13, hurt = (p, slot) => (p.injuryStatus && p.injuryStatus !== "ACTIVE
   } catch (e) { console.error("自由球員傷兵讀不到，略過：", e.message); }
   const file = path.resolve(__dirname, "../docs/injnews.json");
   let old = {}; try { old = JSON.parse(fs.readFileSync(file, "utf8")).items || {}; } catch (e) { /* 第一次 */ }
-  // 資料來源：ESPN 傷兵頁（espn.com/nba/injuries）背後的資料；只處理聯盟裡有人持有或值得注意的自由球員
+  // 資料來源：ESPN 傷兵頁（espn.com/nba/injuries）背後的資料；全部 NBA 傷兵
   const feed = curl("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries");
   const items = {};
   for (const t of feed.injuries) for (const it of t.injuries) {
     const a = it.athlete || {}, m = ((a.links || []).map((l) => String(l.href).match(/\/id\/(\d+)\//)).find(Boolean) || [])[1];
-    if (!m || !ids.has(Number(m))) continue;
+    if (!m) continue; // 全部 NBA 傷兵都翻（傷兵快報最下面「其他 NBA 傷兵」也要中文）
     const head = it.shortComment || "", prev = old[m];
     items[m] = { n: a.displayName, when: it.date, head, story: (it.longComment || "").slice(0, 600), zh: prev && prev.head === head ? prev.zh || "" : "" };
   }
