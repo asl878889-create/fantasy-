@@ -1,5 +1,6 @@
 // 開竅觀察名單：最近 5 場比之前明顯變好，而且原因是「會持續」的（上場時間、先發、球權、穩定數據變多），不是只有手感
 // 抓聯盟 10 隊陣容＋前 150 位自由球員的今年逐場紀錄，算好存成 docs/breakout.json（網頁每次打開只讀這個小檔案）
+// 同時存 docs/last7.json：每位球員真正的「近 7 場」平均和分鐘
 //   node fantasy_report/fetch_breakout.js
 const { execFile } = require("child_process");
 const fs = require("fs"), path = require("path");
@@ -18,11 +19,12 @@ function sideOf(gs) {
   for (const t of ros.teams) for (const e of t.roster.entries) ids.set(e.playerId, e.playerPoolEntry.player.fullName);
   const fa = await curl(`${LEAGUE}?view=kona_player_info`, { players: { filterStatus: { value: ["FREEAGENT", "WAIVERS"] }, limit: 150, sortPercOwned: { sortPriority: 1, sortAsc: false } } });
   for (const x of fa.players) ids.set(x.player.id, x.player.fullName);
-  const list = [...ids.keys()], players = {};
+  const list = [...ids.keys()], players = {}, L7 = {};
   for (let i = 0; i < list.length; i += 40) {
     const d = await curl(`${LEAGUE}?view=kona_playercard`, { players: { filterIds: { value: list.slice(i, i + 40) }, filterStatsForTopScoringPeriodIds: { value: 200, additionalValue: ["002027"] } } });
     for (const pp of d.players || []) {
       const pl = pp.player, gs = (pl.stats || []).filter((s) => s.statSplitTypeId === 5 && s.statSourceId === 0 && s.seasonId === 2027 && s.stats && Number(s.stats["40"]) > 0).sort((a, b) => a.scoringPeriodId - b.scoringPeriodId);
+      if (gs.length) { const l = gs.slice(-7); L7[pl.id] = [Math.round(l.reduce((t, z) => t + (z.appliedTotal || 0), 0) / l.length * 10) / 10, Math.round(l.reduce((t, z) => t + Number(z.stats["40"]), 0) / l.length * 10) / 10, l.length]; } // 真正的近 7 場（ESPN 的 last 7 其實是近 7 天）
       if (gs.length < R + PRIOR_MIN) continue;
       const rec = gs.slice(-R), pri = gs.slice(0, -R), a = rec.map((z) => z.appliedTotal || 0), b = pri.map((z) => z.appliedTotal || 0);
       const diff = mean(a) - mean(b), se = Math.sqrt(vr(a) / a.length + vr(b) / b.length) || 1, z = diff / se;
@@ -38,6 +40,7 @@ function sideOf(gs) {
       players[pl.id] = { n: pl.fullName, z: rd(z, 2), sig, luck, rec: { n: r.n, v: rd(r.v), min: rd(r.min), gs: rd(r.gs, 2), use: rd(r.use), stab: rd(r.stab), ts: rd(r.ts, 3) }, pri: { n: p.n, v: rd(p.v), min: rd(p.min), gs: rd(p.gs, 2), use: rd(p.use), stab: rd(p.stab), ts: rd(p.ts, 3) } };
     }
   }
+  fs.writeFileSync(path.resolve(__dirname, "../docs/last7.json"), JSON.stringify({ generated: new Date().toISOString(), players: L7 })); // id -> [近 7 場平均, 近 7 場分鐘, 場數]
   const file = path.resolve(__dirname, "../docs/breakout.json");
   fs.writeFileSync(file, JSON.stringify({ generated: new Date().toISOString(), recent: R, players }));
   console.log(`已寫入 ${file}：${Object.keys(players).length} 位球員符合（共看了 ${list.length} 位）`);
