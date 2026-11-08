@@ -81,8 +81,9 @@ const IN_PAGE = async ({ mode, opts, site }) => {
       }
     }
     if (mine.st.length) {
-      L.push("", `⭐ **今天最強**：${mine.st.slice(0, 3).map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
-      const low = mine.st.filter((e) => e.pts < 15).slice(-2);
+      const top = mine.st.slice(0, 3);
+      L.push("", `⭐ **今天最強**：${top.map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
+      const low = mine.st.filter((e) => e.pts < 15 && !top.includes(e)).slice(-2); // 已經列在「最強」的人不再列進「拖後腿」
       if (low.length) L.push(`😬 **拖後腿**：${low.map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
     }
     const md = C.missDays.find((x) => x.p === P);
