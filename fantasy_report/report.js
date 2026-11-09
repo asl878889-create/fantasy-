@@ -135,8 +135,14 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     const md = [...C.missDays].sort((x, y) => y.miss - x.miss)[0];
     L.push(`🪑 **替補錯過**：事後最佳先發多 ${f0(C.missed)} 分${md && md.bench.length ? `，最多是 ${lab(md.p)}（${md.bench.map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}在替補）` : ""}`);
   }
-  const adds = (D.txs || []).filter((t) => t.teamId === meId && periods.includes(t.scoringPeriodId)).flatMap((t) => t.items.filter((i) => i.type === "ADD").map((i) => nameOf(i.playerId)));
-  if (adds.length) L.push(`➕ 本週撿了 ${adds.length} 人：${adds.join("、")}`);
+  // 本週撿了誰：最後一天第一場比賽開打後撿的人，ESPN 算到下一週（隔天才生效），所以用「上週最後一天開打」到「這週最後一天開打」切
+  const lockOf = (p) => { const gs = Object.values(GAMES).filter((g) => g.scoringPeriodId === p).map((g) => g.date); return gs.length ? Math.min(...gs) : null; };
+  const lo = W > 1 ? lockOf(periodsOf(W - 1)[6]) : null, hi = lockOf(periods[6]);
+  const inWeek = (t) => (lo == null && hi == null ? periods.includes(t.scoringPeriodId) : (lo == null || t.proposedDate >= lo) && (hi == null || t.proposedDate < hi));
+  const adds = (D.txs || []).filter((t) => t.teamId === meId && inWeek(t)).sort((x, y) => x.proposedDate - y.proposedDate).flatMap((t) => t.items.filter((i) => i.type === "ADD").map((i) => nameOf(i.playerId)));
+  const meT = D.teams.find((t) => t.id === meId) || D.me, official = Number((((meT.transactionCounter || {}).matchupAcquisitionTotals) || {})[W] || 0); // ESPN 官方的每週撿人次數
+  const nAdd = official || adds.length;
+  if (nAdd) L.push(`➕ 本週撿了 ${nAdd} 人${adds.length ? `：${adds.join("、")}` : ""}${official && adds.length !== official ? `（ESPN 算 ${official} 次，名單可能不完整）` : ""}`);
   // 下週（也就是現在這一週）的對手
   const nm = matchOf(W + 1, meId);
   if (nm) {
