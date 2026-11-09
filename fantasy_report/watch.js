@@ -24,10 +24,11 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   const f1 = (x) => (x == null ? "-" : x.toFixed(1));
   const teamName = (id) => (D.teams.find((t) => t.id === id) || {}).name || "";
   const tpe = (ms) => { const p = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date(ms)); const g = (t) => p.find((x) => x.type === t).value; return `${g("month")}/${g("day")} ${g("hour")}:${g("minute")}`; };
-  // 跟你的隊上比：最該換掉的人；沒有就拿綜合評分最低的先發
-  const base = A.drop || A.worst;
-  if (!base) return { text: null };
-  const bar = base.val + UPG;
+  // 跟你的隊上比：撿他要換掉誰（網頁的 dropFor：最該換掉的人；中鋒已滿時改找可以換掉的中鋒）；沒有就拿即時評分最低的先發
+  const base0 = A.drop || A.worst;
+  if (!base0) return { text: null };
+  const baseOf = (f) => (typeof dropFor === "function" ? (posFull(f, D) ? dropFor(f, D) : base0) : base0); // 位置滿了又沒人可換 → null，不通知
+  const good = (f) => { const b = baseOf(f); return b && f.val >= b.val + UPG; };
   const rank = D.me.waiverRank ? `（你的 waiver 順位第 ${D.me.waiverRank}）` : "";
   const dtd = (f) => (["DAY_TO_DAY", "QUESTIONABLE", "DOUBTFUL"].includes(f.injury) ? `，${INJURY[f.injury]}` : "");
   const L = [];
@@ -41,9 +42,10 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
     for (const d of dropped.sort((a, b) => b.at - a.at)) {
       if (seen.has(d.id)) continue; seen.add(d.id);
       const f = D.fas.find((x) => x.id === d.id) || EXTRA[d.id];
-      if (!f || f.out || !["FREEAGENT", "WAIVERS"].includes(f.status) || f.val < bar) continue; // 已經被撿走、受傷、或沒比你的人好就跳過
+      if (!f || f.out || !["FREEAGENT", "WAIVERS"].includes(f.status) || !good(f)) continue; // 已經被撿走、受傷、或沒比你的人好（含中鋒已滿）就跳過
+      const base = baseOf(f);
       const how = f.status === "WAIVERS" ? `在 waiver，台北 ${f.waiverAt ? tpe(f.waiverAt) : "之後"} 處理，要先下 claim` : "自由球員，現在就能直接撿";
-      rows.push(`• **${f.name}**（今年 ${f1(f.avg)}、綜合 ${f1(f.val)}${dtd(f)}）被 ${teamName(d.by)} 丟掉：${how}；比你的 ${base.name}（綜合 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`);
+      rows.push(`• **${f.name}**（今年 ${f1(f.avg)}、即時評分 ${f1(f.val)}${dtd(f)}）被 ${teamName(d.by)} 丟掉：${how}；比你的 ${base.name}（即時評分 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`);
     }
     if (!rows.length) return { text: null };
     L.push(`🔥 **有人丟了好球員**　最近 ${since >= 120 ? Math.round(since / 60) + " 小時" : since + " 分鐘"}（到台北 ${tpe(end)}）`, ...rows.slice(0, 5)); if (rank) L.push(rank.slice(1, -1));
@@ -51,12 +53,12 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   }
 
   // waiver 提醒：接下來 hours 小時內會處理、而且對你有幫助的
-  const soon = D.fas.filter((f) => f.status === "WAIVERS" && f.waiverAt && f.waiverAt > now && f.waiverAt <= now + hours * 3600000 && !f.out && f.val >= bar)
+  const soon = D.fas.filter((f) => f.status === "WAIVERS" && f.waiverAt && f.waiverAt > now && f.waiverAt <= now + hours * 3600000 && !f.out && good(f))
     .sort((a, b) => b.val - a.val).slice(0, 5);
   if (!soon.length) return { text: null };
   const at = soon[0].waiverAt;
   L.push(`⏰ **Waiver 提醒**　台北 ${tpe(at)} 處理，之前可以下 claim`);
-  soon.forEach((f) => L.push(`• **${f.name}**（今年 ${f1(f.avg)}、綜合 ${f1(f.val)}${dtd(f)}）比你的 ${base.name}（綜合 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`));
+  soon.forEach((f) => { const base = baseOf(f); L.push(`• **${f.name}**（今年 ${f1(f.avg)}、即時評分 ${f1(f.val)}${dtd(f)}）比你的 ${base.name}（即時評分 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`); });
   if (rank) L.push(rank.slice(1, -1));
   L.push("沒人 claim 的話，處理後會變成自由球員，誰都能直接撿。");
   return { text: L.join("\n") };
