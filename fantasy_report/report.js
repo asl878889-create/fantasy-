@@ -98,7 +98,9 @@ const IN_PAGE = async ({ mode, opts, site }) => {
   }
 
   // ---------- 週報 ----------
-  const W = opts.week || D.week - 1; // 現在這一週的上一週
+  // 要發哪一週：ESPN 週一早上常常還沒換到下一週（「現在這週」還是剛打完的那週），所以先看現在這週的比賽是不是都打完了
+  const curLast = periodsOf(D.week)[6], curDone = curLast != null && Object.values(GAMES).filter((g) => g.scoringPeriodId === curLast).every((g) => g.statsOfficial || Date.now() >= g.date + 4 * 3600000);
+  const W = opts.week || (curDone ? D.week : D.week - 1);
   if (W < 1) return { ready: false, why: "還沒有已經結束的週" };
   const m = matchOf(W, meId);
   if (!m) return { ready: false, why: `找不到第 ${W} 週的對手` };
@@ -106,19 +108,22 @@ const IN_PAGE = async ({ mode, opts, site }) => {
   const lastP = periodsOf(W)[6], lastGames = Object.values(GAMES).filter((g) => g.scoringPeriodId === lastP);
   const decided = m.winner && m.winner !== "UNDECIDED";
   const over = lastGames.every((g) => g.statsOfficial || Date.now() >= g.date + 4 * 3600000);
-  if (!decided && !(over && D.period > lastP) && !opts.force) return { ready: false, why: `第 ${W} 週還沒結束` };
+  if (!decided && !over && !opts.force) return { ready: false, why: `第 ${W} 週還沒結束` }; // 最後一天的比賽都打完（或開打 4 小時後）就算結束，不用等 ESPN 換週
   const oppId = oppIdOf(m, meId), a = wkPts(side(m, meId)), b = wkPts(side(m, oppId));
   const periods = periodsOf(W);
   const box = await loadWeekBox(W, periods);
   const C = contribution(D, meId, box, periods[6]);
-  const all = sched.filter((x) => x.matchupPeriodId === W && x.away).flatMap((x) => [x.home, x.away]).map((s) => ({ id: s.teamId, pts: s.totalPoints || 0 })).sort((x, y) => y.pts - x.pts);
+  const all = sched.filter((x) => x.matchupPeriodId === W && x.away).flatMap((x) => [x.home, x.away]).map((s) => ({ id: s.teamId, pts: wkPts(s) })).sort((x, y) => y.pts - x.pts); // 用即時分數（ESPN 還沒結算時 totalPoints 是舊的）
   const rank = all.findIndex((x) => x.id === meId) + 1;
   const med = (all[4].pts + all[5].pts) / 2;
   const d0 = (ms) => { const x = new Date(ms); return `${x.getUTCMonth() + 1}/${x.getUTCDate()}`; };
   const st = addDays(D.base, periods[0]), en = addDays(D.base, periods[6]);
   const L = [];
   L.push(`🏆 **${D.me.name} 第 ${W} 週週報**（${st.getUTCMonth() + 1}/${st.getUTCDate()}–${en.getUTCMonth() + 1}/${en.getUTCDate()}）`);
-  L.push(`${a > b ? "贏了 🎉" : a < b ? "輸了" : "平手"}　${f0(a)} : ${f0(b)}（${teamName(oppId)}）　戰績 ${D.me.record.overall.wins}-${D.me.record.overall.losses}`);
+  // 戰績：ESPN 還沒結算這週時，自己把這週的對戰（1 場）和聯盟前一半（1 場）加上去
+  const rec = D.me.record.overall, half = Math.floor(all.length / 2);
+  const wins = rec.wins + (decided ? 0 : (a > b ? 1 : 0) + (rank && rank <= half ? 1 : 0)), losses = rec.losses + (decided ? 0 : (a < b ? 1 : 0) + (rank && rank > half ? 1 : 0));
+  L.push(`${a > b ? "贏了 🎉" : a < b ? "輸了" : "平手"}　${f0(a)} : ${f0(b)}（${teamName(oppId)}）　戰績 ${wins}-${losses}`);
   L.push(`聯盟本週得分第 ${rank} 名（最高 ${f0(all[0].pts)} ${teamName(all[0].id)}），${a >= med ? "高於" : "低於"}中位數 ${f0(med)}`);
   if (C.rows.length) {
     const top = C.rows.slice(0, 3);
