@@ -88,7 +88,7 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     }
     const md = C.missDays.find((x) => x.p === P);
     if (md && md.miss >= 10) L.push(`🪑 **替補錯過**：事後最佳先發可以多 ${f0(md.miss)} 分${md.bench.length ? `（${md.bench.map((e) => `${nameOf(e.id)} ${f0(e.pts)} 分`).join("、")}在替補）` : ""}`);
-    if (theirs.st.length) L.push(`🔥 **對手今天最強**：${theirs.st.slice(0, 2).map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
+    if (theirs.st.length) L.push(`⚔️ **對手今天最強**：${theirs.st.slice(0, 2).map((e) => `${nameOf(e.id)} ${f0(e.pts)}`).join("、")}`);
     // 接下來要做的事（D.period 通常已經是下一個比賽日）
     const must = A.todos.filter((t) => t[1] === "要做" && !t[2].startsWith(lab(P)));
     if (!weekDone && must.length) { L.push("", "🚨 **接下來要做**"); must.slice(0, 4).forEach((t) => L.push(`• ${t[2]}`)); }
