@@ -1,7 +1,7 @@
 // 預估比對補跑：排程沒跑到的比賽日，事後回推「當天開打前」的預估再對答案（存進 docs/pred-log.json）
 // 做法：只用那天以前打完的比賽，重算每個人當時的今年平均、近 15 天平均、出賽場數、近 7 天上場時間，
 // 再照網頁同一套公式算「原本預估」和「混合 EPM 預估」。EPM 和球隊數據只有現在的版本（會用到一點之後的資訊），結果只能當參考。
-//   node fantasy_report/predlog_backfill.js 21 22
+//   node fantasy_report/predlog_backfill.js 21 22   （不給日子＝自動找出中間漏掉、已經打完的比賽日）
 const { chromium } = require("playwright");
 const fs = require("fs"), path = require("path");
 const FILE = path.resolve(__dirname, "../docs/pred-log.json");
@@ -13,7 +13,7 @@ const summarize = (rows) => {
   const r1 = (o) => (o.n ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === "n" ? v : Math.round(v * 100) / 100])) : { n: 0 });
   return { days: new Set(ok.map((r) => r[0])).size, all: r1(one(ok)), low: r1(one(ok.filter((r) => r[7] < 5))), high: r1(one(ok.filter((r) => r[7] >= 5))) };
 };
-const periods = process.argv.slice(2).map(Number).filter(Boolean);
+let periods = process.argv.slice(2).map(Number).filter(Boolean);
 (async () => {
   const log = readJ("pred-log.json") || { rows: [] };
   const browser = await chromium.launch();
@@ -21,6 +21,11 @@ const periods = process.argv.slice(2).map(Number).filter(Boolean);
   await page.addInitScript((a) => { window.__NOAUTH = true; if (a.adv) window.__ADV = a.adv; if (a.epm) window.__EPM = a.epm; }, { adv: readJ("adv.json"), epm: readJ("epm.json") });
   await page.goto("file://" + path.resolve(__dirname, "../docs/index.html"));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && typeof trueProj === "function" && EPM, null, { timeout: 120000 });
+  if (!periods.length) { // 自動：第一天到今天（不含）之間沒有紀錄的比賽日
+    const cur = await page.evaluate(() => CUR.period), have = new Set(log.rows.map((r) => r[0])), first = Math.min(...have);
+    for (let p = first + 1; p < cur; p++) if (!have.has(p)) periods.push(p);
+    console.log(periods.length ? `漏掉的比賽日：${periods.join("、")}` : "沒有漏掉的比賽日");
+  }
   for (const p of periods) {
     if (log.rows.some((r) => r[0] === p)) { console.log(`${p} 已經有紀錄，略過`); continue; }
     const rows = await page.evaluate(async (p) => {
