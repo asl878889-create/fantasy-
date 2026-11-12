@@ -1,7 +1,7 @@
 // 預估比對：每天記錄「原本預估」和「混合 EPM 的預估」，隔天用實際 FPTS 比對，結果存在 docs/pred-log.json。
 //   node fantasy_report/predlog.js            記錄今天、並比對已經打完的日子
 //   node fantasy_report/predlog.js --dry      只印出，不寫檔
-// 一筆紀錄：[比賽日, 球員ID, 名字, 原本預估, 混合預估, EPM佔比, 實際(null=還沒打完, "dnp"=沒上場), 當時出賽場數]
+// 一筆紀錄：[比賽日, 球員ID, 名字, 原本預估, 混合預估, EPM佔比, 實際(null=還沒打完, "dnp"=沒上場), 當時出賽場數, 考慮對手的預估, 旗標]
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
@@ -13,10 +13,14 @@ const summarize = (rows) => {
   const ok = rows.filter((r) => typeof r[6] === "number" && r[4] != null);
   const one = (rs) => ({ n: rs.length, maeOld: mean(rs.map((r) => Math.abs(r[3] - r[6]))), maeMix: mean(rs.map((r) => Math.abs(r[4] - r[6]))), biasOld: mean(rs.map((r) => r[3] - r[6])), biasMix: mean(rs.map((r) => r[4] - r[6])) });
   const r1 = (o) => (o.n ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === "n" ? v : Math.round(v * 100) / 100])) : { n: 0 });
-  return { days: new Set(ok.map((r) => r[0])).size, all: r1(one(ok)), low: r1(one(ok.filter((r) => r[7] < 5))), high: r1(one(ok.filter((r) => r[7] >= 5))) };
+  const three = ok.filter((r) => typeof r[8] === "number"); // 三種預估都有的那批（同一批人比，才公平）
+  const opp = three.length ? { ...one(three), maeOpp: mean(three.map((r) => Math.abs(r[8] - r[6]))), biasOpp: mean(three.map((r) => r[8] - r[6])) } : { n: 0 };
+  return { days: new Set(ok.map((r) => r[0])).size, all: r1(one(ok)), low: r1(one(ok.filter((r) => r[7] < 5))), high: r1(one(ok.filter((r) => r[7] >= 5))), opp: r1(opp) };
 };
+const norm = (r) => { if (r[8] === "bf") { r[9] = "bf"; r[8] = null; } if (r[8] === undefined) r[8] = null; return r; }; // 舊格式：第 9 欄原本是 "bf" 旗標
 (async () => {
   const log = readJ("pred-log.json") || { rows: [] };
+  log.rows.forEach(norm);
   const browser = await chromium.launch();
   const page = await browser.newPage();
   await page.addInitScript((a) => { window.__NOAUTH = true; if (a.adv) window.__ADV = a.adv; if (a.epm) window.__EPM = a.epm; }, { adv: readJ("adv.json"), epm: readJ("epm.json") });
