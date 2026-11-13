@@ -9,13 +9,14 @@ const DRY = process.argv.includes("--dry");
 const FILE = path.resolve(__dirname, "../docs/pred-log.json");
 const readJ = (f) => { try { return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../docs/" + f), "utf8")); } catch (e) { return null; } };
 const mean = (a) => (a.length ? a.reduce((s, v) => s + v, 0) / a.length : null);
+let teamSummary = null;
 const summarize = (rows) => {
   const ok = rows.filter((r) => typeof r[6] === "number" && r[4] != null);
   const one = (rs) => ({ n: rs.length, maeOld: mean(rs.map((r) => Math.abs(r[3] - r[6]))), maeMix: mean(rs.map((r) => Math.abs(r[4] - r[6]))), biasOld: mean(rs.map((r) => r[3] - r[6])), biasMix: mean(rs.map((r) => r[4] - r[6])) });
   const r1 = (o) => (o.n ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === "n" ? v : Math.round(v * 100) / 100])) : { n: 0 });
   const three = ok.filter((r) => typeof r[8] === "number"); // 三種預估都有的那批（同一批人比，才公平）
   const opp = three.length ? { ...one(three), maeOpp: mean(three.map((r) => Math.abs(r[8] - r[6]))), biasOpp: mean(three.map((r) => r[8] - r[6])) } : { n: 0 };
-  return { days: new Set(ok.map((r) => r[0])).size, all: r1(one(ok)), low: r1(one(ok.filter((r) => r[7] < 5))), high: r1(one(ok.filter((r) => r[7] >= 5))), opp: r1(opp) };
+  return { team: teamSummary, days: new Set(ok.map((r) => r[0])).size, all: r1(one(ok)), low: r1(one(ok.filter((r) => r[7] < 5))), high: r1(one(ok.filter((r) => r[7] >= 5))), opp: r1(opp) };
 };
 const norm = (r) => { if (r[8] === "bf") { r[9] = "bf"; r[8] = null; } if (r[8] === undefined) r[8] = null; return r; }; // 舊格式：第 9 欄原本是 "bf" 旗標
 (async () => {
@@ -39,7 +40,24 @@ const norm = (r) => { if (r[8] === "bf") { r[9] = "bf"; r[8] = null; } if (r[8] 
     if (!act) continue;
     for (const r of log.rows) if (r[0] === p && r[6] === null) { const v = act[r[1]]; if (v === undefined) continue; r[6] = Math.abs(v) < 0.001 ? "dnp" : Math.round(v * 10) / 10; filled++; }
   }
+  // 隊伍層級：每隊每天先發的預估加總 vs 實際先發加總（預估只有球員，沒有隊伍，所以用當天實際先發名單去加）
+  log.teams = log.teams || [];
+  const doneT = new Set(log.teams.map((x) => x.p + "_" + x.t));
+  const dayRows = {}; for (const r of log.rows) if (typeof r[6] === "number" || r[6] === "dnp") (dayRows[r[0]] = dayRows[r[0]] || {})[r[1]] = r;
+  for (const p of Object.keys(dayRows).map(Number)) {
+    if (log.teams.some((x) => x.p === p) && [...doneT].filter((k) => k.startsWith(p + "_")).length >= 10) continue;
+    const ta = await page.evaluate((p) => teamActualsOf(p), p).catch(() => null);
+    if (!ta) continue;
+    for (const [tid, v] of Object.entries(ta)) {
+      if (doneT.has(p + "_" + tid)) continue;
+      let o = 0, m = 0, h = 0, third = true, act = 0, miss = 0;
+      v.ids.forEach((id, i) => { act += v.act[i]; const r = dayRows[p][id]; if (!r) { miss++; return; } o += r[3]; m += r[4]; if (typeof r[8] === "number") h += r[8]; else third = false; });
+      log.teams.push({ p, t: Number(tid), o: Math.round(o * 10) / 10, m: Math.round(m * 10) / 10, h: third ? Math.round(h * 10) / 10 : null, a: Math.round(act * 10) / 10, miss });
+    }
+  }
   await browser.close();
+  { const T = log.teams, me = (f) => mean(T.map(f)), r1 = (v) => (v == null ? null : Math.round(v * 100) / 100), H = T.filter((x) => x.h != null);
+    teamSummary = T.length ? { n: T.length, avgAct: r1(me((x) => x.a)), maeOld: r1(me((x) => Math.abs(x.o - x.a))), maeMix: r1(me((x) => Math.abs(x.m - x.a))), biasOld: r1(me((x) => x.o - x.a)), biasMix: r1(me((x) => x.m - x.a)), maeOpp: H.length >= 10 ? r1(mean(H.map((x) => Math.abs(x.h - x.a)))) : null, biasOpp: H.length >= 10 ? r1(mean(H.map((x) => x.h - x.a))) : null } : null; }
   log.updated = new Date().toISOString();
   log.summary = summarize(log.rows);
   console.log(`今天 ${snap.period}：新增 ${added} 筆；比對 ${pending.length} 天、補上 ${filled} 筆實際分數`);
