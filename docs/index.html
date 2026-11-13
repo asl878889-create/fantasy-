@@ -578,9 +578,13 @@ async function load(teamPick) {
   })();
   const jobMoves = (async () => { // 最近 3 天聯盟裡的撿人、丟人
     try {
-      const lists = await Promise.all([period, period - 1, period - 2].filter((p) => p > 0).map((p) =>
-        get(`${LEAGUE}?${qs({ view: "mTransactions2", scoringPeriodId: p })}`, { transactions: { filterType: { value: ["FREEAGENT", "WAIVER", "TRADE_PROPOSAL", "TRADE_ACCEPT"] } } })));
-      const all = lists.flatMap((l) => l.transactions || []), props = all.filter((t) => t.type === "TRADE_PROPOSAL" && (t.items || []).length);
+      const ps3 = [period, period - 1, period - 2].filter((p) => p > 0);
+      const lists = await Promise.all(ps3.map((p) =>
+        get(`${LEAGUE}?${qs({ view: "mTransactions2", scoringPeriodId: p })}`, { transactions: { filterType: { value: ["FREEAGENT", "WAIVER"] } } })));
+      // 交易另外讀、各自包起來：交易讀不到時，只是不顯示交易，撿人丟人照常
+      const tlists = await Promise.all(ps3.map((p) =>
+        get(`${LEAGUE}?${qs({ view: "mTransactions2", scoringPeriodId: p })}`, { transactions: { filterType: { value: ["TRADE_PROPOSAL", "TRADE_ACCEPT"] } } }).catch(() => ({ transactions: [] }))));
+      const all = tlists.flatMap((l) => l.transactions || []), props = all.filter((t) => t.type === "TRADE_PROPOSAL" && (t.items || []).length);
       // 完成的交易：ESPN 的「接受」紀錄沒有球員明細，就用接受前 6 小時內、另一隊提出、跟接受者有關的那筆提案找球員；找不到就只寫誰接受了
       const trades = all.filter((t) => t.type === "TRADE_ACCEPT" && t.status === "EXECUTED").map((t) => {
         const pr = props.filter((q) => q.teamId !== t.teamId && q.proposedDate <= t.proposedDate && t.proposedDate - q.proposedDate <= 6 * 3600000 && q.items.some((i) => i.toTeamId === t.teamId || i.fromTeamId === t.teamId)).sort((a, b) => b.proposedDate - a.proposedDate)[0];
