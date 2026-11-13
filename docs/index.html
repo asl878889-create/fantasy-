@@ -2863,7 +2863,7 @@ function bounceBox(x) {
     <ul>${why.map((w) => `<li>${esc(w)}</li>`).join("")}</ul></div>`;
 }
 // ---------- 更新標記：還沒確認的修改加上橘色虛線框和「更新」標籤，確認後從這裡拿掉 ----------
-const NEW = {  pbpbox: "",  rookie: "p5",  breakout: "p11",  sleep: "p11",  stattot: "p7",  scarce: "p11",  injury: "p13",  rankboard: "p12",  habtap: "",  golink: "",  refreshicon: "",  uitheme: "",  strategy: "p11",  nodec: "p1",  matchup: "p1",  changelog: "p8",  mvalign: "p5",  contrib: "p2", habit: "p13",  wkalign: "p1",  herob: "",  todayalign: "p1",  logic: "p2",  b2bred: "p1",  lineup: "p1", sched: "", fit: "", addc: "p2", wkb: "p1", judge: "p2", cmp2: "p5", trade: "p5", cmpteam: "p5", livebtn: "p5", clr: "p5", todayslot: "p1", cmpcorner: "p2" }; // 空字串 = 不在分頁上（例如點球員的小視窗） // 標記名稱 -> 所在分頁
+const NEW = {}; // 即時版不顯示更新標記
 // 自動更新：手機（尤其加到主畫面的）常常一直開舊版。打開網頁、或從背景切回來時，去抓最新的網頁比對更新紀錄，有新版就自動重新載入
 (() => {
   if (!/github\.io$/.test(location.hostname)) return;
