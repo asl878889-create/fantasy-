@@ -2822,7 +2822,7 @@ function setupFinder(D) {
         <div class="sub">今年 ${f1(r.x.avg)}・近 7 天 ${f1(r.x.last7)}・去年 ${f1(r.x.lastYear)}</div>
         <div class="sub">本週 ${wk(r.x)} 場・下週 ${nx(r.x)} 場</div>
         <button type="button" data-fd="${r.x.id}">放進交易試算</button></div>`; }).join("")}</div>
-      <div class="fdnote">條件：<br>• 別隊健康的人<br>• 即時評分比他高 1.5 分以上<br>• 今年和去年平均不比他高超過 4 分（對方才可能願意換）<br>• 有中鋒資格的人，先檢查你的中鋒上限<br><br>「好不好換」：看對方心目中的價值（今年和去年平均、今年平均，取差距比較大的）<br>• 比你這位低或差不多：容易<br>• 高 2 分以內：中等<br>• 高更多：較難<br>• 不保證對方真的接受<br><br>場次是本週／下週。<br>按「放進交易試算」，<br>會把這組帶到下面算交易後的結果。</div>`
+      <div class="fdnote">條件：<br>• 別隊健康的人<br>• 即時評分比他高 1.5 分以上<br>• 今年和去年平均不比他高超過 4 分（對方才可能願意換）<br>• 有中鋒資格的人，先檢查你的中鋒上限<br><br>「好不好換」：看對方心目中的價值（今年和去年平均、今年平均，取差距比較大的）<br>• 比你這位低或差不多：容易<br>• 高 2 分以內：中等<br>• 高更多：較難<br>• 不保證對方真的接受<br><br>場次是本週／下週。<br>按「放進交易試算」，會把這組帶到下面算交易後的結果。</div>`
       : `<p class="sub">找不到符合條件的人（即時評分高 1.5 分以上、價值差不多、不超過中鋒上限）。</p>`);
     out.querySelectorAll("[data-fd]").forEach((b) => b.addEventListener("click", () => {
       TRADE.give = [mine.id]; TRADE.get = [Number(b.dataset.fd)]; if (TRADE.draw) TRADE.draw();
