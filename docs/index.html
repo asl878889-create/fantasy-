@@ -1373,11 +1373,11 @@ function tradeVerdict(D, t, find, team) {
   lines.push(`<div class="verdict"><b>評價：${head}</b></div>`);
   for (const e of [a, b]) {
     const cnt = e.got.length !== e.gave.length ? `，${e.gave.length} 換 ${e.got.length}` : "";
-    lines.push(`<div class="sub">${esc(team(e.tid))}：陣容實力 <b class="${e.delta >= 0.05 ? "up" : e.delta <= -0.05 ? "down" : ""}">${sg(e.delta)}</b>（拿到平均 ${f(e.gotAvg)}、給出 ${f(e.gaveAvg)}${cnt}）</div>`);
-    if (e.hurt.length) lines.push(`<div class="sub">⚠ ${esc(team(e.tid))} 拿到的 ${e.hurt.map((x) => esc(x.name)).join("、")} 目前${e.hurt.some((x) => x.out) ? " OUT／傷兵" : " DTD"}</div>`);
-    if (Math.abs(e.nxd) >= 2) lines.push(`<div class="sub">${esc(team(e.tid))} 下週場次${e.nxd > 0 ? "多" : "少"} ${Math.abs(e.nxd)} 場</div>`);
+    lines.push(`<div class="sub nolink">${esc(team(e.tid))}：陣容實力 <b class="${e.delta >= 0.05 ? "up" : e.delta <= -0.05 ? "down" : ""}">${sg(e.delta)}</b>（拿到平均 ${f(e.gotAvg)}、給出 ${f(e.gaveAvg)}${cnt}）</div>`);
+    if (e.hurt.length) lines.push(`<div class="sub nolink">⚠ ${esc(team(e.tid))} 拿到的 ${e.hurt.map((x) => esc(x.name)).join("、")} 目前${e.hurt.some((x) => x.out) ? " OUT／傷兵" : " DTD"}</div>`);
+    if (Math.abs(e.nxd) >= 2) lines.push(`<div class="sub nolink">${esc(team(e.tid))} 下週場次${e.nxd > 0 ? "多" : "少"} ${Math.abs(e.nxd)} 場</div>`);
   }
-  lines.push(`<div class="sub">用現在的陣容回推，之後兩邊還會再調整</div>`);
+  lines.push(`<div class="sub nolink">用現在的陣容回推，之後兩邊還會再調整</div>`);
   return lines.join("");
 }
 function movesCard(D, A) {
@@ -1836,7 +1836,7 @@ function linkTeams(root) {
   const key = D.teams.map((t) => t.id + t.name).join("|");
   if (key !== TEAM_RE_KEY) { TEAM_RE_KEY = key; TEAM_RE = new RegExp("(" + [...D.teams].sort((a, b) => b.name.length - a.name.length).map((t) => t.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")", "g"); }
   const idOf = new Map(D.teams.map((t) => [t.name, t.id]));
-  const skip = "script,style,option,datalist,input,textarea,select,button,svg,title,summary,h1,.tmhero,[data-tid],.tlink,.tabs,.pname,.ok-btn"; // 最上面的「隊名 日報」標題、隊伍卡自己的標題不要連結
+  const skip = "script,style,option,datalist,input,textarea,select,button,svg,title,summary,h1,.tmhero,[data-tid],.tlink,.tabs,.pname,.ok-btn,.nolink"; // 最上面的「隊名 日報」標題、隊伍卡自己的標題不要連結
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: (n) => (n.nodeValue.length >= 3 && !n.parentElement.closest(skip) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT) });
   const hits = []; for (let n = w.nextNode(); n; n = w.nextNode()) { TEAM_RE.lastIndex = 0; if (TEAM_RE.test(n.nodeValue)) hits.push(n); }
   for (const n of hits) {
