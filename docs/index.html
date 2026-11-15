@@ -392,7 +392,7 @@ const r0 = (x) => Math.round(x);
 let animT = null, animEpoch = 0; function playAnim() { animEpoch++; const b = document.body; b.classList.remove("anim"); void b.offsetWidth; b.classList.add("anim"); clearTimeout(animT); animT = setTimeout(() => b.classList.remove("anim"), 1500); setTimeout(numFx, 60); } // 長條和圓環從 0 長出來：開頁面、換分頁、開排行榜或隊伍卡時播一次（每 20 秒自動重畫不播）
 
 // ---------- 數字動畫：換分頁／開頁面時從 0 滾到數值；分數更新時從舊值滾到新值，增加閃綠、減少閃紅 ----------
-const FX = new Map(), FX_SEL = ".hrt .n, #todayCard .today b, .vsw2 b, .wbsc b, .rkbig b, .cbtot b";
+const FX = new Map(), FX_SEL = "#todayCard .today b, .vsw2 b, .wbsc b, .rkbig b, .cbtot b";
 function numFx() {
   if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const cnt = {};
