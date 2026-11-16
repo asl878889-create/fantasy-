@@ -155,7 +155,18 @@ const IN_PAGE = async ({ mode, opts, site }) => {
     L.push(`• 他的主力：${th.join("、")}`);
   }
  
-  return { ready: true, text: L.join("\n") };
+  // 戰報圖：用網頁裡的 drawReportData 畫出那一週的圖（舊版網頁沒有這個函式就略過）
+  let png = null;
+  try {
+    if (typeof drawReportData === "function" && typeof winSeriesGen === "function") {
+      const finalP = a > b ? 1 : a < b ? 0 : 0.5, sm = side(m, meId).pointsByScoringPeriod || {}, so = side(m, oppId).pointsByScoringPeriod || {};
+      const bm = (box[meId] || {}), by = {};
+      periods.forEach((p) => (bm[p] || []).forEach((e) => { if (e.slot === IR || e.slot === BENCH) return; by[e.id] = by[e.id] || { n: e.name, t: 0, best: 0 }; by[e.id].t += e.pts; by[e.id].best = Math.max(by[e.id].best, e.pts); }));
+      const R = { week: W, range: `${st.getUTCMonth() + 1}/${st.getUTCDate()}–${en.getUTCMonth() + 1}/${en.getUTCDate()}`, base: D.base, nameA: D.me.name, nameB: teamName(oppId), a, b, pr: finalP, wins: winSeriesGen(D, periods, sm, so, finalP, periods[6], D.myRoster, D.rosters[oppId]), top: Object.values(by).sort((p, q) => q.t - p.t).slice(0, 3) };
+      const cv = document.createElement("canvas"); drawReportData(cv, R); png = cv.toDataURL("image/png").split(",")[1];
+    }
+  } catch (e) { png = null; }
+  return { ready: true, text: L.join("\n"), png };
 };
 
 (async () => {
@@ -177,11 +188,19 @@ const IN_PAGE = async ({ mode, opts, site }) => {
   if (!res.ready) { console.log("沒有發送：" + res.why); return; }
   if (res.skip) { console.log("沒有發送：" + res.skip); return; }
   console.log(res.text);
+  if (DRY && res.png) { require("fs").writeFileSync(process.env.REPORT_PNG || "/tmp/week-report.png", Buffer.from(res.png, "base64")); console.log("（dry）戰報圖已存到 " + (process.env.REPORT_PNG || "/tmp/week-report.png")); }
   if (DRY) return;
-  const body = JSON.stringify({ content: res.text.slice(0, 1990), allowed_mentions: { parse: [] } });
+  const fs = require("fs"), os = require("os");
+  const payload = JSON.stringify({ content: res.text.slice(0, 1990), allowed_mentions: { parse: [] } });
   // Discord 機器人 Token 由雲端環境的網路代理自動加上，這裡的 "proxy-injected" 只是佔位
-  const out = execFileSync("curl", ["-sS", "-X", "POST", `https://discord.com/api/v10/channels/${CHANNEL}/messages`,
-    "-H", "Authorization: Bot proxy-injected", "-H", "Content-Type: application/json", "--data-binary", "@-"], { input: body }).toString();
+  let out;
+  if (res.png) { // 週報附上戰報圖
+    const f = path.join(os.tmpdir(), `tpbl-week-${Date.now()}.png`); fs.writeFileSync(f, Buffer.from(res.png, "base64"));
+    try { out = execFileSync("curl", ["-sS", "-X", "POST", `https://discord.com/api/v10/channels/${CHANNEL}/messages`, "-H", "Authorization: Bot proxy-injected", "-F", `payload_json=${payload}`, "-F", `files[0]=@${f};type=image/png;filename=week-report.png`]).toString(); } finally { try { fs.unlinkSync(f); } catch (e) { /* 暫存檔刪不掉就算了 */ } }
+  } else {
+    out = execFileSync("curl", ["-sS", "-X", "POST", `https://discord.com/api/v10/channels/${CHANNEL}/messages`,
+      "-H", "Authorization: Bot proxy-injected", "-H", "Content-Type: application/json", "--data-binary", "@-"], { input: payload }).toString();
+  }
   const r = JSON.parse(out);
   if (!r.id) { console.error("Discord 發送失敗：", out); process.exit(1); }
   console.log("已發送到 Discord");
