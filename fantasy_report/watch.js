@@ -3,7 +3,8 @@
 //       有人把「對你有用的好球員」丟掉時通知（只看最近 --since 分鐘內的撿人丟人，預設 120）。
 //   node fantasy_report/watch.js --waiver [--hours 小時] [--team N] [--channel ID] [--now ISO時間] [--dry]
 //       waiver 快要處理前提醒：列出你可以下 claim 的好球員（預設看接下來 6 小時內處理的）。
-// 沒有符合的就不發。「好球員」的標準跟網頁的「可以搶」一樣：綜合評分比你最該換掉的人多 3 分以上。
+// 沒有符合的就不發。「好球員」的標準跟網頁的「可以搶」一樣（網頁的 pickupGain）：每場預估比你要換掉的人高 3 分以上，
+// 而且用剩下球季逐日模擬換掉之後每週多 3 fpts 以上。
 // --now 是測試用，假裝現在是某個時間（ISO 格式，例如 2026-11-06T04:00:00Z）。
 const { chromium } = require("playwright");
 const { execFileSync } = require("child_process");
@@ -24,11 +25,11 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   const f1 = (x) => (x == null ? "-" : x.toFixed(1));
   const teamName = (id) => (D.teams.find((t) => t.id === id) || {}).name || "";
   const tpe = (ms) => { const p = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date(ms)); const g = (t) => p.find((x) => x.type === t).value; return `${g("month")}/${g("day")} ${g("hour")}:${g("minute")}`; };
-  // 跟你的隊上比：撿他要換掉誰（網頁的 dropFor：最該換掉的人；中鋒已滿時改找可以換掉的中鋒）；沒有就拿即時評分最低的先發
-  const base0 = A.drop || A.worst;
-  if (!base0) return { text: null };
-  const baseOf = (f) => (typeof dropFor === "function" ? (posFull(f, D) ? dropFor(f, D) : base0) : base0); // 位置滿了又沒人可換 → null，不通知
-  const good = (f) => { const b = baseOf(f); return b && f.val >= b.val + UPG; };
+  // 跟你的隊上比：撿他要換掉誰、換了每週多幾 fpts（網頁的 pickupGain：最該換掉的人或季價值最低的人；中鋒已滿時改找可以換掉的中鋒）
+  if (!(A.drop || A.worst)) return { text: null };
+  const PG = new Map(), pg = (f) => { if (!PG.has(f.id)) PG.set(f.id, pickupGain(f, D)); return PG.get(f.id); };
+  const good = (f) => !!pg(f), baseOf = (f) => pg(f).base;
+  const line = (f) => `• **${f.name}**（今年 ${f1(f.avg)}、每場預估 ${f1(f.val)}${dtd(f)}）`, gainTxt = (f) => `換掉你的 ${baseOf(f).name}，模擬剩下球季每週多 ${f1(pg(f).gain)} fpts`;
   const rank = D.me.waiverRank ? `（你的 waiver 順位第 ${D.me.waiverRank}）` : "";
   const dtd = (f) => (["DAY_TO_DAY", "QUESTIONABLE", "DOUBTFUL"].includes(f.injury) ? `，${INJURY[f.injury]}` : "");
   const L = [];
@@ -43,9 +44,8 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
       if (seen.has(d.id)) continue; seen.add(d.id);
       const f = D.fas.find((x) => x.id === d.id) || EXTRA[d.id];
       if (!f || f.out || !["FREEAGENT", "WAIVERS"].includes(f.status) || !good(f)) continue; // 已經被撿走、受傷、或沒比你的人好（含中鋒已滿）就跳過
-      const base = baseOf(f);
       const how = f.status === "WAIVERS" ? `在 waiver，台北 ${f.waiverAt ? tpe(f.waiverAt) : "之後"} 處理，要先下 claim` : "自由球員，現在就能直接撿";
-      rows.push(`• **${f.name}**（今年 ${f1(f.avg)}、即時評分 ${f1(f.val)}${dtd(f)}）被 ${teamName(d.by)} 丟掉：${how}；比你的 ${base.name}（即時評分 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`);
+      rows.push(`${line(f)}被 ${teamName(d.by)} 丟掉：${how}；${gainTxt(f)}`);
     }
     if (!rows.length) return { text: null };
     L.push(`🔥 **有人丟了好球員**　最近 ${since >= 120 ? Math.round(since / 60) + " 小時" : since + " 分鐘"}（到台北 ${tpe(end)}）`, ...rows.slice(0, 5)); if (rank) L.push(rank.slice(1, -1));
@@ -54,11 +54,11 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
 
   // waiver 提醒：接下來 hours 小時內會處理、而且對你有幫助的
   const soon = D.fas.filter((f) => f.status === "WAIVERS" && f.waiverAt && f.waiverAt > now && f.waiverAt <= now + hours * 3600000 && !f.out && good(f))
-    .sort((a, b) => b.val - a.val).slice(0, 5);
+    .sort((a, b) => pg(b).gain - pg(a).gain).slice(0, 5);
   if (!soon.length) return { text: null };
   const at = soon[0].waiverAt;
   L.push(`⏰ **Waiver 提醒**　台北 ${tpe(at)} 處理，之前可以下 claim`);
-  soon.forEach((f) => { const base = baseOf(f); L.push(`• **${f.name}**（今年 ${f1(f.avg)}、即時評分 ${f1(f.val)}${dtd(f)}）比你的 ${base.name}（即時評分 ${f1(base.val)}）好 ${f1(f.val - base.val)} 分`); });
+  soon.forEach((f) => L.push(`${line(f)}${gainTxt(f)}`));
   if (rank) L.push(rank.slice(1, -1));
   L.push("沒人 claim 的話，處理後會變成自由球員，誰都能直接撿。");
   return { text: L.join("\n") };
