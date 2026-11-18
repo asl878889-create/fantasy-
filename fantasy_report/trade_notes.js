@@ -9,6 +9,14 @@ const fs = require("fs");
 const path = require("path");
 
 const FILE = path.resolve(__dirname, "../docs/trade-notes.json");
+// 寫評語的方法（跟著 --pending 一起印出來，排程照這個寫）
+const WRITING_GUIDE = [
+  "看 facts，不要只看 text 的固定句：text 裡的「合計平均」在 2 換 1 時會誤導。",
+  "結論以「剩下球季每週差幾分」為主：三種估法都正（或都負）才下明確結論；估法之間正負不一時，說清楚好處建立在什麼前提上（例如球員不會回到 ESPN 預測水準）。",
+  "交易兩隊都要評，並點出雙方的動機（例如對方傷兵多、需要 2 換 1 騰名額）。",
+  "用球員的今年／去年／ESPN 預測判斷是不是賣在高點、買在低點；上場時間變化、傷病新聞、季後賽場數有影響就提。",
+  "差距在每週 5 分以內就說差不多。用繁體中文，2～4 句，口語、先講結論，不要逐項列數字。",
+];
 const readNotes = () => { try { return JSON.parse(fs.readFileSync(FILE, "utf8")); } catch (e) { return {}; } };
 const writeNotes = (o) => fs.writeFileSync(FILE, JSON.stringify(o, null, 1) + "\n");
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
@@ -16,8 +24,9 @@ const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.a
 async function collect() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  const adv = (() => { try { return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../docs/adv.json"), "utf8")); } catch (e) { return null; } })();
-  await page.addInitScript((a) => { window.__NOAUTH = true; window.__TNOTES = {}; if (a) window.__ADV = a; }, adv); // __TNOTES 先給空的：要的是「沒評語時」的規則文字
+  const readJ = (f) => { try { return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../docs/" + f), "utf8")); } catch (e) { return null; } };
+  const adv = readJ("adv.json"), injn = readJ("injnews.json"); // 用 file:// 開網頁時 fetch 讀不到資料檔，先塞進去（傷病新聞給 facts 用）
+  await page.addInitScript(([a, n]) => { window.__NOAUTH = true; window.__TNOTES = {}; if (a) window.__ADV = a; if (n) window.__INJN = n; }, [adv, injn]); // __TNOTES 先給空的：要的是「沒評語時」的規則文字
   await page.goto("file://" + path.resolve(__dirname, "../docs/index.html"));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && document.querySelector(".tabs"), null, { timeout: 120000 });
   const items = await page.evaluate(() => [...document.querySelectorAll(".mvx[data-key]")].map((el) => ({
@@ -25,6 +34,11 @@ async function collect() {
     time: (el.querySelector(".mvtm") || {}).textContent, day: (el.closest(".mvtl") && [...el.closest(".mvtl").children].reduce((d, c) => (c.classList.contains("mvday") && !d.done ? (c === el ? d : d) : d), { done: false }).day) || "",
     text: [...el.querySelector(".mvb").children].map((c) => c.textContent.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n"),
   })));
+  // 每筆動態的模擬結果和球員細節（網頁的 window.moveFacts()）：寫評語時用這些，不要只看上面的固定句
+  let facts = null;
+  try { facts = await page.evaluate(() => (window.moveFacts ? window.moveFacts() : null)); } catch (e) { facts = null; }
+  if (facts) for (const it of items) if (facts.動態[it.key]) it.facts = facts.動態[it.key];
+  items.note = facts ? facts.說明 : null;
   await browser.close();
   return items;
 }
@@ -43,7 +57,9 @@ async function collect() {
   }
   if (process.argv.includes("--pending")) {
     const n = readNotes();
-    console.log(JSON.stringify(items.filter((x) => !n[x.key]).map(({ key, kind, time, text }) => ({ key, kind, time, text })), null, 1));
+    const pend = items.filter((x) => !n[x.key]).map(({ key, kind, time, text, facts }) => ({ key, kind, time, text, ...(facts ? { facts } : {}) }));
+    // 有資料時多印一份寫評語的說明（沒有待寫的動態還是印 []，排程看到 [] 就結束）
+    console.log(JSON.stringify(pend.length && items.note ? { 怎麼寫: WRITING_GUIDE, 資料說明: items.note, 待寫: pend } : pend, null, 1));
     return;
   }
   console.error("請指定 --pending、--set 或 --prune"); process.exit(1);
