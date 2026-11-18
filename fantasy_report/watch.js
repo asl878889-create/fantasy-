@@ -29,7 +29,7 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   if (!(A.drop || A.worst)) return { text: null };
   const PG = new Map(), pg = (f) => { if (!PG.has(f.id)) PG.set(f.id, pickupGain(f, D)); return PG.get(f.id); };
   const good = (f) => !!pg(f), baseOf = (f) => pg(f).base;
-  const line = (f) => `• **${f.name}**（今年 ${f1(f.avg)}、每場預估 ${f1(f.val)}${dtd(f)}）`, gainTxt = (f) => `換掉你的 ${baseOf(f).name}，模擬剩下球季每週多 ${f1(pg(f).gain)} fpts`;
+  const line = (f) => `• **${f.name}**（今年 ${f1(f.avg)}、每場預估 ${f1(f.val)}${dtd(f)}）`, gainTxt = (f) => `換掉你的 ${baseOf(f).name} 之後，每週大約多拿 ${Math.round(pg(f).gain)} fpts`;
   const rank = D.me.waiverRank ? `（你的 waiver 順位第 ${D.me.waiverRank}）` : "";
   const dtd = (f) => (["DAY_TO_DAY", "QUESTIONABLE", "DOUBTFUL"].includes(f.injury) ? `，${INJURY[f.injury]}` : "");
   const L = [];
