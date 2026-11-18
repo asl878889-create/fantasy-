@@ -1698,8 +1698,12 @@ function pastProj(D, id, p) {
 }
 function pastPredSum(D, ti, p) {
   const t = ti ? D.opp : D.me, ents = ((D.weekBox || {})[t.id] || {})[p]; if (!ents) return null;
-  const pl = ents.filter((e) => e.pts !== 0).map((e) => ({ id: e.id, slots: e.elig || [], proj: pastProj(D, e.id, p) }));
-  return bestLineup(pl, D.seats).reduce((a, x) => a + x.proj, 0);
+  // 跟點進去的明細一樣：ESPN 陣容排在先發（不是板凳也不是 IR）、當天有比賽但 OUT 沒上場的人也算進預估（實際 0）
+  const ros = ti ? D.oppRoster : D.myRoster; // 只算現在還在名單上的人（明細也是這樣）
+  const forced = new Set(ents.filter((e) => e.pts === 0 && e.slot !== IR && e.slot !== BENCH && ros.some((x) => x.id === e.id && x.games.has(p))).map((e) => e.id));
+  const pl = ents.filter((e) => e.pts !== 0 || forced.has(e.id)).map((e) => ({ id: e.id, slots: e.elig || [], proj: pastProj(D, e.id, p) }));
+  const pick = new Set(bestLineup(pl, D.seats).map((x) => x.id)); forced.forEach((id) => pick.add(id));
+  return pl.filter((x) => pick.has(x.id)).reduce((a, x) => a + x.proj, 0);
 }
 function weekBattle(D, A) {
   const teams = [[D.me, D.myRoster, D.myByDay, D.myScore + A.myRest], [D.opp, D.oppRoster, D.oppByDay, D.oppScore + A.oppRest]];
