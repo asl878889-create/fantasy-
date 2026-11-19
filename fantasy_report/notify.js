@@ -64,9 +64,9 @@ const DRY = process.argv.includes("--dry");
       const dropped = [...new Set(lists.flatMap((l) => l.transactions || []).filter((t) => t.status === "EXECUTED")
         .flatMap((t) => t.items.filter((i) => i.type === "DROP").map((i) => i.playerId)))];
       const fa = new Map(D.fas.map((f) => [f.id, f]));
-      const baseOf = (f) => (typeof dropFor === "function" ? dropFor(f, D) : A.drop); // 跟網頁同一套：撿他要換掉誰（中鋒已滿時只跟可以換掉的中鋒比）
-      const steal = dropped.map((id) => fa.get(id)).filter((f) => { const b = f && baseOf(f); return b && f.val >= b.val + UPG; });
-      if (steal.length) L.push("", `🔥 **可以搶**：${steal.map((f) => `${f.name}（${f.avg.toFixed(1)}${f.status === "WAIVERS" ? "，waiver" : ""}，比你的 ${baseOf(f).name} 好）`).join("、")} 剛被丟掉`);
+      // 跟網頁「可以搶」同一套（pickupGain）：每場預估高 3 分以上，而且模擬剩下球季每週多 3 fpts 以上
+      const steal = dropped.map((id) => fa.get(id)).filter(Boolean).map((f) => ({ f, pg: pickupGain(f, D) })).filter((o) => o.pg);
+      if (steal.length) L.push("", `🔥 **可以搶**：${steal.map(({ f, pg }) => `${f.name}（${f.status === "WAIVERS" ? "waiver，" : ""}換掉你的 ${pg.base.name} 之後每週大約多拿 ${Math.round(pg.gain)} fpts）`).join("、")} 剛被丟掉`);
     } catch (e) { /* 讀不到聯盟動態就略過 */ }
 
    
