@@ -25,7 +25,7 @@ const IN_PAGE = ({ mode, now, since, hours, site }) => {
   const f1 = (x) => (x == null ? "-" : x.toFixed(1));
   const teamName = (id) => (D.teams.find((t) => t.id === id) || {}).name || "";
   const tpe = (ms) => { const p = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date(ms)); const g = (t) => p.find((x) => x.type === t).value; return `${g("month")}/${g("day")} ${g("hour")}:${g("minute")}`; };
-  // 跟你的隊上比：撿他要換掉誰、換了每週多幾 fpts（網頁的 pickupGain：最該換掉的人或季價值最低的人；中鋒已滿時改找可以換掉的中鋒）
+  // 跟你的隊上比：撿他要換掉誰、換了每週多幾 fpts（網頁的 pickupGain：最該換掉的人或淨貢獻最低的人；中鋒已滿時改找可以換掉的中鋒）
   if (!(A.drop || A.worst)) return { text: null };
   const PG = new Map(), pg = (f) => { if (!PG.has(f.id)) PG.set(f.id, pickupGain(f, D)); return PG.get(f.id); };
   const good = (f) => !!pg(f), baseOf = (f) => pg(f).base;
