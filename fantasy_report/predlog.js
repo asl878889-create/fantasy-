@@ -1,7 +1,8 @@
 // 預估比對：每天記錄「原本預估」和「混合 EPM 的預估」，隔天用實際 FPTS 比對，結果存在 docs/pred-log.json。
 //   node fantasy_report/predlog.js            記錄今天、並比對已經打完的日子
 //   node fantasy_report/predlog.js --dry      只印出，不寫檔
-// 一筆紀錄：[比賽日, 球員ID, 名字, 原本預估, 混合預估, EPM佔比, 實際(null=還沒打完, "dnp"=沒上場), 當時出賽場數, 考慮對手的預估, 旗標]
+// 一筆紀錄：[比賽日, 球員ID, 名字, 原本預估, 混合預估, EPM佔比, 實際(null=還沒打完, "dnp"=沒上場), 當時出賽場數, 考慮對手的預估, 旗標, 每場預估]
+//   每場預估（以前叫即時評分，網頁的 x.val）從 2026-11-20 起才有記錄，比較時只用有這一欄的那批
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
