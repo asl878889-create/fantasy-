@@ -59,11 +59,11 @@ async function collect() {
   return items;
 }
 
-async function collectPicks(teams) { // 每隊補強建議卡上的候選和資料（網頁的 window.pickFacts）
+async function collectPicks(teams) { // 每隊補強建議卡上的候選和資料（網頁的 window.pickFacts）；資料檔跟網頁讀的一樣，數字才會跟卡片上一致
   const browser = await chromium.launch();
   const page = await browser.newPage();
   const readJ = (f) => { try { return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../docs/" + f), "utf8")); } catch (e) { return null; } };
-  const inj = {}; for (const [k, f] of Object.entries({ __ADV: "adv.json", __INJN: "injnews.json", __PBP: "pbp.json", __WOWY: "wowy.json", __PLOG: "pbplog.json", __ASSIST: "assist.json", __BRK: "breakout.json", __B2B: "b2b.json", __RKS: "rookies.json" })) { const v = readJ(f); if (v) inj[k] = v; }
+  const inj = {}; for (const [k, f] of Object.entries({ __ADV: "adv.json", __EPM: "epm.json", __INJN: "injnews.json", __PBP: "pbp.json", __WOWY: "wowy.json", __PLOG: "pbplog.json", __ASSIST: "assist.json", __BRK: "breakout.json", __B2B: "b2b.json", __RKS: "rookies.json", __HIST: "history.json" })) { const v = readJ(f); if (v) inj[k] = v; }
   await page.addInitScript((d) => { window.__NOAUTH = true; window.__TNOTES = {}; window.__PICKN = {}; for (const [k, v] of Object.entries(d)) window[k] = v; }, inj);
   await page.goto("file://" + path.resolve(__dirname, "../docs/index.html"));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && window.pickFacts, null, { timeout: 180000 });
