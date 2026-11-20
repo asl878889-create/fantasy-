@@ -1523,9 +1523,10 @@ function nbaInj(x, day) { // day：比賽日（美國日期 Date）；只回傳�
     const f = w[0], c = (NBAINJ._last[w[w.length - 1]] || []).filter((g) => g.length >= 2 && f.length >= 2 && (g.startsWith(f) || f.startsWith(g)));
     if (c.length === 1) it = NBAINJ.items[Object.keys(NBAINJ.items).find((k) => k.startsWith(c[0] + " ") && k.endsWith(" " + w[w.length - 1]))];
   }
-  if (!it || !NBA_ST[it.st]) return null;
-  const d = day || (CUR && CUR.today); if (d && it.gd && it.gd < d.toISOString().slice(0, 10)) return null; // 已經打完的比賽
-  return it;
+  if (!it) return null;
+  const d = day || (CUR && CUR.today), ds = d ? d.toISOString().slice(0, 10) : ""; // 報告常同時列今天和明天：挑那天或之後最近的一場（已經打完的不算）
+  const e = (Array.isArray(it) ? it : [it]).find((z) => !ds || !z.gd || z.gd >= ds);
+  return e && NBA_ST[e.st] ? e : null;
 }
 const nbaInjTxt = (it) => { if (!it) return ""; const [m, d] = it.gd ? it.gd.slice(5).split("-").map(Number) : []; return `官方：${NBA_ST[it.st][1]}${m ? `（${m}/${d}${it.mu ? " " + it.mu : ""}）` : ""}`; };
 async function loadInjN() { if (INJN !== null) return INJN; try { INJN = window.__INJN || (await fetch("injnews.json").then((r) => (r.ok ? r.json() : false))) || false; } catch (e) { INJN = false; } return INJN; }
