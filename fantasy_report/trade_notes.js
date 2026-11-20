@@ -4,11 +4,26 @@
 //   node fantasy_report/trade_notes.js --pending            印出「還沒有評語」的動態（JSON：key、時間、內容），沒有就印 []
 //   node fantasy_report/trade_notes.js --set <key> "評語"    把一則評語寫進 docs/trade-notes.json（已有就覆蓋）
 //   node fantasy_report/trade_notes.js --prune [天數]        刪掉聯盟動態已經看不到的舊評語（預設保留目前清單內的）
+// 撿人前的評語（補強建議卡上的候選：撿誰、丟誰），存成 docs/pick-notes.json：
+//   node fantasy_report/trade_notes.js --pending-picks [--teams 4,11]   印出還沒有評語、或評語超過 24 小時的候選（不給 --teams 就是網頁預設隊伍）
+//   node fantasy_report/trade_notes.js --set-pick <key> "評語"           寫入一則（會記下寫的時間）
+//   node fantasy_report/trade_notes.js --prune-picks [--teams 4,11]     刪掉不在目前候選裡的舊評語
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
 
 const FILE = path.resolve(__dirname, "../docs/trade-notes.json");
+const PFILE = path.resolve(__dirname, "../docs/pick-notes.json");
+const PICK_REFRESH = 24 * 3600000; // 超過 24 小時就重寫（網頁超過 36 小時就不顯示）
+const PICK_GUIDE = [
+  "這是寫給這一隊經營者「撿人之前」看的，幫他決定要不要撿：先講結論（值得撿／可以等／不建議撿），再講主要原因。",
+  "以 facts 為依據：剩下球季每週差幾分（兩種估法 × 例行賽／季後賽）、本週剩下和下週差幾分、兩人的今年／去年／近況、上場時間變化、傷病新聞、季後賽場數、持有率、是不是 waiver、丟的人淨貢獻。",
+  "兩種估法都正（或都負）才下明確結論；正負不一時說清楚好處建立在什麼前提上（例如手感能不能維持、會不會回到去年水準）。只是本週多、長期少（或相反）也要點出來。",
+  "差距在每週 5 fpts 以內就說差不多；丟的人淨貢獻很低時可以提「丟掉幾乎沒損失」。",
+  "繁體中文，1～3 句，口語、先講結論，不要逐項列數字。fantasy 分數寫 fpts、真實得分寫 pts。不要自己編傷勢或預測，只用 facts 裡的資料；不要提 ESPN 預測。",
+];
+const readPicks = () => { try { return JSON.parse(fs.readFileSync(PFILE, "utf8")); } catch (e) { return {}; } };
+const writePicks = (o) => fs.writeFileSync(PFILE, JSON.stringify(o, null, 1) + "\n");
 // 寫評語的方法（跟著 --pending 一起印出來，排程照這個寫）
 const WRITING_GUIDE = [
   "看 facts，不要只看 text 的固定句：text 裡的「合計平均」在 2 換 1 時會誤導。",
@@ -43,7 +58,36 @@ async function collect() {
   return items;
 }
 
+async function collectPicks(teams) { // 每隊補強建議卡上的候選和資料（網頁的 window.pickFacts）
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  const readJ = (f) => { try { return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../docs/" + f), "utf8")); } catch (e) { return null; } };
+  const inj = {}; for (const [k, f] of Object.entries({ __ADV: "adv.json", __INJN: "injnews.json", __PBP: "pbp.json", __WOWY: "wowy.json", __PLOG: "pbplog.json", __ASSIST: "assist.json", __BRK: "breakout.json", __B2B: "b2b.json", __RKS: "rookies.json" })) { const v = readJ(f); if (v) inj[k] = v; }
+  await page.addInitScript((d) => { window.__NOAUTH = true; window.__TNOTES = {}; window.__PICKN = {}; for (const [k, v] of Object.entries(d)) window[k] = v; }, inj);
+  await page.goto("file://" + path.resolve(__dirname, "../docs/index.html"));
+  await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && window.pickFacts, null, { timeout: 180000 });
+  const out = { 說明: null, 候選: {} };
+  for (const t of teams.length ? teams : [null]) {
+    try { const r = await page.evaluate((t) => window.pickFacts(t), t); out.說明 = r.說明; Object.assign(out.候選, r.候選); } catch (e) { console.error("隊伍", t, "讀取失敗：", e.message); }
+  }
+  await browser.close();
+  return out;
+}
+
 (async () => {
+  const teams = (arg("--teams") || "").split(",").map(Number).filter(Boolean);
+  if (process.argv.includes("--set-pick")) {
+    const i = process.argv.indexOf("--set-pick"), key = process.argv[i + 1], text = process.argv[i + 2];
+    if (!key || !text) { console.error("用法：--set-pick <key> \"評語\""); process.exit(1); }
+    const n = readPicks(); n[key] = { t: text.trim(), at: new Date().toISOString() }; writePicks(n); console.log("已寫入", key); return;
+  }
+  if (process.argv.includes("--pending-picks") || process.argv.includes("--prune-picks")) {
+    const c = await collectPicks(teams), n = readPicks(), now = Date.now();
+    if (process.argv.includes("--prune-picks")) { let d = 0; for (const k of Object.keys(n)) if (!c.候選[k] || now - new Date(n[k].at).getTime() > 3 * 86400000) { delete n[k]; d++; } writePicks(n); console.log("刪除", d, "則舊的撿人評語"); return; }
+    const pend = Object.entries(c.候選).filter(([k]) => !n[k] || !(now - new Date(n[k].at).getTime() < PICK_REFRESH)).map(([key, facts]) => ({ key, facts }));
+    console.log(JSON.stringify(pend.length ? { 怎麼寫: PICK_GUIDE, 資料說明: c.說明, 待寫: pend } : [], null, 1));
+    return;
+  }
   if (process.argv.includes("--set")) {
     const i = process.argv.indexOf("--set"), key = process.argv[i + 1], text = process.argv[i + 2];
     if (!key || !text) { console.error("用法：--set <key> \"評語\""); process.exit(1); }
