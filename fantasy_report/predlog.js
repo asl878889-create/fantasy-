@@ -4,6 +4,7 @@
 // 一筆紀錄：[比賽日, 球員ID, 名字, 原本預估, 混合預估, EPM佔比, 實際(null=還沒打完, "dnp"=沒上場), 當時出賽場數, 考慮對手的預估, 旗標, 每場預估]
 //   每場預估（以前叫即時評分，網頁的 x.val）從 2026-11-20 起才有記錄，比較時只用有這一欄的那批
 //   第 12、13 欄（2026-11-21 起）：當時的傷病狀態（ACTIVE／DAY_TO_DAY…）和新聞說法（probable／questionable／gtd／doubtful／out／other／空字串），累積後算 DTD 和各種說法的實際出賽率
+//   第 14 欄（2026-11-21 起）：NBA 官方傷病報告當天那場的分級（Out／Doubtful／Questionable／Probable／Available，沒被列就是空字串；docs/nbainj.json，由 fetch_nbainj.js 抓），跟第 12、13 欄比哪個比較能預測出賽
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
@@ -26,7 +27,7 @@ const norm = (r) => { if (r[8] === "bf") { r[9] = "bf"; r[8] = null; } if (r[8] 
   log.rows.forEach(norm);
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  await page.addInitScript((a) => { window.__NOAUTH = true; if (a.adv) window.__ADV = a.adv; if (a.epm) window.__EPM = a.epm; }, { adv: readJ("adv.json"), epm: readJ("epm.json") });
+  await page.addInitScript((a) => { window.__NOAUTH = true; if (a.adv) window.__ADV = a.adv; if (a.epm) window.__EPM = a.epm; if (a.injn) window.__INJN = a.injn; if (a.nbainj) window.__NBAINJ = a.nbainj; }, { adv: readJ("adv.json"), epm: readJ("epm.json"), injn: readJ("injnews.json"), nbainj: readJ("nbainj.json") });
   await page.goto("file://" + (process.env.REPORT_PAGE || path.resolve(__dirname, "../docs/index.html")));
   await page.waitForFunction(() => typeof CUR !== "undefined" && CUR && CUR.A && typeof predSnapshot === "function", null, { timeout: 120000 });
   const snap = await page.evaluate(() => predSnapshot());
