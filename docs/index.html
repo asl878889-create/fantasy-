@@ -3992,6 +3992,18 @@ async function teamRecords() {
 }
 // ---------- 預估比對（實驗）：每天記錄「原本預估」和「混合 EPM 的預估」，之後跟實際得分比，看哪個準 ----------
 // 給 fantasy_report/predlog.js 用。只記錄陣容裡今天有比賽、健康的人。
+// 傷病新聞的說法分類（預估比對紀錄用，累積後算各種說法的實際出賽率）
+function injWord(x) {
+  const n = INJN && INJN.items && INJN.items[x.id], f = INJF && INJF[x.id];
+  const t = [n && n.zh, n && n.head, f && f.comment].filter(Boolean).join(" ").toLowerCase();
+  if (!t) return "";
+  if (/ruled out|will not play|won't play|確定缺陣|不會出賽|將缺陣/.test(t)) return "out";
+  if (/doubtful|不太可能/.test(t)) return "doubtful";
+  if (/game-time|gametime|賽前決定|臨場決定/.test(t)) return "gtd";
+  if (/questionable|出賽成疑|成疑/.test(t)) return "questionable";
+  if (/probable|expected to play|will play|大概可以|可望出賽|預計出賽|將出賽|可以出賽/.test(t)) return "probable";
+  return "other";
+}
 function predSnapshot() {
   const D = CUR; if (!D || !EPM) return null;
   const rows = [];
@@ -4000,7 +4012,7 @@ function predSnapshot() {
     const tp = trueProj(x); if (!tp) continue;
     // 第三種：考慮對手的預估（賽程上顯示的「預估 FPTS」：對手防守、兩隊節奏、背靠背）
     const g = (TEAM_GAME[x.proTeamId] || {})[D.period], oppId = g ? (g.homeProTeamId === x.proTeamId ? g.awayProTeamId : g.homeProTeamId) : null, pf = oppId != null ? predFpts(x, ABBR[oppId], ABBR[x.proTeamId], x.games.has(D.period - 1)) : null;
-    rows.push([D.period, x.id, x.name, Math.round(x.proj * 10) / 10, Math.round(tp.mix * 10) / 10, Math.round(tp.w * 100) / 100, null, x.gp || 0, pf ? Math.round(pf.v * 10) / 10 : null, null, x.val != null ? Math.round(x.val * 10) / 10 : null]); // 第 11 欄：每場預估（以前叫即時評分），之後比較誰比較準
+    rows.push([D.period, x.id, x.name, Math.round(x.proj * 10) / 10, Math.round(tp.mix * 10) / 10, Math.round(tp.w * 100) / 100, null, x.gp || 0, pf ? Math.round(pf.v * 10) / 10 : null, null, x.val != null ? Math.round(x.val * 10) / 10 : null, x.injury || "ACTIVE", injWord(x)]); // 第 12、13 欄：當時的傷病狀態和新聞說法（算 DTD 實際出賽率用）；第 11 欄：每場預估（以前叫即時評分），之後比較誰比較準
   }
   return { period: D.period, rows };
 }

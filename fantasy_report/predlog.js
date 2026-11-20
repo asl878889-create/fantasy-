@@ -3,6 +3,7 @@
 //   node fantasy_report/predlog.js --dry      只印出，不寫檔
 // 一筆紀錄：[比賽日, 球員ID, 名字, 原本預估, 混合預估, EPM佔比, 實際(null=還沒打完, "dnp"=沒上場), 當時出賽場數, 考慮對手的預估, 旗標, 每場預估]
 //   每場預估（以前叫即時評分，網頁的 x.val）從 2026-11-20 起才有記錄，比較時只用有這一欄的那批
+//   第 12、13 欄（2026-11-21 起）：當時的傷病狀態（ACTIVE／DAY_TO_DAY…）和新聞說法（probable／questionable／gtd／doubtful／out／other／空字串），累積後算 DTD 和各種說法的實際出賽率
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
