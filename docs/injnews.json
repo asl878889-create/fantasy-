@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20T01:08:03.926Z",
+ "updated": "2026-11-20T13:08:19.932Z",
  "items": {
   "3975": {
    "n": "Stephen Curry",
@@ -38,7 +38,7 @@
   },
   "6589": {
    "n": "Draymond Green",
-   "when": "2026-11-19T18:51Z",
+   "when": "2026-11-20T03:53Z",
    "head": "Green (elbow) is out for Thursday's game against the Grizzlies.",
    "story": "Nick Friedell of The Athletic reported Wednesday that the veteran forward would sit out the second half of this back-to-back set, and now it's official. Al Horford should help pick up the slack for the Warriors on Thursday.",
    "zh": "手肘傷勢，背靠背第二場休息，週四對灰熊確定缺陣"
@@ -63,6 +63,13 @@
    "head": "Prince underwent right knee surgery and is listed as out for Friday's game against the Raptors.",
    "story": "It's unknown when or why Prince underwent knee surgery. He can be considered week-to-week until the Pistons offer an update on his status. The veteran forward's absence shouldn't impact the rotation.",
    "zh": "右膝接受手術，週五對暴龍確定缺陣，回歸時間未定（以週計）"
+  },
+  "2991070": {
+   "n": "Jerami Grant",
+   "when": "2026-11-20T02:08Z",
+   "head": "Grant won't return to Thursday's game against the Warriors due to a left calf injury. He'll finish with three points (1-2 FG, 1-1 3Pt) across five minutes.",
+   "story": "Grant limped to the locker room in the second quarter and was ruled out for the remainder of the contest shortly thereafter. If he's forced to miss additional time, Kris Murray and Olivier-Maxence Prosper would be candidates for increased minutes. Grant's next chance to play will come Saturday at Minnesota.",
+   "zh": "左小腿受傷，週四對勇士比賽中退場，週六對灰狼能否出賽待觀察"
   },
   "2991235": {
    "n": "Steven Adams",
@@ -108,14 +115,14 @@
   },
   "3133628": {
    "n": "Myles Turner",
-   "when": "2026-11-19T19:15Z",
+   "when": "2026-11-20T03:55Z",
    "head": "Turner (shoulder) has been ruled out for Thursday's game against Portland due to a left shoulder contusion,",
    "story": "Turner will miss Thursday's contest after playing 21 minutes against Miami on Wednesday. His absence leaves Milwaukee without its primary rim protector and could create additional frontcourt opportunities for Bobby Portis and the team's reserves. Turner's next opportunity to return will come Saturday against Philadelphia, pending further injury updates",
    "zh": "左肩挫傷，週四對拓荒者確定缺陣，最快週六對七六人復出"
   },
   "3134907": {
    "n": "Kyle Kuzma",
-   "when": "2026-11-19T19:20Z",
+   "when": "2026-11-20T03:55Z",
    "head": "Kuzma (shoulder) has been ruled out for Thursday's game against Portland due to a right shoulder contusion.",
    "story": "Kuzma's absence further depletes Milwaukee's frontcourt, with Myles Turner (shoulder) also sidelined. Bobby Portis could see increased offensive opportunities, while additional minutes may become available to the team's reserve forwards. Kuzma's next opportunity to play comes Saturday against Philadelphia, depending on his recovery.",
    "zh": "右肩挫傷，週四對拓荒者確定缺陣，最快週六對七六人復出"
@@ -190,6 +197,13 @@
    "story": "Isaac's 2026-27 season debut will have to wait, as he's still working his way back from a left knee injury. He should be considered week-to-week until Orlando provides a clear update for his return.",
    "zh": "左膝傷，週一對賽爾提克缺陣，本季還沒出賽，以週為單位觀察，等魔術公布確切回歸時間"
   },
+  "4065732": {
+   "n": "De'Andre Hunter",
+   "when": "2026-11-20T01:21Z",
+   "head": "Hunter (hip) is listed as questionable for Friday's game against the Lakers.",
+   "story": "Hunter has been bothered by left hip soreness. While it kept him off the floor for Sunday's 125-103 loss to the Thunder, he returned for Wednesday's meeting with the Suns. If Hunter can't suit up Friday, it could mean more minutes for Leaky Black and Alex Karaban.",
+   "zh": "左髖痠痛，週五對湖人出賽成疑"
+  },
   "4065733": {
    "n": "Ty Jerome",
    "when": "2026-11-19T19:07Z",
@@ -199,7 +213,7 @@
   },
   "4066211": {
    "n": "Robert Williams III",
-   "when": "2026-11-18T22:58Z",
+   "when": "2026-11-20T03:55Z",
    "head": "Williams (rest) is listed as out for Thursday's game versus the Bucks.",
    "story": "Williams will take the night off Thursday after appearing in Portland's last five contests. He will presumably be back on the floor Saturday against the Knicks. In the meantime, Branden Carlson and Yang Hansen should see more minutes behind Donovan Clingan.",
    "zh": "輪休，週四對公鹿確定缺陣，預計週六對尼克回歸"
@@ -220,10 +234,10 @@
   },
   "4066457": {
    "n": "Austin Reaves",
-   "when": "2026-11-19T01:38Z",
-   "head": "Head coach JJ Redick said Reaves' (heel) pregame workout went \"well,\" but he remains without an official timetable to return, Daniel Starkand of LakersNation.com reports.",
-   "story": "Given that Reaves' workout went \"well\" and the injury has been classified as a \"heel bruise,\" we'd take the \"no timetable\" comment from Redick with a grain of salt. For now, Reaves should be considered questionable for Friday's meeting with the Kings.",
-   "zh": "腳跟挫傷，賽前訓練順利但無明確時間表，週五對國王出賽成疑"
+   "when": "2026-11-20T01:05Z",
+   "head": "Reaves (heel) is listed as out for Friday's game against the Kings.",
+   "story": "Reaves suffered a heel injury during the 123-112 win over the Bucks on Nov. 11 and will now miss his fourth consecutive contest. It appears the 28-year-old is improving, so he should be considered day-to-day. While Reaves remains on the shelf, Quentin Grimes is expected to stay in the starting lineup.",
+   "zh": "腳跟傷勢，週五對國王確定缺陣（連續第四場），傷勢好轉中，逐日觀察"
   },
   "4277961": {
    "n": "Jaren Jackson Jr.",
@@ -294,6 +308,13 @@
    "head": "Maxey (foot) is out for Wednesday's game in Orlando, Ky Carlin of USA Today reports.",
    "story": "Maxey will join Jaylen Brown (hamstring) on the inactive list for Wednesday's game, and it'll be Anfernee Simons and Kentavious Caldwell-Pope starting in their place. For now, Maxey should be considered questionable for Saturday's meeting with the Bucks.",
    "zh": "腳傷，週三作客魔術確定缺陣，週六對公鹿出賽成疑"
+  },
+  "4431679": {
+   "n": "Precious Achiuwa",
+   "when": "2026-11-20T01:22Z",
+   "head": "Achiuwa is doubtful for Friday's game against the Lakers due to a left lower leg bruise.",
+   "story": "Achiuwa sat out Friday against Portland and Sunday against Oklahoma City with the same injury before playing Wednesday. However, he's back on the injury report ahead of Sacramento's upcoming matchup and doesn't appear to be in position to suit up at this point. Dylan Cardwell and Leaky Black would be in line for more opportunities if Achiuwa is ruled out ahead of tipoff.",
+   "zh": "左小腿挫傷，週五對湖人大概無法出賽"
   },
   "4431772": {
    "n": "Myron Gardner",
@@ -430,7 +451,7 @@
   },
   "4600663": {
    "n": "Zach Edey",
-   "when": "2026-11-19T19:09Z",
+   "when": "2026-11-20T03:53Z",
    "head": "Edey (hip) has been ruled out for Thursday's game against the Warriors.",
    "story": "Edey is sitting out the second leg of this back-to-back. If healthy, Isaiah Stewart (illness) would draw the spot start at center in all likelihood.",
    "zh": "髖部傷勢，背靠背第二場休息，週四對勇士確定缺陣"
@@ -444,7 +465,7 @@
   },
   "4683021": {
    "n": "Deni Avdija",
-   "when": "2026-11-20T00:21Z",
+   "when": "2026-11-20T03:55Z",
    "head": "Avdija (foot) is listed as out for Thursday's game against the Bucks.",
    "story": "A foot injury continues to bother Avdija, who will now miss his second consecutive contest. His next opportunity to get back on the court will come Saturday versus the Knicks. In the meantime, Sidy Cissoko is expected to remain in the starting lineup.",
    "zh": "腳部傷勢，週四對公鹿確定缺陣，最快週六對尼克復出"
