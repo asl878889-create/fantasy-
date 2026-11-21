@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-21T13:12:02.938Z",
- "file": "Injury-Report_2026-11-21_08_00AM.pdf",
- "report": "11/21/26 08:00 AM",
+ "updated": "2026-11-21T19:11:21.395Z",
+ "file": "Injury-Report_2026-11-21_02_00PM.pdf",
+ "report": "11/21/26 02:00 PM",
  "items": {
   "ousmane dieng": [
    {
@@ -36,7 +36,7 @@
   "dominick barlow": [
    {
     "n": "Dominick Barlow",
-    "st": "Probable",
+    "st": "Available",
     "why": "Low Back Stress Reaction",
     "gd": "2026-11-21",
     "mu": "MIL@PHI",
@@ -76,7 +76,7 @@
   "tyrese maxey": [
    {
     "n": "Tyrese Maxey",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Right Foot Sprain",
     "gd": "2026-11-21",
     "mu": "MIL@PHI",
@@ -156,7 +156,7 @@
   "og anunoby": [
    {
     "n": "OG Anunoby",
-    "st": "Questionable",
+    "st": "Doubtful",
     "why": "Left Calf Tightness",
     "gd": "2026-11-21",
     "mu": "POR@NYK",
@@ -168,6 +168,16 @@
     "n": "Jordan Clarkson",
     "st": "Out",
     "why": "Right Plantar Fasciitis",
+    "gd": "2026-11-21",
+    "mu": "POR@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "karl anthony towns": [
+   {
+    "n": "Karl-Anthony Towns",
+    "st": "Questionable",
+    "why": "Illness",
     "gd": "2026-11-21",
     "mu": "POR@NYK",
     "tm": "New York Knicks"
@@ -336,7 +346,7 @@
   "ty jerome": [
    {
     "n": "Ty Jerome",
-    "st": "Probable",
+    "st": "Available",
     "why": "Right Hip Impingement",
     "gd": "2026-11-21",
     "mu": "MEM@MIN",
@@ -413,6 +423,16 @@
     "tm": "Minnesota Timberwolves"
    }
   ],
+  "isaiah evans": [
+   {
+    "n": "Isaiah Evans",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-21",
+    "mu": "MEM@MIN",
+    "tm": "Minnesota Timberwolves"
+   }
+  ],
   "rocco zikarsky": [
    {
     "n": "Rocco Zikarsky",
@@ -421,6 +441,76 @@
     "gd": "2026-11-21",
     "mu": "MEM@MIN",
     "tm": "Minnesota Timberwolves"
+   }
+  ],
+  "malik dia": [
+   {
+    "n": "Malik Dia",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
+   }
+  ],
+  "bennedict mathurin": [
+   {
+    "n": "Bennedict Mathurin",
+    "st": "Out",
+    "why": "Left Plantar Fasciitis",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
+   }
+  ],
+  "bryce mcgowens": [
+   {
+    "n": "Bryce McGowens",
+    "st": "Out",
+    "why": "Left Elbow Infection",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
+   }
+  ],
+  "trey murphy": [
+   {
+    "n": "Trey Murphy III",
+    "st": "Out",
+    "why": "Bilateral Patellar Tendinopathy Injury Maintenance",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
+   }
+  ],
+  "dejounte murray": [
+   {
+    "n": "Dejounte Murray",
+    "st": "Out",
+    "why": "Left Ankle Sprain",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
+   }
+  ],
+  "julian reese": [
+   {
+    "n": "Julian Reese",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
+   }
+  ],
+  "trendon watford": [
+   {
+    "n": "Trendon Watford",
+    "st": "Out",
+    "why": "Right Ankle Sprain",
+    "gd": "2026-11-21",
+    "mu": "NOP@SAS",
+    "tm": "New Orleans Pelicans"
    }
   ],
   "maliq brown": [
