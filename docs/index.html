@@ -233,7 +233,6 @@ table.slp { min-width: 720px; font-size: 13px; } table.slp td { vertical-align: 
 .ijsum { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 6px 0 2px; } .ijs { border: 1px solid var(--line); border-radius: 12px; padding: 7px 4px; text-align: center; background: rgba(255,255,255,.025); } .ijs b { display: block; font-size: 20px; line-height: 1.1; font-variant-numeric: tabular-nums; } .ijs i { font-style: normal; font-size: 11px; color: var(--muted); white-space: nowrap; } .ijs.bad b { color: var(--bad); } .ijs.warn b { color: var(--warn); }
 .ijl { display: grid; gap: 5px; } .ijc { border: 1px solid var(--line); border-left-width: 4px; border-radius: 12px; padding: 6px 10px; background: rgba(255,255,255,.025); display: grid; gap: 2px; } .ijc.out { border-left-color: var(--bad); } .ijc.dtd { border-left-color: var(--warn); } .ijc.t-soon { background: color-mix(in srgb, var(--ok) 9%, transparent); border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); }
 .ijt { display: grid; grid-template-columns: 42px 1fr auto; gap: 8px; align-items: center; } .ijc .iname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; } .ijc .iname .pname { font-weight: 800; } .ijb { text-align: right; line-height: 1.15; } .ijb b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; } .ijb i { font-style: normal; font-size: 11px; color: var(--muted); white-space: nowrap; } .t-soon .ijb b { color: var(--ok); } .t-na .ijb b { color: var(--muted); font-size: 15px; }
-.ac2-mate { margin: 6px 0 2px; padding: 6px 10px; border-radius: 8px; background: var(--bad-bg); color: var(--bad); font-size: 13px; line-height: 1.45; font-weight: 600; }
 .inba { display: inline-block; justify-self: start; width: fit-content; font-size: 11.5px; font-weight: 700; padding: 1px 7px; border-radius: 6px; margin: 1px 0; } .inba.ok { background: var(--ok-bg); color: var(--ok); } .inba.mid { background: var(--warn-bg); color: var(--warn); } .inba.out { background: var(--bad-bg); color: var(--bad); }
 .ijc .inote { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ijc .izh { font-size: 13px; line-height: 1.4; } .ijc .iwhen { color: var(--muted); font-size: 11px; } .ijc .injnews { font-size: 12px; line-height: 1.35; } .ijc .ib { font-size: 11px; padding: 1px 0; }
 .ijbar { height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--ink) 12%, transparent); overflow: hidden; } .ijbar span { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--c2, var(--accent))); }
@@ -288,7 +287,7 @@ table.slp { min-width: 720px; font-size: 13px; } table.slp td { vertical-align: 
  .mcol h4 { margin: 0 0 8px; font-size: 13.5px; display: flex; flex-direction: column; } .mcol h4 small { font-weight: 400; opacity: .6; font-size: 11px; } .mcol.R h4 { text-align: right; } .mk { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1px 8px; align-content: start; align-items: baseline; margin-bottom: 9px; font-size: 12.5px; } .mk .pname { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; } .mk b { font-size: 13px; } .mk .sub { grid-column: 1 / -1; font-size: 10.5px; opacity: .8; } .mk i { grid-column: 1 / -1; display: block; height: 5px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; } .mk i u { display: block; height: 100%; background: var(--c1); border-radius: 3px; } .mcol.R .mk i u { background: var(--c2); } .mcol.R .mk { direction: rtl; } .mcol.R .mk > * { direction: ltr; } .mcol.R .mk .pname { text-align: right; } .mk.nogame { opacity: .5; } .mbn { margin: 6px 0 0; font-size: 11px; opacity: .55; line-height: 1.6; display: flex; flex-direction: column; } .mbn span { white-space: nowrap; } .mbn em { font-style: normal; opacity: .7; } .mcol.R .mbn { text-align: right; } .mk .inj { margin-left: 5px; color: var(--bad); font-weight: 700; }
 .mcols { display: grid; gap: 0; margin-top: 10px; } .mpair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
 .pvol .atag { margin-left: 6px; font-size: 11px; vertical-align: 1px; }
-.ac2-bet { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; border: 1px dashed color-mix(in srgb, var(--ok) 45%, transparent); font-size: 12.5px; line-height: 1.6; } .ac2-bet.none { border-color: var(--line); border-style: solid; opacity: .8; } .ac2-bet.ok { border-style: solid; background: color-mix(in srgb, var(--ok) 8%, transparent); } .ac2-bet b { margin-right: 6px; } .ac2-bet .sub { font-size: 11.5px; }
+.ac2-bet { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; border: 1px dashed color-mix(in srgb, var(--ok) 45%, transparent); font-size: 12.5px; line-height: 1.6; } .ac2-bet.none { border-color: var(--line); border-style: solid; opacity: .8; } .ac2-bet.mate { border: 1px solid color-mix(in srgb, var(--bad) 45%, transparent); background: color-mix(in srgb, var(--bad) 8%, transparent); } .ac2-bet.mate > div:first-child b { color: var(--bad); } .ac2-bet.ok { border-style: solid; background: color-mix(in srgb, var(--ok) 8%, transparent); } .ac2-bet b { margin-right: 6px; } .ac2-bet .sub { font-size: 11.5px; }
 .ac2-note { margin: 8px 0 6px; padding: 8px 10px; border-radius: 10px; background: color-mix(in srgb, var(--accent, #4aa3ff) 9%, transparent); border-left: 3px solid var(--accent, #4aa3ff); font-size: 13px; line-height: 1.55; } .ac2-note b { margin-right: 6px; font-size: 12px; opacity: .85; } .ac2-note small { display: block; margin-top: 2px; opacity: .55; font-size: 11px; }
 .rotbox { margin-top: 12px; border: 1px solid color-mix(in srgb, var(--obs, #ff8a1f) 45%, transparent); border-radius: 12px; padding: 10px 12px; background: color-mix(in srgb, var(--obs, #ff8a1f) 6%, transparent); }
 .rothd { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; align-items: baseline; } .rothd > b { font-size: 15px; } .rothd span { font-size: 13px; }
@@ -2933,18 +2932,19 @@ function upsideOf(f, D, PD) {
   if (!soon && f.avg && f.min && mnow && mnow - f.min >= 3) c.push([(f.avg / f.min) * mnow, `上場時間變多（今年 ${Math.round(f.min)} → 最近 ${Math.round(mnow)} 分鐘），照現在的分鐘數打`, 2]);
   if (f.lastYear != null && f.gpLY >= 20 && f.lastYear - f.avg >= 4 && !(f.minLY && mnow && f.minLY - mnow >= 3)) c.push([f.lastYear, `回到去年的水準（去年 ${f1(f.lastYear)}，上場時間沒有變少）`, 1]);
   const best = c.filter((x) => x[0] >= (f.val || 0) + 2).sort((a, b) => b[0] - a[0])[0];
-  return best ? { v: best[0], why: best[1], firm: best[2] === 2 } : { none: soon ? mateWhy(f, mt, D) : noBetWhy(f, c, mnow) };
+  return best ? { v: best[0], why: best[1], firm: best[2] === 2 } : soon ? { none: mateWhy(f, mt, D), mate: true } : { none: noBetWhy(f, c, mnow) };
 }
 const mateDay = (mt, D) => { if (mt.days <= 0) return "今天"; const t = addDays(D.today, mt.days); return `${t.getUTCMonth() + 1}/${t.getUTCDate()}`; };
 function mateWhy(f, mt, D) { // 沒有可賭的空間：缺陣的隊友快回來了
   const kn = mt.k.name.split(" ").pop();
   return `最近變強主要靠 ${kn} 缺陣，他預計 ${mateDay(mt, D)} 就回來${mt.ww ? "" : `（他在時每場 ${f1(mt.vW)}）`}`;
 }
-// 補強建議卡：缺陣的隊友什麼時候回來、回來後怎麼算（每週多拿已經照這個算）；pbpstats 加成很小（不到 1.5）就不提
-function mateHtml(f, D) {
+// 補強建議卡：缺陣的隊友什麼時候回來、回來後怎麼算（跟「賭中的話」同一種框）；pbpstats 加成很小（不到 1.5）就不提
+//  noBet：因為隊友快回來所以沒有可賭的空間，併在這個框裡講（不再另外一個框重複）
+function mateHtml(f, D, noBet) {
   const mt = mateOf(f, D); if (!mateBig(f, mt) || mt.days > 30) return "";
-  const kn = mt.k.name.split(" ").pop(), me = f.name.split(" ").pop();
-  return `<div class="ac2-mate">⚠ ${esc(kn)} 預計 ${mateDay(mt, D)} 回來：${mt.ww ? `那天起 ${esc(me)} 每場預估從 ${f1(f.val)} 降到約 ${f1(mt.after)}` : `他在時 ${esc(me)} 每場 ${f1(mt.vW)}（${mt.nW} 場），那天起照每場約 ${f1(mt.after)} 算`}，上面的每週差距已經算進去</div>`;
+  const kn = mt.k.name.split(" ").pop();
+  return `<div class="ac2-bet mate"><div><b>⚠ 隊友回來</b>${esc(kn)} 預計 ${mateDay(mt, D)}</div><div><b>回來後</b>${mt.ww ? `每場預估 ${f1(f.val)} → 約 ${f1(mt.after)}` : `每場約 ${f1(mt.after)}<span class="sub">（他在時 ${f1(mt.vW)}，${mt.nW} 場）</span>`}</div><div class="sub">每週差距已經照這個算${noBet ? `；最近變強靠 ${esc(kn)} 缺陣，沒有可賭的空間` : ""}</div></div>`;
 }
 function noBetWhy(f, c, mnow) { // 沒有可賭的空間：說清楚為什麼
   const m = (v) => Math.round(v);
@@ -2956,7 +2956,7 @@ function noBetWhy(f, c, mnow) { // 沒有可賭的空間：說清楚為什麼
 }
 function betOf(D, ros, f, d, PD) { // { up: 賭中每週, base: 沒中每週, u: upsideOf }
   const u = upsideOf(f, D, PD); if (!u || !d) return null;
-  if (u.none) return { none: u.none };
+  if (u.none) return { none: u.none, mate: !!u.mate };
   const fx = Object.assign(Object.create(f), { __fix: u.v, id: f.id + "u" });
   const up = simSwapGain(D, ros, d, fx), base = simSwapGain(D, ros, d, f);
   if (up == null || base == null) return null;
@@ -4340,7 +4340,7 @@ function addCards(D, A) {
     return `<div class="pt-card ac2${first ? " best" : ""}">
       <div class="pt-top"><div><span class="pname" data-pid="${f.id}">${esc(f.name)}</span><div class="sub">${esc(pos(f))} · ${esc(f.team)} · 持有 ${f.own == null ? "-" : f1(f.own) + "%"}</div></div><button type="button" class="tocmp sm" data-cmp="${f.id}">⚖ 比較</button></div>
       <div class="ac2-rank"><span class="rkb${first ? " first" : ""}">${!ft ? "觀察名單" : i === 0 ? "★ 最推薦" : "推薦 " + (i + 1)}</span>${ft ? `<b class="ac2-gain">每週多拿約 ${r0(ft.gain)} fpts</b><span class="sub">換掉 ${esc(ft.d.name)}（每場預估高 ${f1(ft.dv)}）</span>` : wgain.has(f.id) ? `<b class="ac2-gain ${sgnCls(wgain.get(f.id))}">換掉 ${esc(worst.name.replace(/^(\S)\S*\s+/, "$1. "))}：每週${Math.round(wgain.get(f.id)) > 0 ? `多拿約 ${r0(wgain.get(f.id))}` : Math.round(wgain.get(f.id)) < 0 ? `少拿約 ${-r0(wgain.get(f.id))}` : "差不多"} fpts</b>` : ""}</div>
-      ${mateHtml(f, D)}${betHtml(bet, pd)}${pickNoteHtml(D, f, pd)}<div class="atags">${bet && bet.ok ? '<span class="atag ok">可以賭</span>' : ""}${volTag(f.id)}${PD.tags(f.id)}${st ? `<span class="atag ${st[0]}">${st[1]}</span>` : ""}${role ? `<span class="atag ${role[0]}">${role[1]}</span>` : ""}<span class="atag ${f.status === "WAIVERS" ? "wv2" : "fa2"}">${f.status === "WAIVERS" ? "Waiver" : "FA"}</span></div>
+      ${mateHtml(f, D, bet && bet.mate)}${bet && bet.mate ? "" : betHtml(bet, pd)}${pickNoteHtml(D, f, pd)}<div class="atags">${bet && bet.ok ? '<span class="atag ok">可以賭</span>' : ""}${volTag(f.id)}${PD.tags(f.id)}${st ? `<span class="atag ${st[0]}">${st[1]}</span>` : ""}${role ? `<span class="atag ${role[0]}">${role[1]}</span>` : ""}<span class="atag ${f.status === "WAIVERS" ? "wv2" : "fa2"}">${f.status === "WAIVERS" ? "Waiver" : "FA"}</span></div>
       <div class="ac2-stats"><span><b>${f1(f.avg)}</b>今年</span><span><b>${f1(f.last7)}</b>近 7 天</span><span><b>${f1(f.lastYear)}</b>去年</span><span><b>${days.length}</b>本週場</span><span><b>${nw2}</b>下週場</span></div>
       <ul class="pt-why">${[...PD.why(f.id), ...why(f)].map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`;
   };
@@ -4359,7 +4359,8 @@ function addCards(D, A) {
     ${swWrap(list.map(card), nw("cmpcorner"))}
     ${(() => { const inList = new Set(list.map((f) => f.id)), fa = new Map(D.fas.map((f) => [f.id, f])), mine = new Map((D.rosters[D.me.id] || []).map((x) => [x.id, x]));
       const ids = [...new Set([...PD.S.keys(), ...Object.keys(PD.B).map(Number), ...PD.W.keys(), ...PD.LU.keys()])].filter((id) => fa.has(id) && !inList.has(id));
-      const val = (id) => Math.max(PD.S.get(id) ? PD.S.get(id).vWo : 0, PD.B[id] ? PD.B[id].rec.v : 0, PD.wwEst(id), PD.LU.has(id) ? fa.get(id).last7 || 0 : 0);
+      const soonOf = (id) => { const mt = mateOf(fa.get(id), D); return mateBig(fa.get(id), mt) && mt.days <= 7 ? mt : null; };
+      const val = (id) => { const mt = soonOf(id); return mt ? mt.after : Math.max(PD.S.get(id) ? PD.S.get(id).vWo : 0, PD.B[id] ? PD.B[id].rec.v : 0, PD.wwEst(id), PD.LU.has(id) ? fa.get(id).last7 || 0 : 0); };
       const exIds = ids.sort((a, b) => val(b) - val(a)).slice(0, 8);
       const exCard = (id) => { const f = fa.get(id), b = PD.B[id], s0 = PD.S.get(id), rec = b && (!s0 || b.rec.v >= s0.vWo);
         const bse = posFull(f, D) ? dropFor(f, D) : A.drop || A.worst, eg = bse ? sg(bse, f) : null; // 換掉你隊上最弱的人，剩下球季每週差幾 fpts
@@ -4367,9 +4368,9 @@ function addCards(D, A) {
         if (bse) PICKS.push({ f, d: bse, kind: "潛力股", gain: eg, bet });
         return `<div class="pt-card ac2">
       <div class="pt-top"><div><span class="pname" data-pid="${f.id}">${esc(f.name)}</span><div class="sub">${esc(pos(f))} · ${esc(f.team)} · 持有 ${f.own == null ? "-" : f1(f.own) + "%"}</div></div><button type="button" class="tocmp sm" data-cmp="${f.id}">⚖ 比較</button></div>
-      ${eg != null ? `<b class="ac2-gain ${sgnCls(eg)}">換掉 ${esc(bse.name.replace(/^(\S)\S*\s+/, "$1. "))}：每週${gainTxt(eg)} fpts</b>` : ""}${mateHtml(f, D)}${betHtml(bet, bse)}${bse ? pickNoteHtml(D, f, bse) : ""}
+      ${eg != null ? `<b class="ac2-gain ${sgnCls(eg)}">換掉 ${esc(bse.name.replace(/^(\S)\S*\s+/, "$1. "))}：每週${gainTxt(eg)} fpts</b>` : ""}${mateHtml(f, D, bet && bet.mate)}${bet && bet.mate ? "" : betHtml(bet, bse)}${bse ? pickNoteHtml(D, f, bse) : ""}
       <div class="atags">${eg != null && eg >= 3 ? `<span class="atag ok">值得撿</span>` : bet && bet.ok ? '<span class="atag ok">可以賭</span>' : ""}${volTag(id)}${PD.tags(id)}<span class="atag ${f.status === "WAIVERS" ? "wv2" : "fa2"}">${f.status === "WAIVERS" ? "Waiver" : "FA"}</span></div>
-      <div class="ac2-stats"><span><b class="up">${f1(val(id))}</b>${rec ? "最近 5 場" : s0 || PD.W.has(id) ? "隊友缺陣時" : "近 7 天"}</span>${b ? `<span><b>${f1(b.pri.v)}</b>之前</span>` : ""}<span><b>${f1(f.avg)}</b>今年</span><span><b>${f1(f.last7)}</b>近 7 天</span></div>
+      <div class="ac2-stats">${((mt) => (mt ? `<span><b>${f1(mt.after)}</b>${esc(mt.k.name.split(" ").pop())} 回來後</span>` : `<span><b class="up">${f1(val(id))}</b>${rec ? "最近 5 場" : s0 || PD.W.has(id) ? "隊友缺陣時" : "近 7 天"}</span>`))(soonOf(id))}${b ? `<span><b>${f1(b.pri.v)}</b>之前</span>` : ""}<span><b>${f1(f.avg)}</b>今年</span><span><b>${f1(f.last7)}</b>近 7 天</span></div>
       <ul class="pt-why">${PD.why(id).map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`; };
       const extra = exIds.length ? swWrap(exIds.map(exCard)) : "";
       const mineRows = Object.entries(PD.B).filter(([id]) => mine.has(Number(id))).map(([id, b]) => { const x = mine.get(Number(id));
