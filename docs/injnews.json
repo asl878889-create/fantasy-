@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-21T13:08:29.292Z",
+ "updated": "2026-11-22T01:08:08.613Z",
  "items": {
   "3975": {
    "n": "Stephen Curry",
@@ -59,10 +59,17 @@
   },
   "2530530": {
    "n": "T.J. McConnell",
-   "when": "2026-11-21T04:58Z",
-   "head": "Rick Carlisle revealed during his postgame interview that McConnell exited Friday's 128-119 loss with a left hamstring issue, Tony East of Forbes.com reports.",
-   "story": "McConnell missed the beginning of the season recovering from a right hamstring strain, but now he's having trouble in the other hamstring. Carlisle would not speculate on the severity of McConnell's injury, but with Sunday's game in New York being the first of a back-to-back set, we wouldn't expect to see McConnell in uniform for that one. Quenton Jackson will see a boost if McConnell needs to miss time.",
-   "zh": "左大腿後肌不適，週五對溜馬時提前離場，傷勢嚴重程度未明，週日對尼克的背靠背首戰大概不會出賽"
+   "when": "2026-11-21T22:29Z",
+   "head": "McConnell (hamstring) is listed as out for Sunday's game in New York.",
+   "story": "McConnell missed the Pacers' first nine games of the 2026-27 campaign because of a right hamstring issue. However, he exited Friday's 128-119 loss to the Cavaliers due to left hamstring soreness. McConnell will have another opportunity to play Monday versus Oklahoma City, but for now, he should be considered day-to-day. In the meantime, Quenton Jackson is in line for more minutes behind Andrew Nembhard.",
+   "zh": "左大腿後肌（膝窩肌）不適，週日對尼克確定缺陣，週一對雷霆有機會回來，目前day-to-day"
+  },
+  "2595516": {
+   "n": "Norman Powell",
+   "when": "2026-11-22T00:11Z",
+   "head": "Powell is questionable for Sunday's game against the Nuggets due to a right hamstring strain.",
+   "story": "Powell has been one of the few bright spots for the Bulls this season, averaging 20.8 points, 2.8 rebounds and 2.4 assists per game in 13 starts. If he's ruled out, it'd be a huge blow for an anemic Bulls offense. Buddy Hield and Tre Jones could see more playing time if Powell has to miss time.",
+   "zh": "右大腿後肌拉傷，週日對金塊出賽成疑"
   },
   "2990962": {
    "n": "Taurean Prince",
@@ -80,10 +87,17 @@
   },
   "2991350": {
    "n": "Alex Caruso",
-   "when": "2026-11-20T23:24Z",
-   "head": "Caruso (hip) is listed as out for Friday's game against the Pelicans.",
-   "story": "Caruso exited Wednesday's 117-112 loss to the Hawks because of a hip issue. He will now miss his fourth game of the 2026-27 campaign, with his next opportunity to play coming Sunday in Miami. With Caruso sidelined, it could mean more minutes for Bennett Stirtz and Nique Clifford.",
-   "zh": "髖部傷勢，週五對鵜鶘確定缺陣；下次可出賽為週日對熱火"
+   "when": "2026-11-21T22:29Z",
+   "head": "Caruso (hip) won't play Sunday against the Heat.",
+   "story": "Sunday will mark Caruso's second straight game on the sidelines, but maybe he'll be able to get back out there for Monday's meeting in Indiana. Bennett Stirtz and Nique Clifford will help pick up the slack in Caruso's absence.",
+   "zh": "髖部傷勢，週日對熱火確定缺陣，週一對溜馬有機會回來"
+  },
+  "3032977": {
+   "n": "Giannis Antetokounmpo",
+   "when": "2026-11-21T20:33Z",
+   "head": "Antetokounmpo (groin) is listed as questionable for Sunday's game against Oklahoma City, Ira Winderman of the South Florida Sun Sentinel reports.",
+   "story": "Antetokounmpo previously dealt with a wrist injury in November, and he's now working through a groin issue that puts his status for Sunday's game up in the air. He has yet to miss a game this season, but if he's not cleared to play against Oklahoma City, then Andrew Wiggins and Bobby Portis would be the top candidates to enter Miami's starting lineup.",
+   "zh": "鼠蹊部傷勢，週日對雷霆出賽成疑，今季尚未缺賽"
   },
   "3032979": {
    "n": "Dennis Schroder",
@@ -94,10 +108,10 @@
   },
   "3078576": {
    "n": "Derrick White",
-   "when": "2026-11-21T01:00Z",
-   "head": "White (shoulder) is questionable to play in Saturday's game against Sacramento.",
-   "story": "White is dealing with a left AC joint contusion, and the ailment could force him to miss his first outing of the season. Across 15 games in 2026-27, White is averaging 12.7 points, 3.0 rebounds, 5.0 assists, 1.1 steals, 0.7 blocks and 1.7 three-pointers in 29.9 minutes. If he's unable to play, Payton Pritchard may join the starting lineup, while Hugo Gonzalez and Baylor Scheierman should see a bump in minutes off the bench.",
-   "zh": "左肩鎖關節挫傷，週六對國王出賽成疑，若缺陣將是本季首度"
+   "when": "2026-11-21T20:53Z",
+   "head": "White (shoulder) has been ruled out for Saturday's game against Sacramento.",
+   "story": "White drew the questionable tag for Saturday's game due to left AC joint sprain in his shoulder. The veteran guard will be in street clothes for the first leg of the Celtics' back-to-back set, but he could make his return Sunday against the Warriors. With Jayson Tatum (rest) also out, Payton Pritchard and Paul George will carry the workload for the Celtics, and there will be more opportunities for the likes of Sam Hauser, Hugo Gonzalez, Baylor Scheierman and Jordan Walsh.",
+   "zh": "左肩AC關節扭傷，週六對國王確定缺陣，週日對勇士有機會回來"
   },
   "3102529": {
    "n": "Clint Capela",
@@ -122,17 +136,31 @@
   },
   "3135045": {
    "n": "Grayson Allen",
-   "when": "2026-11-19T22:02Z",
+   "when": "2026-11-21T14:49Z",
    "head": "Allen (concussion) has been ruled out for Friday's game against Atlanta.",
    "story": "Allen is currently dealing with concussion-like symptoms and is in line for a second straight absence. Sion James and Royce O'Neale should continue to see an uptick in playing time until Allen is cleared to return.",
    "zh": "腦震盪，週五對老鷹確定缺陣，需通過檢查才能回歸"
   },
+  "3136195": {
+   "n": "Karl-Anthony Towns",
+   "when": "2026-11-21T22:51Z",
+   "head": "Towns (illness) won't play in Saturday's game versus the Trail Blazers.",
+   "story": "Towns was initially listed as questionable. However, he has since been ruled out, marking his first absence of the 2026-27 campaign. Towns' next opportunity to play will come Sunday against Indiana. In the meantime, Andre Drummond is in line to start.",
+   "zh": "生病，週六對拓荒者確定缺陣（本季首次缺賽），週日對溜馬有機會回來"
+  },
   "3146557": {
    "n": "Jock Landale",
-   "when": "2026-11-19T22:07Z",
-   "head": "Landale (hip) won't play in Friday's game against the Hornets, Brad Rowland of the Locked On Podcast Network reports.",
-   "story": "The big man's next chance to play comes Sunday against the Pistons. Zuby Ejiofor should remain in the rotation as the No. 2 center until Landale returns.",
-   "zh": "髖部傷勢，週五對黃蜂確定缺陣，最快週日對活塞復出"
+   "when": "2026-11-21T22:12Z",
+   "head": "Landale (hip) won't play Sunday against the Pistons.",
+   "story": "This will be Landale's fourth consecutive game on the inactive list. His next chance to play will come Friday in Boston.",
+   "zh": "髖部傷勢，週日對活塞確定缺陣（連續第四場），下週五在波士頓才有機會回來"
+  },
+  "3149673": {
+   "n": "Pascal Siakam",
+   "when": "2026-11-21T22:19Z",
+   "head": "Siakam (hip) is listed as questionable for Sunday's game against New York.",
+   "story": "Siakam has only missed one game this season, but he's in danger of sitting out Sunday due to left hip soreness. If the 32-year-old can't suit up versus the Knicks, Obi Toppin may move into the starting lineup.",
+   "zh": "左髖痠痛，週日對尼克出賽成疑"
   },
   "3157465": {
    "n": "Duncan Robinson",
@@ -185,35 +213,28 @@
   },
   "3934719": {
    "n": "OG Anunoby",
-   "when": "2026-11-20T22:10Z",
-   "head": "Anunoby (calf) is questionable for Saturday's game against Portland.",
-   "story": "Anunoby is trying to avoid missing his first contest of the season. if the veteran forward is unable to suit up, Landry Shamet stands out as the most likely choice to enter the Knicks's starting lineup Saturday.",
-   "zh": "小腿傷勢，週六對拓荒者出賽成疑，力拚不缺席"
+   "when": "2026-11-21T21:49Z",
+   "head": "Anunoby (calf) has been ruled out for Saturday's game against the Trail Blazers.",
+   "story": "Anunoby will miss his first game of the 2026-27 regular season due to left calf tightness, although he could be back on the floor for the second leg of the Knicks' back-to-back set against the Pacers on Sunday. Landry Shamet and Miles McBride are both in line for elevated roles in Anunoby's absence.",
+   "zh": "左小腿緊繃，週六對拓荒者確定缺陣（本季首次缺賽），週日對溜馬有機會回來"
   },
   "4065648": {
    "n": "Jayson Tatum",
-   "when": "2026-11-21T01:07Z",
-   "head": "Tatum (rest) is listed as questionable for Saturday's game against Sacramento.",
-   "story": "Tatum might not play Saturday against the Kings, the first game of a back-to-back. If he doesn't suit up, it could result in more work for Luka Garza, Sam Hauser and Jordan Walsh.",
-   "zh": "休息日管理，週六對國王出賽成疑（背靠背首戰）"
+   "when": "2026-11-21T20:51Z",
+   "head": "Tatum (rest) has been ruled out for Saturday's game against the Kings.",
+   "story": "Tatum will be rested for the first leg of the Celtics' back-to-back set, so he should be back on the floor for Sunday's game against the Warriors. With both Tatum and Derrick White (shoulder) sidelined, the Celtics will rely more heavily on Paul George, Payton Pritchard, Baylor Scheierman, Hugo Gonzalez and Sam Hauser to carry the scoring load against Sacramento.",
+   "zh": "輪休，週六對國王確定缺陣，週日對勇士預計回來"
   },
   "4065654": {
    "n": "Jonathan Isaac",
-   "when": "2026-11-15T18:22Z",
-   "head": "Isaac (knee) has been ruled out for Monday's game against the Celtics.",
-   "story": "Isaac's 2026-27 season debut will have to wait, as he's still working his way back from a left knee injury. He should be considered week-to-week until Orlando provides a clear update for his return.",
-   "zh": "左膝傷，週一對賽爾提克缺陣，本季還沒出賽，以週為單位觀察，等魔術公布確切回歸時間"
-  },
-  "4065733": {
-   "n": "Ty Jerome",
-   "when": "2026-11-20T23:11Z",
-   "head": "Jerome (hip) is probable for Saturday's game in Minnesota.",
-   "story": "Jerome is set to return from a three-game layoff Saturday, which will likely shift Cam Spencer back to the second unit. Jerome has gotten off to a hot start this season, averaging 25.4 points, 5.3 assists and 2.5 triples per contest on 48.5 percent shooting from the field and 90.2 percent at the line.",
-   "zh": "髖部傷勢，週六對灰狼大概可以出賽，結束三場缺陣"
+   "when": "2026-11-21T21:09Z",
+   "head": "Isaac (knee) is out for Sunday's game against the Wizards.",
+   "story": "Isaac continues to deal with a knee injury that has kept him out of action for the entire 2026-27 season. He should continue to be considered week to week until the Magic offer an update on his recovery process.",
+   "zh": "膝傷，週日對巫師確定缺陣，整季未出賽，視為週計傷兵，等待魔術更新"
   },
   "4066218": {
    "n": "Grant Williams",
-   "when": "2026-11-19T22:21Z",
+   "when": "2026-11-21T14:49Z",
    "head": "Williams (hamstring) is listed as out for Friday's game versus the Hawks.",
    "story": "Williams started in Tuesday's 118-114 loss to the Lakers, but he will sit out Friday to rest. With Grayson Allen (concussion) also sidelined, Royce O'Neale could find his way into the starting lineup.",
    "zh": "腿後肌傷勢，週五對老鷹確定缺陣（休息）"
@@ -239,12 +260,19 @@
    "story": "Jackson sustained the injury early in Monday's loss to Memphis, and he's now expected to miss at least a month and a half of action. The star big man's absence creates a major void in the Utah lineup, one that is likely to be filled by a timeshare of Jaxson Hayes (shoulder), Kyle Filipowski and Mo Bamba. The Jazz could also shift Lauri Markkanen (wrist), when healthy, to the center spot at times, perhaps allowing Ace Bailey to spend more time at power forward.",
    "zh": "右膝 MCL 撕裂，預計缺陣 6 到 8 週。"
   },
+  "4278073": {
+   "n": "Shai Gilgeous-Alexander",
+   "when": "2026-11-21T22:45Z",
+   "head": "Gilgeous-Alexander (back/neck) is listed as questionable for Sunday's game versus Miami.",
+   "story": "After scoring 40 points in Friday's 126-120 win over the Pelicans, Gilgeous-Alexander could miss his first game of the 2026-27 campaign due to back and neck issues. With Nikola Topic (hip), Alex Caruso (hip) and Cason Wallace (shoulder) all unavailable, Bennett Stirtz may be needed in the starting lineup if Gilgeous-Alexander is ruled out Sunday.",
+   "zh": "背部／頸部不適，週日對熱火出賽成疑，可能本季首次缺賽"
+  },
   "4278078": {
    "n": "P.J. Washington",
-   "when": "2026-11-20T22:40Z",
-   "head": "Washington (shoulder) is listed as questionable for Saturday's game versus the Clippers.",
-   "story": "Washington has had a productive 2026-27 campaign thus far, averaging 14.0 points, 6.7 rebounds, 1.3 assists and 1.1 blocks over 30.8 minutes per outing. He has also appeared in all 15 of the Mavericks' regular-season games, though he is in danger of missing Saturday's meeting with the Clippers. If Washington gets ruled out, more minutes should open up for Zaccharie Risacher and Naji Marshall.",
-   "zh": "肩傷，週六對快艇出賽成疑"
+   "when": "2026-11-21T23:14Z",
+   "head": "Washington (illness/shoulder) is listed as out for Saturday's game against the Clippers.",
+   "story": "Washington was initially listed on the injury report due to a shoulder issue. Since then, he developed an illness and was downgraded to doubtful. Washington will now miss his first game of the 2026-27 campaign, with his next opportunity to play coming Sunday in Utah. In the meantime, Naji Marshall and Zaccharie Risacher are candidates for more minutes.",
+   "zh": "生病／肩傷，週六對快艇確定缺陣，週日在猶他有機會回來"
   },
   "4279888": {
    "n": "Ja Morant",
@@ -253,12 +281,26 @@
    "story": "Morant was initially given a four-week timetable after he suffered a Grade 2 left hamstring strain on Oct. 30. It sounds like he's making solid progress, though it would be surprising to see him beat that timetable given the tricky nature of hamstring injuries. Scoot Henderson will continue to start in his absence and there will be more minutes available for Jrue Holiday.",
    "zh": "左大腿後肌 Grade 2 拉傷，醫生看法正面，教練說可能不用缺原本預估的 4 週那麼久。"
   },
+  "4351852": {
+   "n": "Mitchell Robinson",
+   "when": "2026-11-21T20:55Z",
+   "head": "Robinson (illness) has been ruled out for Saturday's game against the Kings, Keith Smith of Spotrac.com reports.",
+   "story": "Robinson is under the weather and will not play in the front end of Boston's back-to-back set, but he could be available for Sunday night's game against the Warriors. With Robinson sidelined, Luka Garza and Chris Cenac should both see a bump in minutes behind starting center Neemias Queta.",
+   "zh": "生病，週六對國王確定缺陣，週日對勇士有機會回來"
+  },
   "4395625": {
    "n": "RJ Barrett",
    "when": "2026-11-19T21:13Z",
    "head": "Barrett has been diagnosed with a right hamstring strain and will be re-evaluated in two weeks, Brett Siegel of ClutchPoints.com reports.",
    "story": "Based on his re-evaluation timeline, Barrett likely won't return to game action until mid-December at the earliest. Jamison Battle, Allen Graves and Jamal Shead are candidates for increased playing time in Barrett's absence, especially while Kawhi Leonard (knee) is also sidelined.",
    "zh": "右腿後肌拉傷，兩週後再評估，最快12月中旬回歸"
+  },
+  "4395628": {
+   "n": "Zion Williamson",
+   "when": "2026-11-22T00:39Z",
+   "head": "Williamson is out for Saturday's game against the Spurs due to a left thigh contusion.",
+   "story": "Williamson won't suit up Saturday on the second leg of this back-to-back set. Derik Queen will start in his place alongside Yves Missi in the frontcourt. This will be Williamson's second absence this season. The 26-year-old is averaging 21.7 points, 5.4 rebounds, 2.8 assists and 1.8 steals across 32.4 minutes per outing in 16 regular-season games.",
+   "zh": "左大腿挫傷，週六對馬刺確定缺陣（本季第二次缺賽）"
   },
   "4396818": {
    "n": "Jordan Miller",
@@ -283,38 +325,38 @@
   },
   "4397189": {
    "n": "Jalen Smith",
-   "when": "2026-11-20T23:19Z",
+   "when": "2026-11-21T14:54Z",
    "head": "Smith (illness) is out for Friday's game against the Wizards, Joel Lorenzi of The Athletic reports.",
    "story": "With Smith unavailable after being downgraded to questionable earlier Friday, Chicago will need to cover his center minutes elsewhere. His absence opens up added frontcourt work most prominently for Zach Collins and Nic Claxton, the latter of whom is the likelier candidate to start at center.",
    "zh": "生病，週五對巫師確定缺陣"
   },
+  "4397688": {
+   "n": "Trey Murphy III",
+   "when": "2026-11-21T18:22Z",
+   "head": "Murphy (knee) has been ruled out for Saturday's game against the Spurs.",
+   "story": "Murphy missed six consecutive games due to bilateral patellar tendinopathy before returning for Friday's game against the Thunder, when he played 29 minutes and finished with 17 points, four rebounds, one assist, two steals and one block in a 126-120 loss for the Pelicans. He'll sit for the second leg of a back-to-back set, which means more minutes will be available for Jordan Poole, Herbert Jones and Derik Queen. Murphy's next opportunity to play is Monday against the Suns.",
+   "zh": "雙膝髕骨肌腱病變，週六對馬刺確定缺陣（背靠背第二戰），週一對太陽有機會回來"
+  },
   "4431675": {
    "n": "Trendon Watford",
-   "when": "2026-11-19T21:09Z",
-   "head": "Watford (ankle) has been ruled out for Friday's game against Oklahoma City.",
-   "story": "Watford will miss a seventh consecutive contest due to a right ankle sprain. He remains without a definitive return timetable.",
-   "zh": "右腳踝扭傷，週五對雷霆確定缺陣（連續第七場），回歸時間未定"
-  },
-  "4431678": {
-   "n": "Tyrese Maxey",
-   "when": "2026-11-20T22:07Z",
-   "head": "Maxey (foot) is questionable for Saturday's game against the Bucks.",
-   "story": "Maxey sat out Wednesday's 121-116 win over the Magic, but he was a full participant at Friday's practice, so he's trending in the right direction. If Maxey is cleared to return, Anfernee Simons would likely head back to the second unit and VJ Edgecombe's usage rate would dip.",
-   "zh": "腳傷，週六對公鹿出賽成疑，週五完整參加練習，狀況好轉"
+   "when": "2026-11-21T18:21Z",
+   "head": "Watford (ankle) is out for Saturday's game against the Spurs.",
+   "story": "Watford can be considered week-to-week at this point until the Pelicans offer an update on his recovery. He hasn't played since Nov. 8 and is averaging just 7.2 points and 3.5 boards per game in his six appearances off the bench.",
+   "zh": "腳踝傷勢，週六對馬刺確定缺陣，視為週計傷兵，11月8日後未出賽"
   },
   "4431679": {
    "n": "Precious Achiuwa",
-   "when": "2026-11-20T21:21Z",
-   "head": "Achiuwa (lower leg) has been ruled out for Friday's game against the Lakers.",
-   "story": "Achiuwa will miss the front end of this back-to-back set due to a lower-leg contusion, and his next chance to play will come against Boston on Saturday. With the 27-year-old sidelined, Dylan Cardwell and Alex Karaban are candidates for increased playing time.",
-   "zh": "小腿挫傷，週五對湖人確定缺陣；下次可出賽為週六對塞爾提克"
+   "when": "2026-11-21T21:19Z",
+   "head": "Achiuwa (lower leg) is questionable for Saturday's game against the Celtics.",
+   "story": "Achiuwa has missed three of the Kings' last four games while recovering from a left lower leg contusion, but there's a chance that the veteran forward is available for Saturday's contest. If he's cleared to play, then Dylan Cardwell would likely see a drop in playing time.",
+   "zh": "左小腿挫傷，週六對賽爾提克出賽成疑"
   },
   "4431772": {
    "n": "Myron Gardner",
-   "when": "2026-11-19T14:45Z",
-   "head": "Gardner (hamstring) is out for Wednesday's game against the Bucks.",
-   "story": "Gardner was already in line to hit the bench in Pelle Larsson's (illness) return. He'll have some extra time to recover ahead of Sunday's showdown with the Thunder.",
-   "zh": "腿後肌傷勢，週三對公鹿確定缺陣，預計週日對雷霆回歸"
+   "when": "2026-11-21T20:35Z",
+   "head": "Gardner (hamstring) is probable for Sunday's game against the Thunder.",
+   "story": "The probable tag suggests Gardner is on the verge of returning to the hardwood after a one-game absence due to injury. He's been in and out of the starting five, but he started his last three games before missing Wednesday's win over the Bucks. He's averaging 3.0 points, 2.3 rebounds and 1.1 assists per game this season, so even if he's cleared to play Sunday, he shouldn't carry a ton of fantasy appeal.",
+   "zh": "大腿後肌不適，週日對雷霆大概可以出賽"
   },
   "4431785": {
    "n": "Scotty Pippen Jr.",
@@ -329,6 +371,13 @@
    "head": "Mobley will receive treatment and participate in rehab after the team confirmed a diagnosis of a right great toe sprain, and he'll be re-evaluated in the next 7-to-10 days.",
    "story": "Mobley is set to miss his third straight game Monday since suffering the injury, and he's slated to miss at least the next week while on the mend. The Cavs should have a better idea on when he'll return to the court as he begins to progress through the treatment and rehab phase.",
    "zh": "右腳大拇趾扭傷，7至10天後重新評估，至少再缺一週"
+  },
+  "4432166": {
+   "n": "Cade Cunningham",
+   "when": "2026-11-21T22:23Z",
+   "head": "Cunningham (knee) is probable to play Sunday in Atlanta.",
+   "story": "Cunningham is dealing with some minor soreness in his right knee, but he's planning to play through it. Cunningham is averaging 25.6 points, 5.1 rebounds, 7.9 assists, 2.0 triples, 1.4 steals and 0.9 blocks per game this season.",
+   "zh": "右膝輕微痠痛，週日在亞特蘭大大概可以出賽，預計帶傷上陣"
   },
   "4432171": {
    "n": "Moses Moody",
@@ -371,6 +420,13 @@
    "head": "Bittle (foot) has been ruled out for Sunday's game against the Knicks, Zulfi Sheikh of Sportsnet.ca reports.",
    "story": "Bittle is still working his way back from a foot fracture that has plagued him for multiple months, and he remains without a clear return timeline. He can be considered week-to-week for the time being.",
    "zh": "腳骨折已拖了好幾個月，週日對尼克缺陣，沒有明確回歸時間，以週為單位觀察"
+  },
+  "4432823": {
+   "n": "Jaylin Williams",
+   "when": "2026-11-21T22:34Z",
+   "head": "Williams (back) is listed as out for Sunday's game against Miami.",
+   "story": "Williams missed seven consecutive contests due to back spasms. He has since appeared in the Thunder's last two games. However, the 24-year-old won't suit up Sunday against the Heat, the first game of a back-to-back for Oklahoma City. Without Williams on the floor, Aday Mara, Kenrich Williams and Micah Peavy could see more minutes.",
+   "zh": "背部痙攣，週日對熱火確定缺陣（背靠背首戰）"
   },
   "4432907": {
    "n": "Justin Champagnie",
@@ -435,13 +491,6 @@
    "story": "Watkins, a two-way player for the Wizards, suffered the injury during the Summer League. Although Washington has yet to offer a timetable for a return, a typical recovery time for the procedure is approximately 9-to-12 months. That leaves Watkins in serious jeopardy of missing most, if not all, of the 2026-27 season, and it remains to be seen if the team will continue keeping him around on a two-way roster spot while he's injured.",
    "zh": "ACL 撕裂手術完成，沒有回歸時間，通常需要一年左右。"
   },
-  "4683021": {
-   "n": "Deni Avdija",
-   "when": "2026-11-20T22:08Z",
-   "head": "Avdija (foot) is listed as questionable for Saturday's game against the Knicks.",
-   "story": "The star point forward is looking to avoid a three-game absence with a bruised left foot. Damian Lillard would do the heavy lifting offensively if Avdija is out, while Jayson Kent would be in line for a third consecutive start.",
-   "zh": "左腳挫傷，週六對尼克出賽成疑，力拚避免連缺三場"
-  },
   "4683634": {
    "n": "Bennedict Mathurin",
    "when": "2026-11-19T21:07Z",
@@ -472,10 +521,10 @@
   },
   "4683771": {
    "n": "Ronald Holland II",
-   "when": "2026-11-21T00:34Z",
-   "head": "Holland (knee) is listed as out for Friday's game against Toronto.",
-   "story": "Holland was listed as doubtful, so most expected he would miss his third consecutive game. His next opportunity to play will come Sunday in Atlanta. In the meantime, Chaz Lanier and Isaiah Joe should continue to see more minutes.",
-   "zh": "膝傷，週五對暴龍確定缺陣（連續第三場）；下次可出賽為週日對老鷹"
+   "when": "2026-11-21T23:05Z",
+   "head": "Holland (knee) is listed as questionable for Sunday's game against Atlanta.",
+   "story": "Holland has missed the last three games due to a bone bruise in his left knee. If he remains sidelined versus the Hawks, Isaiah Joe, Chaz Lanier and Javonte Green are candidates for more minutes.",
+   "zh": "左膝骨挫傷，已缺三場，週日對老鷹出賽成疑"
   },
   "4701232": {
    "n": "Mark Williams",
@@ -486,7 +535,7 @@
   },
   "4702670": {
    "n": "Grant Nelson",
-   "when": "2026-11-19T21:18Z",
+   "when": "2026-11-21T14:51Z",
    "head": "Nelson (ankle) has been ruled out for Friday's game against Orlando.",
    "story": "Nelson will hit the inactive list due to a sprained right ankle. The two-way player's absence shouldn't affect the rotation.",
    "zh": "右腳踝扭傷，週五對魔術確定缺陣"
@@ -512,13 +561,6 @@
    "story": "It's unclear exactly what Small is dealing with, but for now, he can be considered questionable for Monday's meeting in Charlotte. With Small out, Cam Spencer and Jahmai Mashack will fill the minutes behind Ty Jerome.",
    "zh": "因私人因素週六對灰狼缺陣，週一對黃蜂出賽成疑"
   },
-  "4870562": {
-   "n": "Dominick Barlow",
-   "when": "2026-11-20T22:13Z",
-   "head": "Barlow (back) is probable for Saturday's game versus the Bucks.",
-   "story": "Barlow is on the precipice of making his season debut following a long recovery due to a lower-back stress reaction. With Adem Bona (back) sidelined, Barlow should immediately slot into the No. 2 center spot behind Joel Embiid on Saturday.",
-   "zh": "下背壓力反應復原，週六對公鹿大概可以出賽，將迎來賽季首秀"
-  },
   "4871141": {
    "n": "Ariel Hukporti",
    "when": "2026-10-06T19:17Z",
@@ -535,17 +577,10 @@
   },
   "4888725": {
    "n": "Ryan Dunn",
-   "when": "2026-11-21T04:06Z",
+   "when": "2026-11-21T14:55Z",
    "head": "Dunn won't return to Friday's game against the Jazz due to a right quad injury, Amanda Pflugrad of 3TV Phoenix reports.",
    "story": "Dunn will end his evening with five rebounds and nothing else in nine minutes off the bench. For now, he should be considered questionable for Monday's meeting in New Orleans.",
    "zh": "右股四頭肌受傷，週五對爵士中途退場，週一對鵜鶘出賽成疑"
-  },
-  "4896372": {
-   "n": "Walter Clayton Jr.",
-   "when": "2026-11-20T22:35Z",
-   "head": "Clayton (knee) is questionable for Saturday's game against the Clippers.",
-   "story": "Clayton is dealing with left knee tendinitis. Naji Marshall and Zaccharie Risacher would see more playing time off the bench if Clayton is downgraded to out Saturday.",
-   "zh": "左膝肌腱炎，週六對快艇出賽成疑"
   },
   "4898371": {
    "n": "Maxime Raynaud",
@@ -612,7 +647,7 @@
   },
   "5093267": {
    "n": "Collin Murray-Boyles",
-   "when": "2026-11-19T21:41Z",
+   "when": "2026-11-21T14:52Z",
    "head": "Murray-Boyles (concussion) has been ruled out for Friday's game against the Pistons.",
    "story": "Murray-Boyles has been placed in the league's concussion protocol after leaving Wednesday's loss to the Wizards with what was initially called an illness. With the second-year big man sidelined, Jakob Poeltl, Kyle Anderson and Trayce Jackson-Davis are all candidates for increased playing time. Murray-Boyles' next chance to play will come Monday against Milwaukee.",
    "zh": "腦震盪進入聯盟保護程序，週五對活塞確定缺陣，最快下週一對公鹿復出"
@@ -666,19 +701,12 @@
    "story": "Bona hasn't played since Nov. 4 due to a back sprain, though he appears to be trending in the right direction. Until the big man is cleared to play, Dominick Barlow (back) and Jabari Walker are candidates for increased minutes.",
    "zh": "背部扭傷，11/4起缺陣，已參加練習但尚需完整對抗練習才能復出"
   },
-  "5105841": {
-   "n": "Felix Okpara",
-   "when": "2026-11-21T00:43Z",
-   "head": "Okpara (illness) is available for Friday's game against Toronto.",
-   "story": "Okpara will shed his questionable tag due to an illness and suit up Friday. However, the two-way player isn't guaranteed to see the floor.",
-   "zh": "生病，週五對速龍確定可以出賽，但不保證上場"
-  },
   "5106040": {
    "n": "Tobi Lawal",
-   "when": "2026-11-19T14:51Z",
-   "head": "Lawal is out for Wednesday's game against the Warriors due to tightness in his right groin.",
-   "story": "It sounds like the rookie forward is dealing with a minor issue. His next chance to suit up comes Saturday against the Clippers.",
-   "zh": "右鼠蹊部緊繃，週三對勇士確定缺陣，傷勢輕微，最快週六對快艇回歸"
+   "when": "2026-11-21T15:08Z",
+   "head": "Lawal (groin) is out for Saturday's game against the Clippers.",
+   "story": "Lawal will miss a second straight game with right groin tightness. The rookie forward isn't expected to have a big role in the rotation, so he likely won't have much fantasy upside anytime soon. His next chance to play will come Sunday against the Jazz on the second leg of a back-to-back set.",
+   "zh": "右鼠蹊部緊繃，週六對快艇確定缺陣（連續第二場），週日對爵士有機會回來"
   },
   "5106268": {
    "n": "Nae'Qwan Tomlin",
@@ -703,10 +731,10 @@
   },
   "5149077": {
    "n": "Kingston Flemings",
-   "when": "2026-11-20T22:15Z",
-   "head": "Flemings (back) is out for Friday's game against the Hornets, Brad Rowland of the Locked On Podcast Network reports.",
-   "story": "Friday will mark Flemings' third straight game on the inactive list, which should result in another start for Aaron Wiggins, and Luguentz Dort will have the chance for some extended minutes. For now, Flemings should be considered questionable for Sunday's meeting with the Pistons.",
-   "zh": "背傷，週五對黃蜂確定缺陣（連續第三場）；週日對活塞出賽成疑"
+   "when": "2026-11-21T22:16Z",
+   "head": "Flemings (back) is questionable to play Sunday against the Pistons.",
+   "story": "Flemings has missed the past three games, but it looks like there's a chance he could return Sunday. If he's cleared to play, Aaron Wiggins would likely head back to the second unit.",
+   "zh": "背部傷勢，已缺三場，週日對活塞出賽成疑，有機會回來"
   },
   "5157066": {
    "n": "Johnny Furphy",
@@ -717,10 +745,10 @@
   },
   "5159925": {
    "n": "Nikola Topic",
-   "when": "2026-11-20T17:02Z",
-   "head": "Topic (hip) is out for Friday's game against New Orleans.",
-   "story": "Topic suffered a hip injury during Wednesday's matchup against Atlanta, and the issue is significant enough to keep him from Friday's game. His next opportunity to return will arrive Sunday in Miami.",
-   "zh": "髖部傷勢，週五對鵜鶘確定缺陣；下次可出賽為週日對熱火"
+   "when": "2026-11-21T22:39Z",
+   "head": "Topic (hip) is listed as out for Sunday's game versus the Heat.",
+   "story": "Topic has appeared in only three games for Oklahoma City this season. He will now miss a second consecutive contest due to a hip injury, with his next opportunity to play coming Monday versus the Pacers. Considering Topic has averaged just 11.3 minutes per outing, his absence won't have much of an effect on the rotation, though he might have seen more action if Shai Gilgeous-Alexander (back/neck), who is questionable, can't suit up.",
+   "zh": "髖部傷勢，週日對熱火確定缺陣（連續第二場），週一對溜馬有機會回來"
   },
   "5214637": {
    "n": "Noah Penda",
@@ -731,10 +759,10 @@
   },
   "5258459": {
    "n": "Ebuka Okorie",
-   "when": "2026-11-19T21:43Z",
-   "head": "Okorie (oblique) has been ruled out for Friday's game against Toronto.",
-   "story": "Okorie is dealing with a left oblique strain he sustained while playing for the G League's Motor City Cruise. The rookie first-rounder's next opportunity to play for the parent club will come Sunday at Atlanta.",
-   "zh": "左腹斜肌拉傷，週五對暴龍確定缺陣，最快週日客場對老鷹復出"
+   "when": "2026-11-21T22:34Z",
+   "head": "Okorie (oblique) is out for Sunday's game in Atlanta.",
+   "story": "This will be Okorie's second straight game on the inactive list due to injury. His next chance to play will come Tuesday in Orlando.",
+   "zh": "腹斜肌傷勢，週日在亞特蘭大確定缺陣（連續第二場），週二在奧蘭多才有機會回來"
   },
   "5279129": {
    "n": "Sergio de Larrea",
@@ -745,7 +773,7 @@
   },
   "5279130": {
    "n": "Nolan Traore",
-   "when": "2026-11-21T02:25Z",
+   "when": "2026-11-21T14:51Z",
    "head": "Traore (hamstring) won't return to Friday's game against Orlando, Meghan Triplett of YES Network reports. He finished with four points (2-6 FG, 0-2 3Pt) and two assists over 18 minutes.",
    "story": "After a drive to the rim in the fourth quarter, Traore was observed holding the back of his right hamstring in obvious discomfort. He limped to the locker room and was subsequently ruled out for the remainder of the contest. Mikel Brown and Egor Demin are in line for more minutes the rest of the way.",
    "zh": "右大腿後肌受傷，週五對魔術中途退場，本場不再出賽"
