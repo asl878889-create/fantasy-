@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-22T13:11:58.681Z",
- "file": "Injury-Report_2026-11-22_08_00AM.pdf",
- "report": "11/22/26 08:00 AM",
+ "updated": "2026-11-22T19:12:07.630Z",
+ "file": "Injury-Report_2026-11-22_02_00PM.pdf",
+ "report": "11/22/26 02:00 PM",
  "items": {
   "cade cunningham": [
    {
@@ -26,7 +26,7 @@
   "ronald holland": [
    {
     "n": "Ronald Holland II",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Left Knee Contusion / Bone Bruise",
     "gd": "2026-11-22",
     "mu": "DET@ATL",
@@ -36,7 +36,7 @@
   "isaac jones": [
    {
     "n": "Isaac Jones",
-    "st": "Questionable",
+    "st": "Out",
     "why": "G League - Two-Way",
     "gd": "2026-11-22",
     "mu": "DET@ATL",
@@ -86,7 +86,7 @@
   "rafael castro": [
    {
     "n": "Rafael Castro",
-    "st": "Questionable",
+    "st": "Out",
     "why": "G League - Two-Way",
     "gd": "2026-11-22",
     "mu": "DET@ATL",
@@ -96,7 +96,7 @@
   "rayj dennis": [
    {
     "n": "RayJ Dennis",
-    "st": "Questionable",
+    "st": "Available",
     "why": "G League - Two-Way",
     "gd": "2026-11-22",
     "mu": "DET@ATL",
@@ -106,7 +106,7 @@
   "kingston flemings": [
    {
     "n": "Kingston Flemings",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Lumbar Strain",
     "gd": "2026-11-22",
     "mu": "DET@ATL",
@@ -166,7 +166,7 @@
   "jalen wilson": [
    {
     "n": "Jalen Wilson",
-    "st": "Questionable",
+    "st": "Out",
     "why": "G League - Two-Way",
     "gd": "2026-11-22",
     "mu": "DET@ATL",
@@ -293,6 +293,76 @@
     "tm": "Miami Heat"
    }
   ],
+  "tarik biberovic": [
+   {
+    "n": "Tarik Biberovic",
+    "st": "Out",
+    "why": "Right Heel Bursitis",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "walter clayton": [
+   {
+    "n": "Walter Clayton Jr.",
+    "st": "Questionable",
+    "why": "Left Patellar Tendinitis",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "sergio de larrea": [
+   {
+    "n": "Sergio de Larrea",
+    "st": "Out",
+    "why": "Right Knee Sprain",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "tobi lawal": [
+   {
+    "n": "Tobi Lawal",
+    "st": "Out",
+    "why": "Right Groin Strain",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "dereck lively": [
+   {
+    "n": "Dereck Lively II",
+    "st": "Out",
+    "why": "Right Foot Surgery",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "caleb martin": [
+   {
+    "n": "Caleb Martin",
+    "st": "Available",
+    "why": "Right Thumb Splint",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "p j washington": [
+   {
+    "n": "P.J. Washington",
+    "st": "Doubtful",
+    "why": "Illness",
+    "gd": "2026-11-22",
+    "mu": "DAL@UTA",
+    "tm": "Dallas Mavericks"
+   }
+  ],
   "jonas aidoo": [
    {
     "n": "Jonas Aidoo",
@@ -403,10 +473,20 @@
     "tm": "Chicago Bulls"
    }
   ],
+  "nic claxton": [
+   {
+    "n": "Nic Claxton",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-22",
+    "mu": "DEN@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
   "norman powell": [
    {
     "n": "Norman Powell",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Right Hamstring Strain",
     "gd": "2026-11-22",
     "mu": "DEN@CHI",
@@ -416,8 +496,8 @@
   "orlando robinson": [
    {
     "n": "Orlando Robinson",
-    "st": "Out",
-    "why": "G League - On Assignment",
+    "st": "Available",
+    "why": "-",
     "gd": "2026-11-22",
     "mu": "DEN@CHI",
     "tm": "Chicago Bulls"
@@ -436,7 +516,7 @@
   "jalen smith": [
    {
     "n": "Jalen Smith",
-    "st": "Questionable",
+    "st": "Probable",
     "why": "Gastrointestinal Illness",
     "gd": "2026-11-22",
     "mu": "DEN@CHI",
@@ -503,11 +583,31 @@
     "tm": "Orlando Magic"
    }
   ],
+  "deandre ayton": [
+   {
+    "n": "Deandre Ayton",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-22",
+    "mu": "ORL@WAS",
+    "tm": "Washington Wizards"
+   }
+  ],
   "reece beekman": [
    {
     "n": "Reece Beekman",
     "st": "Out",
     "why": "Right AC Joint Sprain / Separation",
+    "gd": "2026-11-22",
+    "mu": "ORL@WAS",
+    "tm": "Washington Wizards"
+   }
+  ],
+  "bub carrington": [
+   {
+    "n": "Bub Carrington",
+    "st": "Questionable",
+    "why": "Illness",
     "gd": "2026-11-22",
     "mu": "ORL@WAS",
     "tm": "Washington Wizards"
@@ -601,6 +701,36 @@
     "gd": "2026-11-22",
     "mu": "IND@NYK",
     "tm": "Indiana Pacers"
+   }
+  ],
+  "og anunoby": [
+   {
+    "n": "OG Anunoby",
+    "st": "Out",
+    "why": "Left Calf Tightness",
+    "gd": "2026-11-22",
+    "mu": "IND@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "jordan clarkson": [
+   {
+    "n": "Jordan Clarkson",
+    "st": "Out",
+    "why": "Right Plantar Fasciitis",
+    "gd": "2026-11-22",
+    "mu": "IND@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "karl anthony towns": [
+   {
+    "n": "Karl-Anthony Towns",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-22",
+    "mu": "IND@NYK",
+    "tm": "New York Knicks"
    }
   ],
   "jimmy butler": [
