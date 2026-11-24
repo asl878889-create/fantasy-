@@ -400,7 +400,7 @@ def impacts(timeline):
     return times
 
 
-def render_frame(ep, timeline, bg, T, shakes):
+def render_frame(ep, timeline, bg, T, shakes, captions=True):
     frame = bg.copy()
     idx = next(i for i, sc in enumerate(timeline) if T < sc["start"] + sc["dur"] or i == len(timeline) - 1)
     sc = timeline[idx]
@@ -418,7 +418,8 @@ def render_frame(ep, timeline, bg, T, shakes):
         scene_cta(frame, ep, t, dur)
 
     draw_progress(frame, idx, len(timeline), clamp(t / dur))
-    draw_caption(frame, sc, t, dur)
+    if captions:
+        draw_caption(frame, sc, t, dur)
     draw_wipes(frame, timeline, T)
     return frame
 
@@ -581,6 +582,42 @@ def align_phrases(a, weights):
     return list(zip(edges[:-1], edges[1:]))
 
 
+def sentence_rows(sc):
+    """Merge phrase timings into whole sentences (split at 。！？) so a TTS reads them fluently."""
+    rows, cur, pos, cap = [], None, 0, sc["caption"]
+    for ph, a, b in sc.get("timings", []):
+        i = cap.find(ph, pos)
+        end_ch = cap[i + len(ph)] if i >= 0 and i + len(ph) < len(cap) else "。"
+        pos = i + len(ph) if i >= 0 else pos
+        sep = "，" if cur else ""
+        cur = [cur[0], b, cur[2] + sep + ph] if cur else [a, b, ph]
+        if ph[-1] in "！？":
+            end_ch = ""
+            rows.append(tuple(cur))
+            cur = None
+        elif end_ch in "。！？":
+            rows.append((cur[0], cur[1], cur[2] + (end_ch if end_ch != "。" else "")))
+            cur = None
+    if cur:
+        rows.append(tuple(cur))
+    return rows
+
+
+def write_srt(path, timeline, sentences=False):
+    """Subtitles per spoken phrase (or per sentence); also usable as YouTube closed captions."""
+    def ts(x):
+        ms = int(round(x * 1000))
+        return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
+    rows = []
+    for sc in timeline:
+        src = sentence_rows(sc) if sentences else sc.get("timings", [])
+        for a, b, ph in ((r[0], r[1], r[2]) if sentences else (r[1], r[2], r[0]) for r in src):
+            rows.append((sc["start"] + a, sc["start"] + b, ph))
+    with open(path, "w", encoding="utf-8") as f:
+        for i, (a, b, ph) in enumerate(rows, 1):
+            f.write(f"{i}\n{ts(a)} --> {ts(b)}\n{ph}\n\n")
+
+
 def voice_track(timeline, total):
     out = np.zeros(int(total * SR) + SR)
     for sc in timeline:
@@ -669,6 +706,8 @@ def main():
     ap.add_argument("--voice-id", type=int, default=58,
                     help="Kokoro speaker: 3-57 Mandarin female, 58-102 Mandarin male (default 58)")
     ap.add_argument("--stills", action="store_true", help="only write key-frame PNGs for review")
+    ap.add_argument("--capcut", action="store_true",
+                    help="for CapCut/剪映 text-to-speech: no voice, no burned-in captions, plus a timed .srt")
     args = ap.parse_args()
 
     ensure_fonts()
@@ -681,7 +720,11 @@ def main():
     bg = make_background()
     outdir = ROOT / "out"
     outdir.mkdir(exist_ok=True)
-    out = Path(args.out) if args.out else outdir / f"{ep['slug']}.mp4"
+    out = Path(args.out) if args.out else outdir / f"{ep['slug']}{'-capcut' if args.capcut else ''}.mp4"
+    if narration:
+        srt = out.with_suffix(".srt")
+        write_srt(srt, timeline, sentences=args.capcut)
+        print(f"wrote {srt}", file=sys.stderr)
     random.seed(1)
 
     if args.stills:
@@ -689,13 +732,15 @@ def main():
             for off in (sc["dur"] * 0.6,):
                 T = sc["start"] + off
                 p = outdir / f"{ep['slug']}_{T:05.2f}s.png"
-                render_frame(ep, timeline, bg, T, shakes).convert("RGB").save(p)
+                render_frame(ep, timeline, bg, T, shakes, not args.capcut).convert("RGB").save(p)
                 print(p)
         return
 
     music = outdir / f"{ep['slug']}_audio.wav"
     mix = synth_music(total, timeline) * (0 if args.no_music else 1)
-    if narration:
+    if args.capcut:
+        mix = mix * 0.3  # leave headroom for the voice added in CapCut
+    elif narration:
         mix = mix * 0.22 + voice_track(timeline, total)  # duck music under the AI voice
         mix = mix / max(1.0, np.abs(mix).max() / 0.97)
     write_wav(music, mix)
@@ -714,7 +759,7 @@ def main():
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     nframes = int(round(total * FPS))
     for i in range(nframes):
-        frame = render_frame(ep, timeline, bg, i / FPS, shakes)
+        frame = render_frame(ep, timeline, bg, i / FPS, shakes, not args.capcut)
         proc.stdin.write(frame.convert("RGB").tobytes())
         if i % FPS == 0:
             print(f"\r{i / FPS:5.1f}s / {total:.1f}s", end="", file=sys.stderr)
