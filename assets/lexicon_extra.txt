@@ -1,0 +1,3 @@
+# Extra English pronunciations for the AI voice (MeloTTS lexicon format).
+# word  phonemes(ARPAbet, lowercase)  tones(7=consonant, 9=stressed vowel, 8=unstressed vowel)
+champagnie sh ae m p ey n iy 7 8 7 7 9 7 8

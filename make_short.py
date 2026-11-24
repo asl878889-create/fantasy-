@@ -353,8 +353,20 @@ def caption_at(text, t, dur):
     return phrases[-1], 1.0
 
 
-def draw_caption(frame, text, t, dur):
-    phrase, p = caption_at(text, t, dur)
+def caption_from_timings(timings, t):
+    """timings: [(phrase, start, end)] in scene-local seconds."""
+    for i, (ph, st, en) in enumerate(timings):
+        nxt = timings[i + 1][1] if i + 1 < len(timings) else 1e9
+        if t < nxt:
+            return ph, clamp((t - st) / max(0.1, en - st))
+    return timings[-1][0], 1.0
+
+
+def draw_caption(frame, sc, t, dur):
+    if sc.get("timings"):
+        phrase, p = caption_from_timings(sc["timings"], t)
+    else:
+        phrase, p = caption_at(sc["caption"], t, dur)
     f = fit_font("cjk", phrase, W - 140, 58, "Black")
     s = text_sprite(phrase, f, WHITE, stroke=7, stroke_fill=(0, 0, 0, 255))
     blit(frame, s, W / 2, CAPTION_Y + 10 * (1 - ease_out(p * 6)), alpha=min(1, p * 8), anchor="ct", shake=False)
@@ -362,14 +374,21 @@ def draw_caption(frame, text, t, dur):
 
 # --------------------------------------------------------------------------- timeline
 
-def build_timeline(ep):
+def build_timeline(ep, narration=None):
+    """narration: optional list (one per scene) of (audio, timings) from the TTS step."""
     scenes = [("hook", None, ep["hook"]["duration"], ep["hook"]["caption"])]
     for pl in sorted(ep["players"], key=lambda p: -p["rank"]):
         scenes.append(("player", pl, pl["duration"], pl["caption"]))
     scenes.append(("cta", None, ep["cta"]["duration"], ep["cta"]["caption"]))
     out, start = [], 0.0
-    for kind, pl, dur, cap in scenes:
-        out.append(dict(kind=kind, pl=pl, start=start, dur=dur, caption=cap))
+    for i, (kind, pl, dur, cap) in enumerate(scenes):
+        sc = dict(kind=kind, pl=pl, start=start, dur=dur, caption=cap)
+        if narration:
+            audio, timings = narration[i]
+            sc["voice"] = audio
+            sc["timings"] = [(ph, VOICE_LEAD + a, VOICE_LEAD + b) for ph, a, b in timings]
+            sc["dur"] = dur = max(dur if kind == "hook" else 2.5, VOICE_LEAD + len(audio) / SR + VOICE_TAIL)
+        out.append(sc)
         start += dur
     return out, start
 
@@ -398,7 +417,7 @@ def render_frame(ep, timeline, bg, T, shakes):
         scene_cta(frame, ep, t, dur)
 
     draw_progress(frame, idx, len(timeline), clamp(t / dur))
-    draw_caption(frame, sc["caption"], t, dur)
+    draw_caption(frame, sc, t, dur)
     draw_wipes(frame, timeline, T)
     return frame
 
@@ -420,6 +439,96 @@ def draw_wipes(frame, timeline, T):
 # --------------------------------------------------------------------------- audio
 
 SR = 44100
+VOICE_LEAD = 0.22   # voice starts this long after a scene cut (after the wipe)
+VOICE_TAIL = 0.45   # breathing room after the last phrase
+PHRASE_GAP = 0.10
+
+TTS_DIR = ROOT / "assets/tts/vits-melo-tts-zh_en"
+TTS_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-melo-tts-zh_en.tar.bz2"
+LEXICON_EXTRA = ROOT / "assets/lexicon_extra.txt"
+
+
+def ensure_tts():
+    if not (TTS_DIR / "model.onnx").exists():
+        import tarfile
+        TTS_DIR.parent.mkdir(parents=True, exist_ok=True)
+        tmp = TTS_DIR.parent / "melo.tar.bz2"
+        print("Downloading MeloTTS zh_en voice model (~170 MB)…", file=sys.stderr)
+        urllib.request.urlretrieve(TTS_URL, tmp)
+        with tarfile.open(tmp) as tf:
+            tf.extractall(TTS_DIR.parent)
+        tmp.unlink()
+    # merge our extra pronunciations (player names missing from the stock lexicon)
+    merged = TTS_DIR / "lexicon_merged.txt"
+    extra = LEXICON_EXTRA.read_text(encoding="utf-8") if LEXICON_EXTRA.exists() else ""
+    extra = "\n".join(l for l in extra.splitlines() if l.strip() and not l.startswith("#"))
+    base = (TTS_DIR / "lexicon.txt").read_text(encoding="utf-8")
+    merged.write_text(extra + "\n" + base, encoding="utf-8")
+    return merged
+
+
+def make_tts():
+    import sherpa_onnx
+    lex = ensure_tts()
+    d = TTS_DIR
+    cfg = sherpa_onnx.OfflineTtsConfig(
+        model=sherpa_onnx.OfflineTtsModelConfig(
+            vits=sherpa_onnx.OfflineTtsVitsModelConfig(
+                model=str(d / "model.onnx"), lexicon=str(lex), tokens=str(d / "tokens.txt"), dict_dir=str(d / "dict")),
+            num_threads=4),
+        rule_fsts=",".join(str(d / f) for f in ("date.fst", "phone.fst", "number.fst", "new_heteronym.fst")))
+    return sherpa_onnx.OfflineTts(cfg)
+
+
+def synth_narration(ep, speed):
+    """Speak every scene's caption phrase by phrase; returns [(audio, [(phrase, start, end)])] per scene."""
+    from opencc import OpenCC
+    t2s = OpenCC("t2s")  # the model's lexicon is Simplified Chinese
+    tts = make_tts()
+    texts = [ep["hook"].get("narration", ep["hook"]["caption"])]
+    texts += [p.get("narration", p["caption"]) for p in sorted(ep["players"], key=lambda p: -p["rank"])]
+    texts += [ep["cta"].get("narration", ep["cta"]["caption"])]
+    caps = [ep["hook"]["caption"]] + [p["caption"] for p in sorted(ep["players"], key=lambda p: -p["rank"])]
+    caps += [ep["cta"]["caption"]]
+    result = []
+    for text, cap in zip(texts, caps):
+        spoken, shown = split_phrases(text), split_phrases(cap)
+        if len(spoken) != len(shown):
+            shown = spoken  # narration override with different phrasing: show what is said
+        chunks, timings, pos = [], [], 0.0
+        for sp, sh in zip(spoken, shown):
+            g = tts.generate(t2s.convert(sp), sid=0, speed=speed)
+            a = np.asarray(g.samples, dtype=np.float64)
+            if g.sample_rate != SR:
+                a = np.interp(np.arange(0, len(a), g.sample_rate / SR), np.arange(len(a)), a)
+            a = trim_silence(a)
+            timings.append((sh, pos, pos + len(a) / SR))
+            chunks += [a, np.zeros(int(PHRASE_GAP * SR))]
+            pos += len(a) / SR + PHRASE_GAP
+        result.append((np.concatenate(chunks), timings))
+        print(f"  narration: {text}  ({pos:.1f}s)", file=sys.stderr)
+    return result
+
+
+def trim_silence(a, thresh=0.01, pad=0.03):
+    idx = np.where(np.abs(a) > thresh)[0]
+    if len(idx) == 0:
+        return a
+    p = int(pad * SR)
+    return a[max(0, idx[0] - p): idx[-1] + p]
+
+
+def voice_track(timeline, total):
+    out = np.zeros(int(total * SR) + SR)
+    for sc in timeline:
+        v = sc.get("voice")
+        if v is None:
+            continue
+        i = int((sc["start"] + VOICE_LEAD) * SR)
+        out[i:i + len(v)] += v[: len(out) - i]
+    out = out[: int(total * SR)]
+    peak = np.abs(out).max()
+    return out / peak * 0.95 if peak > 0 else out
 
 
 def synth_music(total, timeline, bpm=118):
@@ -492,12 +601,17 @@ def main():
     ap.add_argument("--out", default=None, help="output .mp4 (default out/<slug>.mp4)")
     ap.add_argument("--voice", help="optional voice-over audio file; music is ducked under it")
     ap.add_argument("--no-music", action="store_true")
+    ap.add_argument("--no-tts", action="store_true", help="skip the AI voice-over")
+    ap.add_argument("--speed", type=float, default=1.12, help="AI voice speaking speed (default 1.12)")
     ap.add_argument("--stills", action="store_true", help="only write key-frame PNGs for review")
     args = ap.parse_args()
 
     ensure_fonts()
     ep = json.loads(Path(args.episode).read_text(encoding="utf-8"))
-    timeline, total = build_timeline(ep)
+    narration = None
+    if not args.no_tts and not args.voice:
+        narration = synth_narration(ep, args.speed)
+    timeline, total = build_timeline(ep, narration)
     shakes = impacts(timeline)
     bg = make_background()
     outdir = ROOT / "out"
@@ -514,8 +628,12 @@ def main():
                 print(p)
         return
 
-    music = outdir / f"{ep['slug']}_music.wav"
-    write_wav(music, synth_music(total, timeline) * (0 if args.no_music else 1))
+    music = outdir / f"{ep['slug']}_audio.wav"
+    mix = synth_music(total, timeline) * (0 if args.no_music else 1)
+    if narration:
+        mix = mix * 0.22 + voice_track(timeline, total)  # duck music under the AI voice
+        mix = mix / max(1.0, np.abs(mix).max() / 0.97)
+    write_wav(music, mix)
 
     cmd = ["ffmpeg", "-y", "-loglevel", "error",
            "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",

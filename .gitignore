@@ -1,3 +1,4 @@
 out/
 assets/fonts/*.ttf
+assets/tts/
 __pycache__/

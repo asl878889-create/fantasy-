@@ -1,2 +1,4 @@
 pillow>=10
 numpy>=1.24
+sherpa-onnx>=1.10
+opencc-python-reimplemented>=0.1.7
