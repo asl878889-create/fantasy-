@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-24T11:12:03.285Z",
- "file": "Injury-Report_2026-11-24_06_00AM.pdf",
- "report": "11/24/26 06:00 AM",
+ "updated": "2026-11-24T19:12:16.223Z",
+ "file": "Injury-Report_2026-11-24_02_00PM.pdf",
+ "report": "11/24/26 02:00 PM",
  "items": {
   "cade cunningham": [
    {
@@ -173,6 +173,16 @@
     "tm": "Washington Wizards"
    }
   ],
+  "tre mann": [
+   {
+    "n": "Tre Mann",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-24",
+    "mu": "BOS@WAS",
+    "tm": "Washington Wizards"
+   }
+  ],
   "felix okpara": [
    {
     "n": "Felix Okpara",
@@ -261,6 +271,66 @@
     "gd": "2026-11-24",
     "mu": "DAL@DEN",
     "tm": "Dallas Mavericks"
+   }
+  ],
+  "tobe awaka": [
+   {
+    "n": "Tobe Awaka",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "norman powell": [
+   {
+    "n": "Norman Powell",
+    "st": "Out",
+    "why": "Right Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "orlando robinson": [
+   {
+    "n": "Orlando Robinson",
+    "st": "Out",
+    "why": "Not With Team",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "jaylin sellers": [
+   {
+    "n": "Jaylin Sellers",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "jalen smith": [
+   {
+    "n": "Jalen Smith",
+    "st": "Questionable",
+    "why": "Gastrointestinal Illness",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "caleb wilson": [
+   {
+    "n": "Caleb Wilson",
+    "st": "Out",
+    "why": "Right Metacarpal Fracture",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Chicago Bulls"
    }
   ]
  }
