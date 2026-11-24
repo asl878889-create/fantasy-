@@ -1,0 +1,73 @@
+{
+  "slug": "2026-wk06-waiver",
+  "week_label": "WEEK 6",
+  "date_range": "11/23 – 11/29",
+  "as_of": "資料截至 2026/11/25 · 上片前請再確認傷病報告",
+  "hook": {
+    "duration": 3.0,
+    "kicker": "ESPN FANTASY · NBA",
+    "line1": "本週必撿",
+    "number": "3",
+    "unit": "人",
+    "sub": "WAIVER WIRE PICKUPS",
+    "caption": "本週 Fantasy 必撿三個人，快去 waiver 搶！"
+  },
+  "players": [
+    {
+      "rank": 3,
+      "first": "Kevin",
+      "last": "Huerter",
+      "team": "DET",
+      "team_zh": "活塞",
+      "accent": [255, 176, 32],
+      "stats": [
+        {"value": "36+", "zh": "上場分鐘", "en": "MINUTES"},
+        {"value": "4", "zh": "連續場數", "en": "STRAIGHT GAMES"}
+      ],
+      "reason": "Duncan Robinson 股四頭肌傷缺\n上場時間直接暴增",
+      "tags": ["3PT", "PTS"],
+      "duration": 8.0,
+      "caption": "第三名，活塞 Kevin Huerter。Robinson 受傷，他連四場打滿 36 分鐘以上，缺三分直接撿！"
+    },
+    {
+      "rank": 2,
+      "first": "Mo",
+      "last": "Bamba",
+      "team": "UTA",
+      "team_zh": "爵士",
+      "accent": [64, 224, 208],
+      "stats": [
+        {"value": "26", "zh": "單場得分", "en": "POINTS"},
+        {"value": "6/6", "zh": "三分命中", "en": "3-POINTERS"}
+      ],
+      "reason": "爵士多名長人傷缺\n有機會升上先發",
+      "tags": ["BLK", "REB", "3PT"],
+      "duration": 8.0,
+      "caption": "第二名，爵士 Mo Bamba。單場 26 分、三分六投六中，爵士長人傷兵多，有望升先發！"
+    },
+    {
+      "rank": 1,
+      "first": "Julian",
+      "last": "Champagnie",
+      "team": "SAS",
+      "team_zh": "馬刺",
+      "accent": [255, 92, 56],
+      "stats": [
+        {"value": "2–3", "zh": "Harper 缺陣週數", "en": "WEEKS OUT"},
+        {"value": "START", "zh": "可望升先發", "en": "NEW STARTER"}
+      ],
+      "reason": "Dylan Harper 左髖拉傷\n角色、出手數一起升級",
+      "tags": ["3PT", "REB", "STL"],
+      "duration": 8.0,
+      "caption": "第一名，馬刺 Julian Champagnie。Harper 髖部拉傷要休兩到三週，他可望進先發！"
+    }
+  ],
+  "cta": {
+    "duration": 4.0,
+    "line1": "你撿了誰？",
+    "line2": "留言告訴我",
+    "button": "訂閱 SUBSCRIBE",
+    "sub": "每週更新 Waiver 推薦",
+    "caption": "你這週撿了誰？留言告訴我，訂閱每週更新！"
+  }
+}
