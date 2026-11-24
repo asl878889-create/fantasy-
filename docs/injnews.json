@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T01:08:02.493Z",
+  "updated": "2026-11-24T13:08:36.655Z",
   "items": {
     "3975": {
       "n": "Stephen Curry",
@@ -52,10 +52,17 @@
     },
     "2530530": {
       "n": "T.J. McConnell",
-      "when": "2026-11-23T18:25Z",
+      "when": "2026-11-24T04:40Z",
       "head": "McConnell is out for Monday's game against the Thunder due to left hamstring soreness.",
       "story": "The veteran floor general is missing both ends of this back-to-back set, but he'll have some extra time to heal up ahead of Friday's tilt against the 76ers. Quenton Jackson should play a significant role off the bench in McConnell's absence Monday.",
       "zh": "左大腿後側肌群痠痛，週一對雷霆確定缺陣，下一場最快週五對七六人回來"
+    },
+    "2580365": {
+      "n": "Larry Nance Jr.",
+      "when": "2026-11-24T02:00Z",
+      "head": "Nance exited Monday's game against the Thunder due to a sore right ankle and he will not return, Tony East of Forbes.com reports.",
+      "story": "Nance will have three full days to rest his sore ankle before the Pacers' next game, although with Friday's matchup with the 76ers being the first of a back-to-back set, Nance may need to miss that one as well. Obi Toppin figures to pick up most of Nance's minutes while he's sidelined.",
+      "zh": "右腳踝痠痛，週一對雷霆中途退場，大概不會回來；週五對七六人可能也要缺陣（背靠背第一戰）"
     },
     "2595516": {
       "n": "Norman Powell",
@@ -101,7 +108,7 @@
     },
     "3059318": {
       "n": "Joel Embiid",
-      "when": "2026-11-23T22:49Z",
+      "when": "2026-11-24T04:33Z",
       "head": "Embiid (illness) is out for Monday's game against Portland, Austin Krell of OnPattison.com reports.",
       "story": "The star big man can be considered day-to-day moving forward. With Embiid sidelined Monday, Dominick Barlow is a candidate to start at center for the 76ers while Adem Bona (back) helps pick up the slack off the bench.",
       "zh": "生病，週一對拓荒者確定缺陣，之後視為每日觀察"
@@ -119,13 +126,6 @@
       "head": "Porzingis announced on his social media that he's stepping away from basketball.",
       "story": "Porzingis said he was looking forward to joining the Warriors, but his body didn't respond the way he wanted it too during his ramp-up process before the season. Additionally, he said he will work with the Warriors on a solution that \"makes sense.\" Porzingis is making this decision to prioritize his health and will hopefully turn a corner soon on that front.",
       "zh": "在社群媒體宣布暫時離開籃球，賽季前的恢復過程身體反應不如預期，將和勇士討論解決方案。"
-    },
-    "3134916": {
-      "n": "Jordan McLaughlin",
-      "when": "2026-11-23T01:38Z",
-      "head": "McLaughlin (shoulder) is listed as questionable for Monday's game against the Kings.",
-      "story": "McLaughlin may miss his seventh game of the year. With De'Aaron Fox (shin) also questionable and Dylan Harper (hip) already sidelined, McLaughlin would be in line to receive extra minutes if he manages to suit up. However, if he's not available versus Sacramento, David Jones Garcia could see significantly more work than usual.",
-      "zh": "肩傷，週一對國王出賽成疑（questionable），本季可能第七度缺陣"
     },
     "3135045": {
       "n": "Grayson Allen",
@@ -185,17 +185,17 @@
     },
     "4066218": {
       "n": "Grant Williams",
-      "when": "2026-11-22T22:05Z",
+      "when": "2026-11-24T04:32Z",
       "head": "Williams (hamstring) won't play Monday's game against the Grizzlies.",
       "story": "Williams will miss a second consecutive game due to right hamstring injury management. Royce O'Neale and Tidjane Salaun should continue to see more minutes off the bench for Charlotte.",
       "zh": "右大腿後肌傷勢管理，週一對灰熊確定缺陣（連續第二場）"
     },
     "4066259": {
       "n": "De'Aaron Fox",
-      "when": "2026-11-23T01:39Z",
-      "head": "Fox is questionable for Monday's game against the Kings due to a right shin contusion, Jared Weiss of The Athletic reports.",
-      "story": "Fox could miss Monday's game due to a shin injury he likely picked up during Saturday's game against the Pelicans. With Dylan Harper (hip) out and Jordan McLaughlin (shoulder) questionable, the Spurs could be thin at the lead guard position, leaving more ball-handling responsibilities for Stephon Castle.",
-      "zh": "右小腿脛骨挫傷，週一對國王出賽成疑，週六對鵜鶘時可能受傷"
+      "when": "2026-11-24T06:06Z",
+      "head": "Fox (shin) has been ruled out for Monday's game against the Kings, Jeff McDonald of the San Antonio Express-News reports.",
+      "story": "Fox will miss his second outing of the regular season due to a right shin contusion. Stephon Castle will operate as the primary ballhandler with Dylan Harper (hip) also sidelined, while Jordan McLaughlin should see increased burn off the Spurs' bench.",
+      "zh": "右小腿脛骨挫傷，週一對國王確定缺陣；本季第二場缺賽"
     },
     "4066336": {
       "n": "Lauri Markkanen",
@@ -206,10 +206,10 @@
     },
     "4066457": {
       "n": "Austin Reaves",
-      "when": "2026-11-23T01:09Z",
-      "head": "Reaves (heel) has been ruled out for Monday's game against the Jazz, Jovan Buha of The Athletic reports.",
-      "story": "Reaves will miss a fifth consecutive game due to a bruised left heel. His next chance to suit up will come against the Spurs on Friday. Quentin Grimes should remain in the starting lineup versus Utah, while Collin Sexton and Cameron Carr are likely to see additional minutes off the Lakers' bench.",
-      "zh": "左腳跟骨挫傷，週一對爵士確定缺陣（連續第五場），下次可出賽為週五對馬刺"
+      "when": "2026-11-24T01:31Z",
+      "head": "Coach JJ Redick stated Monday that the team is optimistic Reaves (heel) will return for Friday's game against San Antonio, Daniel Starkand of LakersNation.com reports.",
+      "story": "Reaves has already been downgraded to out for Monday's clash against Utah, which will mark his fifth straight absence due to a bruised left heel. However, the sharpshooter managed to take part in a stay-ready game earlier in the day Monday and was moving well, per Benjamin Royer of The Orange County Register. Reaves figures to be in line to take the court Friday as long as he continues to show progress throughout the week.",
+      "zh": "左腳跟挫傷，週一對爵士確定缺陣（連續第五場）；球隊樂觀看待週五對馬刺復出"
     },
     "4277961": {
       "n": "Jaren Jackson Jr.",
@@ -255,7 +255,7 @@
     },
     "4396909": {
       "n": "Aaron Nesmith",
-      "when": "2026-11-23T18:22Z",
+      "when": "2026-11-24T04:40Z",
       "head": "Nesmith is out for Monday's game against the Thunder due to right foot soreness.",
       "story": "The swingman is sitting out the second leg of this back-to-back set and is likely facing a short-term absence. Nesmith's absence should get Obi Toppin onto the streaming map in fantasy leagues Monday.",
       "zh": "右腳痠痛，週一對雷霆確定缺陣，預計只是短期缺陣"
@@ -276,7 +276,7 @@
     },
     "4397077": {
       "n": "Jaxson Hayes",
-      "when": "2026-11-23T21:04Z",
+      "when": "2026-11-24T06:07Z",
       "head": "Hayes (knee) has been ruled out for Monday's game against the Lakers.",
       "story": "Hayes left Sunday's tilt against the Mavericks with what's now being described as a left knee strain, and it's not yet known how much time he may miss beyond Monday. Mo Bamba should start at center for the Jazz and is worthy of streaming consideration in all fantasy leagues.",
       "zh": "左膝拉傷，週一對湖人確定缺陣，之後缺多久未明"
@@ -353,7 +353,7 @@
     },
     "4432823": {
       "n": "Jaylin Williams",
-      "when": "2026-11-23T19:09Z",
+      "when": "2026-11-24T04:36Z",
       "head": "Williams (back) has been ruled out for Monday's game against the Pacers",
       "story": "Williams returned from a seven-game absence to make two appearances before sitting out Sunday against Miami. His recurring back issues leave Oklahoma City's depleted frontcourt even thinner, potentially opening additional minutes for Kenrich Williams and Micah Peavy.",
       "zh": "背部傷勢，週一對溜馬確定缺陣，舊傷反覆"
@@ -385,6 +385,13 @@
       "head": "Duren (hamstring) has been ruled out for Tuesday's game against the Magic.",
       "story": "Duren hasn't played since Oct. 23 due to a right hamstring strain, though he's expected to be re-evaluated soon. Until the Pistons offer an update on the 23-year-old big man's progress, he can be considered week-to-week. Paul Reed will likely continue seeing increased minutes for as long as Duren is sidelined.",
       "zh": "右大腿後側肌群拉傷，週二對魔術確定缺陣，自10/23起未出賽，視為至少數週"
+    },
+    "4576060": {
+      "n": "Ryan Kalkbrenner",
+      "when": "2026-11-24T02:14Z",
+      "head": "Kalkbrenner has been ruled out for the rest of Monday's game against Memphis due to left hip soreness. He'll end with two rebounds in nine minutes.",
+      "story": "Hannes Steinbach could see additional opportunities as the backup center with Kalkbrenner shut down for the rest of the night. The Creighton product can be considered day-to-day moving forward.",
+      "zh": "左髖痠痛，週一對灰熊中途退場、當晚不再出賽；視為每日觀察"
     },
     "4578893": {
       "n": "Vit Krejci",
@@ -535,10 +542,10 @@
     },
     "5104157": {
       "n": "Victor Wembanyama",
-      "when": "2026-11-23T04:52Z",
-      "head": "Wembanyama (back) is questionable for Monday's game against the Kings, Jared Weiss of The Athletic reports.",
-      "story": "Wembanyama is dealing with lower-back tightness, leaving his status for Monday's road tilt up in the air. If he's unable to play, Luke Kornet would likely replace Wembanyama in the starting lineup, while Carter Bryant, Keldon Johnson and rookie Tarris Reed Jr. could all see a bump in minutes off the Spurs' bench.",
-      "zh": "下背緊繃，週一對國王出賽成疑，若缺陣由科爾奈特遞補先發"
+      "when": "2026-11-24T06:06Z",
+      "head": "Wembanyama (back) won't play Monday against the Kings, Jeff McDonald of the San Antonio Express-News reports.",
+      "story": "Wembanyama is dealing with some back pain and will sit out Monday's game against the 1-14 Kings, but he's expected to return for Wednesday's NBA Cup game in Portland. Luka Kornet will likely get the start with Wembanyama unavailable, and Stephon Castle should see a sizeable uptick in usage.",
+      "zh": "背部不適，週一對國王確定缺陣；預計週三NBA盃對拓荒者復出"
     },
     "5105462": {
       "n": "Richie Saunders",
@@ -605,7 +612,7 @@
     },
     "5174983": {
       "n": "Aday Mara",
-      "when": "2026-11-23T18:45Z",
+      "when": "2026-11-24T04:36Z",
       "head": "Mara (shin) has been ruled out for Monday's game against the Pacers.",
       "story": "Mara will miss a second consecutive contest due to a right shin contusion, with his next opportunity to play coming against Minnesota on Wednesday. With the rookie big man sidelined, Kenrich Williams and Micah Peavy are candidates for increased playing time.",
       "zh": "右小腿挫傷，週一對溜馬確定缺陣，連續第二場缺賽，最快週三對灰狼復出"
