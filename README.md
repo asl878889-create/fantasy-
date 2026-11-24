@@ -4,11 +4,13 @@
 
 - 畫面：1080×1920 直式、30fps，有動態文字、轉場和燒進畫面的中文字幕
 - 音樂：程式現場合成的節拍 + 轉場音效（沒有版權問題）
-- 可選：用 `--voice` 混入你自己錄的旁白（背景音樂會自動降低音量）
+- AI 旁白：離線 Kokoro 語音模型（Apache-2.0），中英混講，字幕逐句跟著語音；第一次執行會自動下載模型（約 360 MB）
+- 也可以用 `--voice` 換成你自己錄的旁白（背景音樂會自動降低音量）
+- 參數：`--speed` 語速、`--voice-id` 換聲音、`--no-tts` 不要旁白
 
 ## 使用方式
 
-需要 Python 3、ffmpeg、`pip install -r requirements.txt`。第一次執行會自動下載 Noto Sans TC 字型（OFL 授權）。
+需要 Python 3、ffmpeg，再執行 `pip install -r requirements.txt`。第一次執行會自動下載 Noto Sans TC 字型（OFL 授權）。
 
 ```bash
 python3 make_short.py episodes/2026-wk06.json
@@ -30,7 +32,7 @@ python3 make_short.py episodes/2026-wk06.json --voice voice.m4a
 
 1. 複製 `episodes/2026-wk06.json` → `episodes/2026-wk07.json`
 2. 改 `slug`、`week_label`、`date_range`、`as_of`，以及 3 位球員的 `first`/`last`/`team`/`team_zh`/`stats`/`reason`/`tags`/`caption`
-3. `caption` 就是字幕兼旁白稿，用「，。！」斷句，字幕會依字數自動分配時間
+3. `caption` 就是字幕兼旁白稿，用「，。！」斷句。AI 念錯字可以加 `narration` 欄位寫念法；英文人名念錯就把念法加到 `assets/lexicon_extra.txt`
 4. 跑 `make_short.py`
 
 每集的旁白腳本和上傳資訊放在 `episodes/*-SCRIPT.md`。

@@ -1,3 +1,8 @@
-# Extra English pronunciations for the AI voice (MeloTTS lexicon format).
-# word  phonemes(ARPAbet, lowercase)  tones(7=consonant, 9=stressed vowel, 8=unstressed vowel)
-champagnie sh ae m p ey n iy 7 8 7 7 9 7 8
+# Extra English pronunciations for the AI voice (Kokoro / misaki phoneme format).
+# word  phonemes separated by spaces; ˈ marks the stressed syllable.
+# Look at assets/tts/kokoro-multi-lang-v1_1/lexicon-us-en.txt for examples of similar-sounding words.
+kevin k ˈ ɛ v ə n
+huerter h ˈ ɜ ɹ t ə ɹ
+robinson ɹ ˈ ɑ b ə n s ə n
+bamba b ˈ ɑ m b ə
+champagnie ʃ æ m p ˈ A n i

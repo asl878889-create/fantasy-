@@ -10,6 +10,7 @@ import argparse
 import json
 import math
 import random
+import re
 import subprocess
 import sys
 import urllib.request
@@ -443,8 +444,8 @@ VOICE_LEAD = 0.22   # voice starts this long after a scene cut (after the wipe)
 VOICE_TAIL = 0.45   # breathing room after the last phrase
 PHRASE_GAP = 0.10
 
-TTS_DIR = ROOT / "assets/tts/vits-melo-tts-zh_en"
-TTS_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-melo-tts-zh_en.tar.bz2"
+TTS_DIR = ROOT / "assets/tts/kokoro-multi-lang-v1_1"
+TTS_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_1.tar.bz2"
 LEXICON_EXTRA = ROOT / "assets/lexicon_extra.txt"
 
 
@@ -452,35 +453,42 @@ def ensure_tts():
     if not (TTS_DIR / "model.onnx").exists():
         import tarfile
         TTS_DIR.parent.mkdir(parents=True, exist_ok=True)
-        tmp = TTS_DIR.parent / "melo.tar.bz2"
-        print("Downloading MeloTTS zh_en voice model (~170 MB)…", file=sys.stderr)
+        tmp = TTS_DIR.parent / "kokoro.tar.bz2"
+        print("Downloading Kokoro multi-lang voice model (~360 MB, one time)…", file=sys.stderr)
         urllib.request.urlretrieve(TTS_URL, tmp)
         with tarfile.open(tmp) as tf:
             tf.extractall(TTS_DIR.parent)
         tmp.unlink()
-    # merge our extra pronunciations (player names missing from the stock lexicon)
-    merged = TTS_DIR / "lexicon_merged.txt"
+    # prepend our extra pronunciations (player names missing from the stock English lexicon)
+    merged = TTS_DIR / "lexicon-us-en-merged.txt"
     extra = LEXICON_EXTRA.read_text(encoding="utf-8") if LEXICON_EXTRA.exists() else ""
-    extra = "\n".join(l for l in extra.splitlines() if l.strip() and not l.startswith("#"))
-    base = (TTS_DIR / "lexicon.txt").read_text(encoding="utf-8")
+    extra = "\n".join(l.strip() for l in extra.splitlines() if l.strip() and not l.startswith("#"))
+    base = (TTS_DIR / "lexicon-us-en.txt").read_text(encoding="utf-8")
     merged.write_text(extra + "\n" + base, encoding="utf-8")
     return merged
 
 
 def make_tts():
     import sherpa_onnx
-    lex = ensure_tts()
+    en_lex = ensure_tts()
     d = TTS_DIR
     cfg = sherpa_onnx.OfflineTtsConfig(
         model=sherpa_onnx.OfflineTtsModelConfig(
-            vits=sherpa_onnx.OfflineTtsVitsModelConfig(
-                model=str(d / "model.onnx"), lexicon=str(lex), tokens=str(d / "tokens.txt"), dict_dir=str(d / "dict")),
+            kokoro=sherpa_onnx.OfflineTtsKokoroModelConfig(
+                model=str(d / "model.onnx"), voices=str(d / "voices.bin"), tokens=str(d / "tokens.txt"),
+                data_dir=str(d / "espeak-ng-data"), dict_dir=str(d / "dict"),
+                lexicon=f"{en_lex},{d / 'lexicon-zh.txt'}"),
             num_threads=4),
-        rule_fsts=",".join(str(d / f) for f in ("date.fst", "phone.fst", "number.fst", "new_heteronym.fst")))
+        rule_fsts=",".join(str(d / f) for f in ("date-zh.fst", "phone-zh.fst", "number-zh.fst")))
     return sherpa_onnx.OfflineTts(cfg)
 
 
-def synth_narration(ep, speed):
+def tts_text(t2s, text):
+    """Kokoro's lexicons are Simplified Chinese and lowercase English."""
+    return re.sub(r"[A-Za-z]+", lambda m: m.group(0).lower(), t2s.convert(text))
+
+
+def synth_narration(ep, speed, sid):
     """Speak every scene's caption phrase by phrase; returns [(audio, [(phrase, start, end)])] per scene."""
     from opencc import OpenCC
     t2s = OpenCC("t2s")  # the model's lexicon is Simplified Chinese
@@ -497,7 +505,7 @@ def synth_narration(ep, speed):
             shown = spoken  # narration override with different phrasing: show what is said
         chunks, timings, pos = [], [], 0.0
         for sp, sh in zip(spoken, shown):
-            g = tts.generate(t2s.convert(sp), sid=0, speed=speed)
+            g = tts.generate(tts_text(t2s, sp), sid=sid, speed=speed)
             a = np.asarray(g.samples, dtype=np.float64)
             if g.sample_rate != SR:
                 a = np.interp(np.arange(0, len(a), g.sample_rate / SR), np.arange(len(a)), a)
@@ -602,7 +610,9 @@ def main():
     ap.add_argument("--voice", help="optional voice-over audio file; music is ducked under it")
     ap.add_argument("--no-music", action="store_true")
     ap.add_argument("--no-tts", action="store_true", help="skip the AI voice-over")
-    ap.add_argument("--speed", type=float, default=1.12, help="AI voice speaking speed (default 1.12)")
+    ap.add_argument("--speed", type=float, default=1.2, help="AI voice speaking speed (default 1.2)")
+    ap.add_argument("--voice-id", type=int, default=58,
+                    help="Kokoro speaker: 3-57 Mandarin female, 58-102 Mandarin male (default 58)")
     ap.add_argument("--stills", action="store_true", help="only write key-frame PNGs for review")
     args = ap.parse_args()
 
@@ -610,7 +620,7 @@ def main():
     ep = json.loads(Path(args.episode).read_text(encoding="utf-8"))
     narration = None
     if not args.no_tts and not args.voice:
-        narration = synth_narration(ep, args.speed)
+        narration = synth_narration(ep, args.speed, args.voice_id)
     timeline, total = build_timeline(ep, narration)
     shakes = impacts(timeline)
     bg = make_background()
