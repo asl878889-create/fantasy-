@@ -1,16 +1,16 @@
 # Week 6 Waiver Wire：本週必撿 3 人（NBA）
 
-約 31 秒 · 1080×1920 · **AI 旁白已內建**（離線 Kokoro 模型，普通話男聲，中英混講），字幕跟著語音逐句出現。
+約 39 秒 · 1080×1920 · **AI 旁白已內建**（離線 Kokoro 模型，普通話，中英混講），字幕跟著語音逐句出現。
 
 ## 旁白腳本（AI 會念這些；也可以自己照著錄）
 
 | 時間 | 畫面 | 旁白（中英混講） |
 |---|---|---|
-| 0:00–0:04 | WEEK 6／本週必撿 3 人 | 本週 Fantasy 必撿三個人，快去 waiver 搶！ |
-| 0:04–0:12 | #3 Kevin Huerter（DET） | 第三名，活塞 Kevin Huerter。Robinson 受傷，他連四場打滿 36 分鐘以上，缺三分直接撿！ |
-| 0:12–0:20 | #2 Mo Bamba（UTA） | 第二名，爵士 Mo Bamba。單場 26 分、三分六投六中，爵士長人傷兵多，有望升先發！ |
-| 0:20–0:27 | #1 Julian Champagnie（SAS） | 第一名，馬刺 Julian Champagnie。Harper 髖部拉傷要休兩到三週，他可望進先發！ |
-| 0:27–0:31 | 你撿了誰？／訂閱 | 你這週撿了誰？留言告訴我，訂閱每週更新！ |
+| 0:00–0:05 | WEEK 6／本週必撿 3 人 | 這週 Fantasy 有三個人，一定要去 waiver 撿！ |
+| 0:05–0:14 | #3 Kevin Huerter（DET） | 第三名，活塞的 Kevin Huerter。隊友 Robinson 受傷，他已經連續四場打超過 36 分鐘，缺三分的直接撿。 |
+| 0:14–0:25 | #2 Mo Bamba（UTA） | 第二名，爵士的 Mo Bamba。前幾天單場砍下 26 分，三分球六投六中！爵士長人傷兵一堆，他很有機會升先發。 |
+| 0:25–0:34 | #1 Julian Champagnie（SAS） | 第一名，馬刺的 Julian Champagnie。Harper 髖部拉傷，要休兩到三週，他可望直接升上先發。 |
+| 0:34–0:39 | 你撿了誰？／訂閱 | 你這週撿了誰？留言告訴我，記得訂閱，每週更新！ |
 
 旁白文字＝JSON 裡每段的 `caption`。如果 AI 念錯某個字，可以在那段加一個 `narration` 欄位寫「念法」（例如用同音字），字幕仍顯示 `caption`。英文名字念錯的話，把念法加到 `assets/lexicon_extra.txt`。
 
@@ -18,7 +18,7 @@
 ```bash
 python3 make_short.py episodes/2026-wk06.json --voice voice.m4a
 ```
-調整 AI 語速（預設 1.2），或換聲音（3–57 女聲、58–102 男聲，預設 58）：
+調整 AI 語速（預設 1.05），或換聲音（3–57 女聲、58–102 男聲，預設 58）：
 ```bash
 python3 make_short.py episodes/2026-wk06.json --speed 1.3
 ```

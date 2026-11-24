@@ -10,7 +10,7 @@
     "number": "3",
     "unit": "人",
     "sub": "WAIVER WIRE PICKUPS",
-    "caption": "本週 Fantasy 必撿三個人，快去 waiver 搶！"
+    "caption": "這週 Fantasy 有三個人，一定要去 waiver 撿！"
   },
   "players": [
     {
@@ -27,7 +27,7 @@
       "reason": "Duncan Robinson 股四頭肌傷缺\n上場時間直接暴增",
       "tags": ["3PT", "PTS"],
       "duration": 8.0,
-      "caption": "第三名，活塞 Kevin Huerter。Robinson 受傷，他連四場打滿 36 分鐘以上，缺三分直接撿！"
+      "caption": "第三名，活塞的 Kevin Huerter。隊友 Robinson 受傷，他已經連續四場打超過 36 分鐘，缺三分的直接撿。"
     },
     {
       "rank": 2,
@@ -43,7 +43,7 @@
       "reason": "爵士多名長人傷缺\n有機會升上先發",
       "tags": ["BLK", "REB", "3PT"],
       "duration": 8.0,
-      "caption": "第二名，爵士 Mo Bamba。單場 26 分、三分六投六中，爵士長人傷兵多，有望升先發！"
+      "caption": "第二名，爵士的 Mo Bamba。前幾天單場砍下 26 分，三分球六投六中！爵士長人傷兵一堆，他很有機會升先發。"
     },
     {
       "rank": 1,
@@ -59,7 +59,7 @@
       "reason": "Dylan Harper 左髖拉傷\n角色、出手數一起升級",
       "tags": ["3PT", "REB", "STL"],
       "duration": 8.0,
-      "caption": "第一名，馬刺 Julian Champagnie。Harper 髖部拉傷要休兩到三週，他可望進先發！"
+      "caption": "第一名，馬刺的 Julian Champagnie。Harper 髖部拉傷，要休兩到三週，他可望直接升上先發。"
     }
   ],
   "cta": {
@@ -68,6 +68,6 @@
     "line2": "留言告訴我",
     "button": "訂閱 SUBSCRIBE",
     "sub": "每週更新 Waiver 推薦",
-    "caption": "你這週撿了誰？留言告訴我，訂閱每週更新！"
+    "caption": "你這週撿了誰？留言告訴我，記得訂閱，每週更新！"
   }
 }

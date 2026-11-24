@@ -442,7 +442,6 @@ def draw_wipes(frame, timeline, T):
 SR = 44100
 VOICE_LEAD = 0.22   # voice starts this long after a scene cut (after the wipe)
 VOICE_TAIL = 0.45   # breathing room after the last phrase
-PHRASE_GAP = 0.10
 
 TTS_DIR = ROOT / "assets/tts/kokoro-multi-lang-v1_1"
 TTS_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_1.tar.bz2"
@@ -503,27 +502,83 @@ def synth_narration(ep, speed, sid):
         spoken, shown = split_phrases(text), split_phrases(cap)
         if len(spoken) != len(shown):
             shown = spoken  # narration override with different phrasing: show what is said
-        chunks, timings, pos = [], [], 0.0
-        for sp, sh in zip(spoken, shown):
-            g = tts.generate(tts_text(t2s, sp), sid=sid, speed=speed)
-            a = np.asarray(g.samples, dtype=np.float64)
-            if g.sample_rate != SR:
-                a = np.interp(np.arange(0, len(a), g.sample_rate / SR), np.arange(len(a)), a)
-            a = trim_silence(a)
-            timings.append((sh, pos, pos + len(a) / SR))
-            chunks += [a, np.zeros(int(PHRASE_GAP * SR))]
-            pos += len(a) / SR + PHRASE_GAP
-        result.append((np.concatenate(chunks), timings))
-        print(f"  narration: {text}  ({pos:.1f}s)", file=sys.stderr)
+        # one pass per scene so the model keeps natural sentence intonation
+        g = tts.generate(tts_text(t2s, text), sid=sid, speed=speed)
+        a = trim_silence(resample(np.asarray(g.samples, dtype=np.float32), g.sample_rate, SR))
+        a = soften_edges(a)
+        # phrase lengths measured by speaking each phrase alone: far better than character counts
+        # (English names take longer); these estimates are then snapped to real pauses in `a`
+        est = []
+        for sp in spoken:
+            gp = tts.generate(tts_text(t2s, sp), sid=sid, speed=speed)
+            est.append(len(trim_silence(np.asarray(gp.samples, dtype=np.float64), pad=0)) / gp.sample_rate)
+        bounds = align_phrases(a, est)
+        timings = [(sh, b0, b1) for sh, (b0, b1) in zip(shown, bounds)]
+        result.append((a, timings))
+        print(f"  narration: {text}  ({len(a) / SR:.1f}s)", file=sys.stderr)
     return result
 
 
-def trim_silence(a, thresh=0.01, pad=0.03):
+def resample(a, sr_in, sr_out):
+    """High-quality resampling through ffmpeg (avoids the aliasing of naive interpolation)."""
+    if sr_in == sr_out:
+        return a.astype(np.float64)
+    out = subprocess.run(
+        ["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(sr_in), "-ac", "1", "-i", "-",
+         "-af", f"aresample={sr_out}:filter_size=64:cutoff=0.97", "-f", "f32le", "-"],
+        input=a.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32).astype(np.float64)
+
+
+def trim_silence(a, thresh=0.008, pad=0.06):
     idx = np.where(np.abs(a) > thresh)[0]
     if len(idx) == 0:
         return a
     p = int(pad * SR)
     return a[max(0, idx[0] - p): idx[-1] + p]
+
+
+def soften_edges(a, ms=15):
+    n = min(len(a) // 2, int(ms / 1000 * SR))
+    a = a.copy()
+    a[:n] *= np.linspace(0, 1, n)
+    a[-n:] *= np.linspace(1, 0, n)
+    return a
+
+
+def align_phrases(a, weights):
+    """Map caption phrases onto the audio by snapping estimated boundaries to real pauses."""
+    total = len(a) / SR
+    if len(weights) == 1:
+        return [(0.0, total)]
+    hop = int(0.01 * SR)
+    env = np.sqrt(np.convolve(a * a, np.ones(hop * 3) / (hop * 3), mode="same")[::hop])
+    quiet = env < max(env.max() * 0.08, 1e-4)
+    gaps, i = [], 0  # (centre_seconds, length_seconds) of each pause
+    while i < len(quiet):
+        if quiet[i]:
+            j = i
+            while j < len(quiet) and quiet[j]:
+                j += 1
+            if j - i >= 4 and i > 0 and j < len(quiet):  # >= 40 ms, not at the edges
+                gaps.append(((i + j) / 2 * 0.01, (j - i) * 0.01))
+            i = j
+        else:
+            i += 1
+    cum = np.cumsum(weights) / sum(weights)
+    cuts, last = [], 0.0
+    for k in range(len(weights) - 1):
+        want = cum[k] * total
+        cands = [g for g in gaps if g[0] > last + 0.25]
+        if cands:  # nearest pause, longer pauses preferred
+            best = min(cands, key=lambda g: abs(g[0] - want) - 0.5 * g[1])
+            cut = best[0] if abs(best[0] - want) < 0.6 else want
+        else:
+            cut = want
+        cuts.append(cut)
+        last = cut
+    edges = [0.0] + cuts + [total]
+    return list(zip(edges[:-1], edges[1:]))
 
 
 def voice_track(timeline, total):
@@ -610,7 +665,7 @@ def main():
     ap.add_argument("--voice", help="optional voice-over audio file; music is ducked under it")
     ap.add_argument("--no-music", action="store_true")
     ap.add_argument("--no-tts", action="store_true", help="skip the AI voice-over")
-    ap.add_argument("--speed", type=float, default=1.2, help="AI voice speaking speed (default 1.2)")
+    ap.add_argument("--speed", type=float, default=1.05, help="AI voice speaking speed (default 1.05)")
     ap.add_argument("--voice-id", type=int, default=58,
                     help="Kokoro speaker: 3-57 Mandarin female, 58-102 Mandarin male (default 58)")
     ap.add_argument("--stills", action="store_true", help="only write key-frame PNGs for review")
