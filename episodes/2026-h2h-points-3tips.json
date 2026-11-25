@@ -1,0 +1,76 @@
+{
+  "slug": "2026-h2h-points-3tips",
+  "week_label": "H2H",
+  "date_range": "POINTS LEAGUE",
+  "as_of": "數據截至 2026/11/19 · 來自我自己做的 Fantasy 日報網站",
+  "hook": {
+    "duration": 3.0,
+    "kicker": "ESPN FANTASY · 積分盟",
+    "line1": "積分盟必學",
+    "number": "3",
+    "unit": "招",
+    "sub": "3 TIPS + 3 PICKS",
+    "caption": "ESPN 積分盟必學三招，每一招都附推薦人選！"
+  },
+  "players": [
+    {
+      "rank": 3,
+      "kicker": "第 3 招  ·  看比賽節奏",
+      "first": "Isaac",
+      "last": "Okoro",
+      "team": "CHI",
+      "team_zh": "公牛",
+      "accent": [255, 176, 32],
+      "stats": [
+        {"value": "103.1", "zh": "公牛節奏 聯盟最快", "en": "PACE · LEAGUE AVG 99.0"},
+        {"value": "22.2", "zh": "近 5 場平均", "en": "FPTS · LAST 5"}
+      ],
+      "reason": "節奏快＝回合多＝大家都多拿分\n他也剛升上先發，上場 30 分鐘",
+      "tags": ["PACE", "FPTS"],
+      "duration": 8.0,
+      "caption": "第三招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟最快，推薦 Isaac Okoro，剛升上先發，近五場每場 22 個 fantasy 分。"
+    },
+    {
+      "rank": 2,
+      "kicker": "第 2 招  ·  輪流撿人",
+      "first": "Kelly",
+      "last": "Oubre Jr.",
+      "team": "IND",
+      "team_zh": "溜馬",
+      "accent": [64, 224, 208],
+      "stats": [
+        {"value": "24.6", "zh": "近 5 場平均（翻倍）", "en": "FPTS · LAST 5"},
+        {"value": "+5.4", "zh": "上場分鐘變多", "en": "MINUTES"}
+      ],
+      "reason": "同一個名額，每隔幾天換有比賽的人\n記得在開打前換",
+      "tags": ["GAMES", "ADDS"],
+      "duration": 8.0,
+      "caption": "第二招，輪流撿人。積分盟比總分，多打一場就多拿分，同一個名額每隔幾天換一個有比賽的人。推薦 Kelly Oubre，上場時間變多，近五場翻倍到 24 個 fantasy 分。"
+    },
+    {
+      "rank": 1,
+      "kicker": "第 1 招  ·  分辨真開竅",
+      "first": "Caleb",
+      "last": "Martin",
+      "team": "DAL",
+      "team_zh": "獨行俠",
+      "accent": [255, 92, 56],
+      "stats": [
+        {"value": "7→26", "zh": "近 5 場平均暴增", "en": "FPTS PER GAME"},
+        {"value": "100%", "zh": "先發比例（之前 50%）", "en": "STARTS"}
+      ],
+      "reason": "上場、先發、球權都變多＝真開竅\nSam Hauser 只有命中率變高＝手感",
+      "tags": ["MIN", "USAGE"],
+      "duration": 8.0,
+      "caption": "第一招，分辨真開竅。Caleb Martin 近五場從 7 分暴增到 26 個 fantasy 分，上場時間、先發、球權都變多，是真開竅。反觀 Sam Hauser，只有命中率變高，那是手感，小心回落。"
+    }
+  ],
+  "cta": {
+    "duration": 4.0,
+    "line1": "你撿了哪一個？",
+    "line2": "留言告訴我",
+    "button": "訂閱 SUBSCRIBE",
+    "sub": "每週更新積分盟攻略",
+    "caption": "你撿了哪一個？留言告訴我，記得訂閱！"
+  }
+}

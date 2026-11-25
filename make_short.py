@@ -36,6 +36,11 @@ CAPTION_Y = 1440  # keep above YouTube Shorts bottom UI
 # --------------------------------------------------------------------------- fonts
 
 _fonts = {}
+_font_key = {}  # id(font) -> (kind, size, weight)
+
+
+def has_cjk(text):
+    return any(ord(c) > 0x2FF for c in text)
 
 
 def ensure_fonts():
@@ -57,10 +62,13 @@ def font(kind, size, weight="Black"):
             f = ImageFont.truetype(str(NOTO), size)
             f.set_variation_by_name(weight)
         _fonts[key] = f
+        _font_key[id(f)] = key
     return _fonts[key]
 
 
 def fit_font(kind, text, max_w, size, weight="Black", min_size=24):
+    if has_cjk(text):
+        kind = "cjk"
     while size > min_size:
         f = font(kind, size, weight)
         b = f.getbbox(text)
@@ -76,6 +84,9 @@ _sprites = {}
 
 
 def text_sprite(text, f, fill=WHITE, stroke=0, stroke_fill=(0, 0, 0, 255), outline_only=False, tracking=0):
+    meta = _font_key.get(id(f))
+    if meta and meta[0] == "latin" and has_cjk(text):
+        f = font("cjk", meta[1], meta[2])  # Inter has no Chinese glyphs
     key = (text, id(f), fill, stroke, stroke_fill, outline_only, tracking)
     if key in _sprites:
         return _sprites[key]
@@ -273,7 +284,7 @@ def scene_player(frame, ep, pl, t, dur):
     a = tuple(pl["accent"])
     blit(frame, glow_sprite(a), 820 + 60 * math.sin(t), 520 + 40 * math.cos(t * 0.8), alpha=0.85, anchor="cc", shake=False)
 
-    kick = pill_sprite(f"PICK #{pl['rank']}  ·  必撿第 {pl['rank']} 名", font("cjk", 34, "Bold"), a + (255,), (15, 15, 25, 255))
+    kick = pill_sprite(pl.get("kicker", f"PICK #{pl['rank']}  ·  必撿第 {pl['rank']} 名"), font("cjk", 34, "Bold"), a + (255,), (15, 15, 25, 255))
     blit(frame, kick, 80 - 40 * (1 - ease_out(prog(t, 0, 0.35))), 200, alpha=prog(t, 0, 0.3))
 
     big = text_sprite(f"#{pl['rank']}", font("latin", 430), a + (255,), stroke=6, outline_only=True)
