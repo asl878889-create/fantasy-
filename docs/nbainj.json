@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-24T19:12:16.223Z",
- "file": "Injury-Report_2026-11-24_02_00PM.pdf",
- "report": "11/24/26 02:00 PM",
+ "updated": "2026-11-25T03:12:04.984Z",
+ "file": "Injury-Report_2026-11-24_10_00PM.pdf",
+ "report": "11/24/26 10:00 PM",
  "items": {
   "cade cunningham": [
    {
     "n": "Cade Cunningham",
-    "st": "Probable",
+    "st": "Out",
     "why": "Right Knee Soreness",
     "gd": "2026-11-24",
     "mu": "DET@ORL",
@@ -26,7 +26,7 @@
   "isaac jones": [
    {
     "n": "Isaac Jones",
-    "st": "Questionable",
+    "st": "Out",
     "why": "G League - Two-Way",
     "gd": "2026-11-24",
     "mu": "DET@ORL",
@@ -176,7 +176,7 @@
   "tre mann": [
    {
     "n": "Tre Mann",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Illness",
     "gd": "2026-11-24",
     "mu": "BOS@WAS",
@@ -186,7 +186,7 @@
   "felix okpara": [
    {
     "n": "Felix Okpara",
-    "st": "Questionable",
+    "st": "Out",
     "why": "G League - Two-Way",
     "gd": "2026-11-24",
     "mu": "BOS@WAS",
@@ -266,11 +266,71 @@
   "p j washington": [
    {
     "n": "P.J. Washington",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Illness",
     "gd": "2026-11-24",
     "mu": "DAL@DEN",
     "tm": "Dallas Mavericks"
+   }
+  ],
+  "giannis antetokounmpo": [
+   {
+    "n": "Giannis Antetokounmpo",
+    "st": "Questionable",
+    "why": "Right Groin Tendinitis",
+    "gd": "2026-11-25",
+    "mu": "MIA@PHI",
+    "tm": "Miami Heat"
+   }
+  ],
+  "tre donaldson": [
+   {
+    "n": "Tre Donaldson",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "MIA@PHI",
+    "tm": "Miami Heat"
+   }
+  ],
+  "myron gardner": [
+   {
+    "n": "Myron Gardner",
+    "st": "Available",
+    "why": "Right Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "MIA@PHI",
+    "tm": "Miami Heat"
+   }
+  ],
+  "vladislav goldin": [
+   {
+    "n": "Vladislav Goldin",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "MIA@PHI",
+    "tm": "Miami Heat"
+   }
+  ],
+  "joel embiid": [
+   {
+    "n": "Joel Embiid",
+    "st": "Doubtful",
+    "why": "Illness",
+    "gd": "2026-11-25",
+    "mu": "MIA@PHI",
+    "tm": "Philadelphia 76ers"
+   }
+  ],
+  "ariel hukporti": [
+   {
+    "n": "Ariel Hukporti",
+    "st": "Out",
+    "why": "Right Achilles Tendon Rupture / Tear",
+    "gd": "2026-11-25",
+    "mu": "MIA@PHI",
+    "tm": "Philadelphia 76ers"
    }
   ],
   "tobe awaka": [
@@ -331,6 +391,646 @@
     "gd": "2026-11-25",
     "mu": "CHI@CHA",
     "tm": "Chicago Bulls"
+   }
+  ],
+  "michael ajayi": [
+   {
+    "n": "Michael Ajayi",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "grayson allen": [
+   {
+    "n": "Grayson Allen",
+    "st": "Questionable",
+    "why": "Concussion Protocol",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "kylan boswell": [
+   {
+    "n": "Kylan Boswell",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "sion james": [
+   {
+    "n": "Sion James",
+    "st": "Probable",
+    "why": "Left Thigh Soreness",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "ryan kalkbrenner": [
+   {
+    "n": "Ryan Kalkbrenner",
+    "st": "Doubtful",
+    "why": "Left Hip Soreness / Tightness",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "kon knueppel": [
+   {
+    "n": "Kon Knueppel",
+    "st": "Out",
+    "why": "Left Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "dennis schroder": [
+   {
+    "n": "Dennis Schroder",
+    "st": "Out",
+    "why": "Left Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "CHI@CHA",
+    "tm": "Charlotte Hornets"
+   }
+  ],
+  "zack austin": [
+   {
+    "n": "Zack Austin",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "Cleveland Cavaliers"
+   }
+  ],
+  "khalifa diop": [
+   {
+    "n": "Khalifa Diop",
+    "st": "Out",
+    "why": "G League - On Assignment",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "Cleveland Cavaliers"
+   }
+  ],
+  "evan mobley": [
+   {
+    "n": "Evan Mobley",
+    "st": "Out",
+    "why": "Left Great Toe Sprain",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "Cleveland Cavaliers"
+   }
+  ],
+  "nae qwan tomlin": [
+   {
+    "n": "Nae'Qwan Tomlin",
+    "st": "Out",
+    "why": "Low Back Stress",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "Cleveland Cavaliers"
+   }
+  ],
+  "ernest udeh": [
+   {
+    "n": "Ernest Udeh Jr.",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "Cleveland Cavaliers"
+   }
+  ],
+  "og anunoby": [
+   {
+    "n": "OG Anunoby",
+    "st": "Out",
+    "why": "Left Calf Strain",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "jordan clarkson": [
+   {
+    "n": "Jordan Clarkson",
+    "st": "Out",
+    "why": "Right Plantar Fasciitis",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "josh hart": [
+   {
+    "n": "Josh Hart",
+    "st": "Questionable",
+    "why": "Right Shoulder Sprain",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "miles mcbride": [
+   {
+    "n": "Miles McBride",
+    "st": "Questionable",
+    "why": "Left Adductor Tightness",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "karl anthony towns": [
+   {
+    "n": "Karl-Anthony Towns",
+    "st": "Questionable",
+    "why": "Right Knee Inflammation",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "joan beringer": [
+   {
+    "n": "Joan Beringer",
+    "st": "Available",
+    "why": "Right Face Mask",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Minnesota Timberwolves"
+   }
+  ],
+  "jaylen clark": [
+   {
+    "n": "Jaylen Clark",
+    "st": "Out",
+    "why": "Right Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Minnesota Timberwolves"
+   }
+  ],
+  "donte divincenzo": [
+   {
+    "n": "Donte DiVincenzo",
+    "st": "Out",
+    "why": "Right Achilles Tendon Repair / Surgery",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Minnesota Timberwolves"
+   }
+  ],
+  "anthony edwards": [
+   {
+    "n": "Anthony Edwards",
+    "st": "Out",
+    "why": "Right Knee Arthroscopy",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Minnesota Timberwolves"
+   }
+  ],
+  "rocco zikarsky": [
+   {
+    "n": "Rocco Zikarsky",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Minnesota Timberwolves"
+   }
+  ],
+  "chet holmgren": [
+   {
+    "n": "Chet Holmgren",
+    "st": "Out",
+    "why": "Right Knee/ Injury Recovery",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "aday mara": [
+   {
+    "n": "Aday Mara",
+    "st": "Out",
+    "why": "Right Shin Contusion",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "thomas sorber": [
+   {
+    "n": "Thomas Sorber",
+    "st": "Out",
+    "why": "Right Knee Surgery",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "nikola topic": [
+   {
+    "n": "Nikola Topic",
+    "st": "Out",
+    "why": "Left Hip Strain",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "cason wallace": [
+   {
+    "n": "Cason Wallace",
+    "st": "Out",
+    "why": "Left Shoulder Surgery",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "jalen williams": [
+   {
+    "n": "Jalen Williams",
+    "st": "Out",
+    "why": "Left Ankle Surgery",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "jaylin williams": [
+   {
+    "n": "Jaylin Williams",
+    "st": "Out",
+    "why": "Low Back Spasms",
+    "gd": "2026-11-25",
+    "mu": "MIN@OKC",
+    "tm": "Oklahoma City Thunder"
+   }
+  ],
+  "tyler bilodeau": [
+   {
+    "n": "Tyler Bilodeau",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "BKN@MIL",
+    "tm": "Brooklyn Nets"
+   }
+  ],
+  "joshua jefferson": [
+   {
+    "n": "Joshua Jefferson",
+    "st": "Out",
+    "why": "G League - On Assignment",
+    "gd": "2026-11-25",
+    "mu": "BKN@MIL",
+    "tm": "Brooklyn Nets"
+   }
+  ],
+  "chaney johnson": [
+   {
+    "n": "Chaney Johnson",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "BKN@MIL",
+    "tm": "Brooklyn Nets"
+   }
+  ],
+  "drake powell": [
+   {
+    "n": "Drake Powell",
+    "st": "Out",
+    "why": "G League - On Assignment",
+    "gd": "2026-11-25",
+    "mu": "BKN@MIL",
+    "tm": "Brooklyn Nets"
+   }
+  ],
+  "ben saraf": [
+   {
+    "n": "Ben Saraf",
+    "st": "Out",
+    "why": "G League - On Assignment",
+    "gd": "2026-11-25",
+    "mu": "BKN@MIL",
+    "tm": "Brooklyn Nets"
+   }
+  ],
+  "nolan traore": [
+   {
+    "n": "Nolan Traore",
+    "st": "Out",
+    "why": "Right Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "BKN@MIL",
+    "tm": "Brooklyn Nets"
+   }
+  ],
+  "bradley beal": [
+   {
+    "n": "Bradley Beal",
+    "st": "Out",
+    "why": "Right Knee Injury Management",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "LA Clippers"
+   }
+  ],
+  "nick martinelli": [
+   {
+    "n": "Nick Martinelli",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "LA Clippers"
+   }
+  ],
+  "jordan miller": [
+   {
+    "n": "Jordan Miller",
+    "st": "Out",
+    "why": "Left Rotator Cuff Surgery",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "LA Clippers"
+   }
+  ],
+  "cameron boozer": [
+   {
+    "n": "Cameron Boozer",
+    "st": "Out",
+    "why": "Right Medial Ankle Sprain",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "Memphis Grizzlies"
+   }
+  ],
+  "jerami grant": [
+   {
+    "n": "Jerami Grant",
+    "st": "Out",
+    "why": "Left Calf Strain",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "Memphis Grizzlies"
+   }
+  ],
+  "gg jackson": [
+   {
+    "n": "GG Jackson",
+    "st": "Out",
+    "why": "Left 5th Metatarsal Fracture",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "Memphis Grizzlies"
+   }
+  ],
+  "scotty pippen": [
+   {
+    "n": "Scotty Pippen Jr.",
+    "st": "Out",
+    "why": "Lumbar Disc Herniation",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "Memphis Grizzlies"
+   }
+  ],
+  "richie saunders": [
+   {
+    "n": "Richie Saunders",
+    "st": "Out",
+    "why": "Right Knee Surgery",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "Memphis Grizzlies"
+   }
+  ],
+  "mark williams": [
+   {
+    "n": "Mark Williams",
+    "st": "Out",
+    "why": "Left Shoulder Surgery",
+    "gd": "2026-11-25",
+    "mu": "PHX@HOU",
+    "tm": "Phoenix Suns"
+   }
+  ],
+  "quadir copeland": [
+   {
+    "n": "Quadir Copeland",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "PHX@HOU",
+    "tm": "Houston Rockets"
+   }
+  ],
+  "julian phillips": [
+   {
+    "n": "Julian Phillips",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "PHX@HOU",
+    "tm": "Houston Rockets"
+   }
+  ],
+  "jonathan mogbo": [
+   {
+    "n": "Jonathan Mogbo",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Sacramento Kings"
+   }
+  ],
+  "maxime raynaud": [
+   {
+    "n": "Maxime Raynaud",
+    "st": "Out",
+    "why": "Right Patella Subluxation",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Sacramento Kings"
+   }
+  ],
+  "ben simmons": [
+   {
+    "n": "Ben Simmons",
+    "st": "Out",
+    "why": "Right Achilles Tendon Repair / Surgery",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Sacramento Kings"
+   }
+  ],
+  "jimmy butler": [
+   {
+    "n": "Jimmy Butler III",
+    "st": "Out",
+    "why": "Right ACL Repair / Surgery",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Golden State Warriors"
+   }
+  ],
+  "stephen curry": [
+   {
+    "n": "Stephen Curry",
+    "st": "Out",
+    "why": "Right Oblique Tear",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Golden State Warriors"
+   }
+  ],
+  "yaxel lendeborg": [
+   {
+    "n": "Yaxel Lendeborg",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Golden State Warriors"
+   }
+  ],
+  "moses moody": [
+   {
+    "n": "Moses Moody",
+    "st": "Out",
+    "why": "Left Patellar Tendon Repair / Surgery",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Golden State Warriors"
+   }
+  ],
+  "kristaps porzingis": [
+   {
+    "n": "Kristaps Porzingis",
+    "st": "Out",
+    "why": "Not With Team",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Golden State Warriors"
+   }
+  ],
+  "brandon williams": [
+   {
+    "n": "Brandon Williams",
+    "st": "Questionable",
+    "why": "Left Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Golden State Warriors"
+   }
+  ],
+  "de aaron fox": [
+   {
+    "n": "De'Aaron Fox",
+    "st": "Questionable",
+    "why": "Right Shin Contusion",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "San Antonio Spurs"
+   }
+  ],
+  "dylan harper": [
+   {
+    "n": "Dylan Harper",
+    "st": "Out",
+    "why": "Left Hip External Rotator Strain",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "San Antonio Spurs"
+   }
+  ],
+  "tobias harris": [
+   {
+    "n": "Tobias Harris",
+    "st": "Out",
+    "why": "Left Calf Strain",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "San Antonio Spurs"
+   }
+  ],
+  "jayden quaintance": [
+   {
+    "n": "Jayden Quaintance",
+    "st": "Out",
+    "why": "Right Knee Surgery",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "San Antonio Spurs"
+   }
+  ],
+  "victor wembanyama": [
+   {
+    "n": "Victor Wembanyama",
+    "st": "Questionable",
+    "why": "Low Back Tightness",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "San Antonio Spurs"
+   }
+  ],
+  "vit krejci": [
+   {
+    "n": "Vit Krejci",
+    "st": "Out",
+    "why": "Left Ankle Fracture",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "Portland Trail Blazers"
+   }
+  ],
+  "ja morant": [
+   {
+    "n": "Ja Morant",
+    "st": "Out",
+    "why": "Left Hamstring Strain",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "Portland Trail Blazers"
+   }
+  ],
+  "shaedon sharpe": [
+   {
+    "n": "Shaedon Sharpe",
+    "st": "Out",
+    "why": "Right Meniscus Surgery",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "Portland Trail Blazers"
+   }
+  ],
+  "chris youngblood": [
+   {
+    "n": "Chris Youngblood",
+    "st": "Out",
+    "why": "Right Heel Contusion / Bone Bruise",
+    "gd": "2026-11-25",
+    "mu": "SAS@POR",
+    "tm": "Portland Trail Blazers"
    }
   ]
  }
