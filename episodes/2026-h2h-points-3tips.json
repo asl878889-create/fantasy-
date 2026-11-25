@@ -2,7 +2,7 @@
   "slug": "2026-h2h-points-3tips",
   "week_label": "H2H",
   "date_range": "POINTS LEAGUE",
-  "as_of": "數據截至 2026/11/19 · 來自我自己做的 Fantasy 日報網站",
+  "as_of": "數據截至 2026/11/25 · 來自我自己做的 Fantasy 日報網站",
   "hook": {
     "duration": 3.0,
     "kicker": "ESPN FANTASY · 積分盟",
@@ -22,31 +22,30 @@
       "team_zh": "公牛",
       "accent": [255, 176, 32],
       "stats": [
-        {"value": "103.1", "zh": "公牛節奏 聯盟最快", "en": "PACE · LEAGUE AVG 99.0"},
-        {"value": "22.2", "zh": "近 5 場平均", "en": "FPTS · LAST 5"}
+        {"value": "102.1", "zh": "公牛節奏 聯盟前二", "en": "PACE · LEAGUE AVG 98.7"},
+        {"value": "23.6", "zh": "近 5 場平均", "en": "FPTS · LAST 5"}
       ],
-      "reason": "節奏快＝回合多＝大家都多拿分\n他也剛升上先發，上場 30 分鐘",
+      "reason": "節奏快＝回合多＝大家都多拿分\n他也升上先發，上場 31 分鐘",
       "tags": ["PACE", "FPTS"],
       "duration": 8.0,
-      "caption": "第三招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟最快，推薦 Isaac Okoro，剛升上先發，近五場每場 22 個 fantasy 分。"
+      "caption": "第三招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟前二，推薦 Isaac Okoro，升上先發後，近五場每場 23 個 fantasy 分。"
     },
     {
       "rank": 2,
-      "kicker": "第 2 招  ·  主力缺陣看球權",
-      "first": "Norman",
-      "last": "Powell",
-      "team": "CHI",
-      "team_zh": "公牛",
+      "kicker": "第 2 招  ·  主力缺陣誰受惠",
+      "first": "Javon",
+      "last": "Small",
+      "team": "MEM",
+      "team_zh": "灰熊",
       "accent": [64, 224, 208],
       "stats": [
-        {"value": "24→32%", "zh": "Wilson 不在場時的球權", "en": "USAGE RATE"},
-        {"value": "22→37", "zh": "每 36 分鐘", "en": "FPTS PER 36 MIN"}
+        {"value": "16→40", "zh": "Boozer 不在場時", "en": "FPTS PER 36 MIN"},
+        {"value": "4", "zh": "Boozer 幾週後才再評估", "en": "WEEKS"}
       ],
-      "reason": "大家只看誰補先發\n真正的訊號是球權跑到誰身上",
-      "tags": ["USAGE", "PTS"],
+      "reason": "不是猜誰補先發\n要看主力不在場時，誰真的多拿分",
+      "tags": ["WOWY", "FPTS"],
       "duration": 8.0,
-      "caption": "第二招，主力缺陣要看球權。公牛新秀 Caleb Wilson 手骨折要休四到六週，他不在場時，Norman Powell 的球權從 24% 跳到 32%，每三十六分鐘從 22 分變 37 個 fantasy 分。",
-      "narration": "第二招，主力缺陣要看球權。公牛新秀 Caleb Wilson 手骨折要休四到六週，他不在場時，Norman Powell 的球權從百分之 24 跳到百分之 32，每三十六分鐘從 22 分變 37 個 fantasy 分。"
+      "caption": "第二招，主力缺陣看誰真的受惠。灰熊新秀 Cameron Boozer 腳踝扭傷，四週後才再評估。他不在場時，Javon Small 每三十六分鐘從 16 分暴增到 40 個 fantasy 分。"
     },
     {
       "rank": 1,
@@ -57,13 +56,13 @@
       "team_zh": "獨行俠",
       "accent": [255, 92, 56],
       "stats": [
-        {"value": "7→26", "zh": "近 5 場平均暴增", "en": "FPTS PER GAME"},
-        {"value": "100%", "zh": "先發比例（之前 50%）", "en": "STARTS"}
+        {"value": "10→30", "zh": "近 5 場平均暴增", "en": "FPTS PER GAME"},
+        {"value": "100%", "zh": "先發比例（之前 63%）", "en": "STARTS"}
       ],
-      "reason": "上場、先發、球權都變多＝真開竅\nSam Hauser 只有命中率變高＝手感",
+      "reason": "上場、先發、球權都變多＝真開竅\n只有命中率變高的不算，那是手感",
       "tags": ["MIN", "USAGE"],
       "duration": 8.0,
-      "caption": "第一招，分辨真開竅。Caleb Martin 近五場從 7 分暴增到 26 個 fantasy 分，上場時間、先發、球權都變多，是真開竅。反觀 Sam Hauser，只有命中率變高，那是手感，小心回落。"
+      "caption": "第一招，分辨真開竅。Caleb Martin 近五場從 10 分暴增到 30 個 fantasy 分，上場時間、先發、球權都變多，是真開竅。如果只有命中率變高，那是手感，小心回落。"
     }
   ],
   "cta": {
