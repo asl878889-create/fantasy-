@@ -32,7 +32,7 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#07060c;font-fam
 .ttl{position:absolute;left:0;right:0;text-align:center}
 .board,.stand,.next{position:absolute;left:70px;right:70px}
 .bh{font-size:78px;text-align:center;color:#f3d58a;letter-spacing:10px;text-shadow:0 0 30px rgba(243,180,80,.6)}
-.mrow{margin-top:34px;padding:22px 34px;border-radius:24px;background:rgba(12,10,22,.72);border:2px solid rgba(255,255,255,.08)}
+.mrow{margin-top:40px;padding:28px 36px;border-radius:24px;background:rgba(12,10,22,.72);border:2px solid rgba(255,255,255,.08)}
 .mt{display:flex;justify-content:space-between;align-items:center;font-size:48px}
 .mt .s{font-size:64px;font-weight:bold;min-width:180px;text-align:center}
 .bar{height:16px;border-radius:8px;margin-top:20px;display:flex;overflow:hidden;background:rgba(255,255,255,.08)}
@@ -65,9 +65,9 @@ function build(s){
   if(s.type==="title") return '<div class="ttl" style="top:560px"><div id="t1" style="font-size:150px;letter-spacing:24px;color:#f3d58a;text-shadow:0 0 60px rgba(243,180,80,.8)">'+esc(s.series)+'</div>'+
     '<div id="t2" style="margin-top:90px;font-size:60px;letter-spacing:14px">第 '+s.no+' 章</div><div id="t3" style="margin-top:40px;font-size:96px;letter-spacing:8px">'+esc(s.title)+'</div>'+
     '<div id="t4" style="margin-top:70px;font-size:40px;color:rgba(245,230,200,.7);letter-spacing:6px">第 '+s.week+' 週　'+esc(s.dates)+'</div></div>';
-  if(s.type==="board") return '<div class="board" style="top:170px"><div class="bh">第 '+s.week+' 週戰報</div>'+s.ms.map((m,i)=>'<div class="mrow" id="m'+i+'"><div class="mt"><span class="'+(m.wa?"win":"lose")+'" style="--c:'+m.ca+'">'+esc(m.a)+(m.wa?'<span class="crown">勝</span>':'')+'</span></div>'+
-    '<div class="mt" style="margin-top:8px"><span class="s '+(m.wa?"win":"lose")+'" style="--c:'+m.ca+'" id="sa'+i+'">0</span><span style="font-size:36px;color:#f3d58a">VS</span><span class="s '+(m.wb?"win":"lose")+'" style="--c:'+m.cb+'" id="sb'+i+'">0</span></div>'+
-    '<div class="mt" style="justify-content:flex-end"><span class="'+(m.wb?"win":"lose")+'" style="--c:'+m.cb+'">'+(m.wb?'<span class="crown" style="margin:0 12px 0 0">勝</span>':'')+esc(m.b)+'</span></div>'+
+  if(s.type==="board") return '<div class="board" style="top:190px"><div class="bh">第 '+s.week+' 週戰報</div>'+s.ms.map((m,i)=>'<div class="mrow" id="m'+i+'">'+
+    '<div class="mt"><span class="'+(m.wa?"win":"lose")+'" style="--c:'+m.ca+'">'+esc(m.a)+(m.wa?'<span class="crown">勝</span>':'')+'</span><span class="'+(m.wb?"win":"lose")+'" style="--c:'+m.cb+'">'+(m.wb?'<span class="crown" style="margin:0 12px 0 0">勝</span>':'')+esc(m.b)+'</span></div>'+
+    '<div class="mt" style="margin-top:6px"><span class="s '+(m.wa?"win":"lose")+'" style="--c:'+m.ca+';text-align:left" id="sa'+i+'">0</span><span style="font-size:34px;color:#f3d58a">VS</span><span class="s '+(m.wb?"win":"lose")+'" style="--c:'+m.cb+';text-align:right" id="sb'+i+'">0</span></div>'+
     '<div class="bar"><i id="ba'+i+'" style="background:'+m.ca+';width:50%"></i><i id="bb'+i+'" style="background:'+m.cb+';width:50%"></i></div></div>').join("")+'</div>';
   if(s.type==="standings") return '<div class="stand" style="top:200px"><div class="bh" style="margin-bottom:30px">第 '+s.week+' 週後排名</div>'+s.rows.map((r,i)=>'<div class="srow" id="r'+i+'"><span class="rk">'+r.rank+'</span><span class="gl" style="background:'+r.color+'">'+esc(r.glyph)+'</span><span class="nm">'+esc(r.name)+(r.streak?'<span class="stk">'+esc(r.streak)+'</span>':'')+'</span>'+
     '<span class="chg '+(r.chg>0?"up":r.chg<0?"dn":"")+'">'+(r.chg>0?"▲"+r.chg:r.chg<0?"▼"+(-r.chg):"")+'</span><span class="rc">'+esc(r.rec)+'</span></div>').join("")+'</div>';
@@ -94,7 +94,7 @@ function seek(t){
     const tm=sub.team; col=tm?tm.color:"#b08a4a";
     if(sub!==lastSub){lastSub=sub;const tk=tm?tm.name:"";if(tk!==lastTeam){lastTeam=tk;teamT=sub.start}
       const stat=sub.stat;let sh="";
-      if(stat&&stat.kind==="score")sh='<div class="big" id="sv" data-a="'+stat.a+'" data-b="'+stat.b+'">0 : 0</div><div class="lab">比分</div>';
+      if(stat&&stat.kind==="score")sh='<div class="big" id="sv" style="font-size:124px;white-space:nowrap" data-a="'+stat.a+'" data-b="'+stat.b+'">0 : 0</div><div class="lab">比分</div>';
       else if(stat&&stat.kind==="player")sh='<div class="big" id="sv" data-v="'+stat.v+'">0</div><div class="lab">'+esc(stat.name)+'　戰功</div>';
       else if(stat&&stat.kind==="team")sh='<div class="big" id="sv" data-v="'+stat.v+'">0</div><div class="lab">本週總戰功</div>';
       else if(stat&&stat.kind==="gap")sh='<div class="big" id="sv" data-v="'+stat.v+'">0</div><div class="lab">分差</div>';
@@ -150,6 +150,6 @@ window.seek=seek;
   const list = path.join(work, "segs.txt");
   fs.writeFileSync(list, Array.from({ length: WORKERS }, (_, w) => w).filter((w) => fs.existsSync(path.join(work, `seg${w}.mp4`))).map((w) => `file 'seg${w}.mp4'`).join("\n"));
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", list, "-i", path.join(work, "audio.wav"), "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", path.resolve(out)]);
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", list, "-i", path.join(work, "audio.wav"), "-c:v", "copy", "-af", "loudnorm=I=-16:TP=-1.5", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", path.resolve(out)]);
   console.error("完成：", out);
 })().catch((e) => { console.error(e); process.exit(1); });
