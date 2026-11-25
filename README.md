@@ -7,7 +7,7 @@
 - AI 旁白：離線 Kokoro 語音模型（Apache-2.0），中英混講，字幕逐句跟著語音；第一次執行會自動下載模型（約 360 MB）
 - 也可以用 `--voice` 換成你自己錄的旁白（背景音樂會自動降低音量）
 - 參數：`--speed` 語速、`--voice-id` 換聲音、`--no-tts` 不要旁白
-- 想用 CapCut／剪映的配音（較自然）：`--capcut` 產生沒配音、沒字幕的影片＋時間對好的 `.srt`，步驟見 [CAPCUT.md](CAPCUT.md)
+- **預設產生剪映（CapCut）版**：沒配音、沒字幕的影片，加上時間對好的 `-capcut.srt`（畫面字幕）和 `-capcut-voice.srt`（朗讀用），步驟見 [CAPCUT.md](CAPCUT.md)；要 AI 旁白版加 `--ai-voice`
 - 一般模式也會輸出 `.srt`，可以上傳到 YouTube 當 CC 字幕
 
 ## 使用方式

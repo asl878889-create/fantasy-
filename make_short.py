@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Render a vertical 1080x1920 YouTube Short (NBA fantasy waiver picks) from an episode JSON.
+"""Render a vertical 1080x1920 YouTube Short (NBA fantasy) from an episode JSON.
+
+By default it makes the CapCut/剪映 version: video + music, no voice, no burned-in
+captions, plus out/<slug>-capcut.srt (on-screen text) and -capcut-voice.srt (read-aloud text).
 
 Usage:
-    python3 make_short.py episodes/2026-wk06.json
-    python3 make_short.py episodes/2026-wk06.json --voice my_voiceover.wav
-    python3 make_short.py episodes/2026-wk06.json --stills      # key-frame PNGs only
+    python3 make_short.py episodes/2026-rookies-11-vs-1.json              # 剪映版（預設）
+    python3 make_short.py episodes/2026-rookies-11-vs-1.json --ai-voice   # AI 旁白＋字幕燒進影片
+    python3 make_short.py episodes/2026-rookies-11-vs-1.json --voice my_voiceover.wav
+    python3 make_short.py episodes/2026-rookies-11-vs-1.json --stills     # key-frame PNGs only
 """
 import argparse
 import json
@@ -812,6 +816,12 @@ def sentence_rows(sc):
     return rows
 
 
+def spoken_form(text):
+    """How on-screen shorthand should be read aloud: 23 fpts -> 23 fantasy points, 24% -> 百分之 24."""
+    text = re.sub(r"(\d) ?fpts", r"\1 fantasy points", text)
+    return re.sub(r"(\d+(?:\.\d+)?)%", r"百分之 \1", text)
+
+
 def write_srt(path, timeline, sentences=False):
     """Subtitles per spoken phrase (or per sentence); also usable as YouTube closed captions."""
     def ts(x):
@@ -915,9 +925,11 @@ def main():
     ap.add_argument("--voice-id", type=int, default=58,
                     help="Kokoro speaker: 3-57 Mandarin female, 58-102 Mandarin male (default 58)")
     ap.add_argument("--stills", action="store_true", help="only write key-frame PNGs for review")
-    ap.add_argument("--capcut", action="store_true",
-                    help="for CapCut/剪映 text-to-speech: no voice, no burned-in captions, plus a timed .srt")
+    ap.add_argument("--ai-voice", action="store_true",
+                    help="burn in the AI voice-over and captions (default is the CapCut/剪映 version)")
     args = ap.parse_args()
+    # default: CapCut/剪映 version (no voice, no burned-in captions, timed .srt files for its text-to-speech)
+    args.capcut = not (args.ai_voice or args.voice)
 
     ensure_fonts()
     ep = json.loads(Path(args.episode).read_text(encoding="utf-8"))
@@ -934,6 +946,10 @@ def main():
         srt = out.with_suffix(".srt")
         write_srt(srt, timeline, sentences=args.capcut)
         print(f"wrote {srt}", file=sys.stderr)
+        if args.capcut:  # a copy written the way it should be read aloud, for 剪映's 文字朗讀
+            vsrt = out.with_name(out.stem + "-voice.srt")
+            vsrt.write_text(spoken_form(srt.read_text(encoding="utf-8")), encoding="utf-8")
+            print(f"wrote {vsrt}", file=sys.stderr)
     random.seed(1)
 
     if args.stills:

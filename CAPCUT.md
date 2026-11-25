@@ -5,7 +5,7 @@ CapCut 的文字朗讀有台灣口音的聲音，比內建的離線語音自然�
 ## 1. 產生素材
 
 ```bash
-python3 make_short.py episodes/2026-wk06.json --capcut
+python3 make_short.py episodes/<這一集>.json
 ```
 
 會得到：
