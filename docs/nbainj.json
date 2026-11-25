@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-25T11:11:48.155Z",
- "file": "Injury-Report_2026-11-25_06_00AM.pdf",
- "report": "11/25/26 06:00 AM",
+ "updated": "2026-11-25T19:11:40.939Z",
+ "file": "Injury-Report_2026-11-25_02_00PM.pdf",
+ "report": "11/25/26 02:00 PM",
  "items": {
   "giannis antetokounmpo": [
    {
@@ -83,16 +83,6 @@
     "tm": "Chicago Bulls"
    }
   ],
-  "orlando robinson": [
-   {
-    "n": "Orlando Robinson",
-    "st": "Out",
-    "why": "Not With Team",
-    "gd": "2026-11-25",
-    "mu": "CHI@CHA",
-    "tm": "Chicago Bulls"
-   }
-  ],
   "jaylin sellers": [
    {
     "n": "Jaylin Sellers",
@@ -136,7 +126,7 @@
   "grayson allen": [
    {
     "n": "Grayson Allen",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Concussion Protocol",
     "gd": "2026-11-25",
     "mu": "CHI@CHA",
@@ -166,7 +156,7 @@
   "ryan kalkbrenner": [
    {
     "n": "Ryan Kalkbrenner",
-    "st": "Doubtful",
+    "st": "Out",
     "why": "Left Hip Soreness / Tightness",
     "gd": "2026-11-25",
     "mu": "CHI@CHA",
@@ -253,6 +243,16 @@
     "tm": "New York Knicks"
    }
   ],
+  "jalen brunson": [
+   {
+    "n": "Jalen Brunson",
+    "st": "Questionable",
+    "why": "Illness",
+    "gd": "2026-11-25",
+    "mu": "CLE@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
   "jordan clarkson": [
    {
     "n": "Jordan Clarkson",
@@ -266,7 +266,7 @@
   "josh hart": [
    {
     "n": "Josh Hart",
-    "st": "Questionable",
+    "st": "Probable",
     "why": "Right Shoulder Sprain",
     "gd": "2026-11-25",
     "mu": "CLE@NYK",
@@ -276,7 +276,7 @@
   "miles mcbride": [
    {
     "n": "Miles McBride",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Left Adductor Tightness",
     "gd": "2026-11-25",
     "mu": "CLE@NYK",
@@ -286,7 +286,7 @@
   "karl anthony towns": [
    {
     "n": "Karl-Anthony Towns",
-    "st": "Questionable",
+    "st": "Probable",
     "why": "Right Knee Inflammation",
     "gd": "2026-11-25",
     "mu": "CLE@NYK",
@@ -327,7 +327,7 @@
    {
     "n": "Anthony Edwards",
     "st": "Out",
-    "why": "Right Knee Arthroscopy",
+    "why": "Right Knee",
     "gd": "2026-11-25",
     "mu": "MIN@OKC",
     "tm": "Minnesota Timberwolves"
@@ -497,7 +497,17 @@
    {
     "n": "Jordan Miller",
     "st": "Out",
-    "why": "Left Rotator Cuff",
+    "why": "Left Rotator Cuff Surgery",
+    "gd": "2026-11-25",
+    "mu": "LAC@MEM",
+    "tm": "LA Clippers"
+   }
+  ],
+  "jalen pickett": [
+   {
+    "n": "Jalen Pickett",
+    "st": "Questionable",
+    "why": "G League - Two-Way",
     "gd": "2026-11-25",
     "mu": "LAC@MEM",
     "tm": "LA Clippers"
