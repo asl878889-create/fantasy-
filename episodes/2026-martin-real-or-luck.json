@@ -1,0 +1,122 @@
+{
+  "slug": "2026-martin-real-or-luck",
+  "as_of": "數據截至 2026/11/25 · ESPN 積分盟計分 · 來自我自己做的 Fantasy 日報網站",
+  "scenes": [
+    {
+      "kind": "hook2",
+      "kicker": "近 5 場 FANTASY 分",
+      "left": "13",
+      "mid": "→",
+      "right": "34",
+      "lines": [
+        "真的變強，還是手感？",
+        "看一個數字就知道"
+      ],
+      "duration": 3.0,
+      "caption": "這個人五場從 13 變 34 fpts，是真變強，還是手感？",
+      "narration": "這個人五場從 13 變 34 fantasy points，是真變強，還是手感？"
+    },
+    {
+      "kind": "trend",
+      "accent": [
+        255,
+        176,
+        32
+      ],
+      "tag": "DAL 獨行俠",
+      "first": "Caleb",
+      "last": "Martin",
+      "bars": [
+        {
+          "label": "之前 9 場",
+          "value": "13.1"
+        },
+        {
+          "label": "近 5 場",
+          "value": "34.0"
+        }
+      ],
+      "note": "上場 20 → 27 分鐘 · 場場先發",
+      "caption": "獨行俠的 Caleb Martin，之前每場 13 fpts，最近五場 34。上場時間變多，場場先發。",
+      "narration": "獨行俠的 Caleb Martin，之前每場 13 fantasy points，最近五場 34。上場時間變多，場場先發。"
+    },
+    {
+      "kind": "trend",
+      "accent": [
+        64,
+        224,
+        208
+      ],
+      "tag": "關鍵：真實命中率 %",
+      "first": "Caleb",
+      "last": "Martin",
+      "bars": [
+        {
+          "label": "之前 9 場",
+          "value": "67.6"
+        },
+        {
+          "label": "近 5 場",
+          "value": "67.6"
+        }
+      ],
+      "note": "命中率一模一樣＝不是手感",
+      "caption": "關鍵是命中率：前後都是 67.6%，一模一樣，不是手感。"
+    },
+    {
+      "kind": "trend",
+      "accent": [
+        255,
+        92,
+        56
+      ],
+      "tag": "多出來的分數哪來？",
+      "first": "每場",
+      "last": "抄截",
+      "bars": [
+        {
+          "label": "之前 9 場",
+          "value": "0.7"
+        },
+        {
+          "label": "近 5 場",
+          "value": "2.6"
+        }
+      ],
+      "note": "ESPN 積分盟：一次抄截 = 4 fpts",
+      "caption": "分數從哪來？抄截。每場從 0.7 次變 2.6 次，一次就是 4 fpts。",
+      "narration": "分數從哪來？抄截。每場從 0.7 次變 2.6 次，一次就是 4 fantasy points。"
+    },
+    {
+      "kind": "question",
+      "accent": [
+        255,
+        176,
+        32
+      ],
+      "line1": "Caleb Martin",
+      "line2": "你會撿嗎？",
+      "options": [
+        {
+          "text": "A  真開竅，撿！",
+          "accent": [
+            64,
+            224,
+            208
+          ]
+        },
+        {
+          "text": "B  抄截會回落，等等",
+          "accent": [
+            255,
+            92,
+            56
+          ]
+        }
+      ],
+      "sub": "留言打 A 或 B",
+      "duration": 4.0,
+      "caption": "我的網站判定是真開竅，但抄截起伏大。你會撿嗎？留言告訴我！"
+    }
+  ]
+}
