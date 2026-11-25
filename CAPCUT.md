@@ -12,6 +12,8 @@ python3 make_short.py episodes/2026-wk06.json --capcut
 - `out/2026-wk06-waiver-capcut.mp4`：有畫面和背景音樂，沒有旁白、沒有字幕
 - `out/2026-wk06-waiver-capcut.srt`：字幕檔，一句一條，時間已經對好每一段畫面
 
+※ 如果字幕裡有 CapCut 念不好的寫法（例如 `fpts`），會另外附一份 `-capcut-voice.srt`：裡面寫成要念的樣子（`fantasy points`）。做法：先匯入 `-capcut-voice.srt` 產生朗讀，再把字幕文字改回顯示用的寫法，或刪掉這份字幕、改匯入 `-capcut.srt` 當畫面字幕。
+
 ## 2. 在 CapCut 電腦版（建議）操作
 
 1. 開新專案，把 `.mp4` 拖進時間軸
