@@ -32,20 +32,21 @@
     },
     {
       "rank": 2,
-      "kicker": "第 2 招  ·  主力缺陣誰受惠",
-      "first": "Isaiah",
-      "last": "Hartenstein",
-      "team": "OKC",
-      "team_zh": "雷霆",
+      "kicker": "第 2 招  ·  主力缺陣看球權",
+      "first": "Norman",
+      "last": "Powell",
+      "team": "CHI",
+      "team_zh": "公牛",
       "accent": [64, 224, 208],
       "stats": [
-        {"value": "33→44", "zh": "Holmgren 不在場時", "en": "FPTS PER 36 MIN"},
-        {"value": "8-10", "zh": "Holmgren 至少休幾週", "en": "WEEKS OUT"}
+        {"value": "24→32%", "zh": "Wilson 不在場時的球權", "en": "USAGE RATE"},
+        {"value": "22→37", "zh": "每 36 分鐘", "en": "FPTS PER 36 MIN"}
       ],
-      "reason": "不是只看誰補先發\n要看主力不在場時，隊友實際多拿多少",
-      "tags": ["WOWY", "REB"],
+      "reason": "大家只看誰補先發\n真正的訊號是球權跑到誰身上",
+      "tags": ["USAGE", "PTS"],
       "duration": 8.0,
-      "caption": "第二招，主力缺陣看誰受惠。不是猜誰補先發，而是看主力不在場時，隊友實際多拿多少。雷霆 Holmgren 至少休八到十週，Hartenstein 在他不在場時，每三十六分鐘從 33 分變 44 個 fantasy 分。"
+      "caption": "第二招，主力缺陣要看球權。公牛新秀 Caleb Wilson 手骨折要休四到六週，他不在場時，Norman Powell 的球權從 24% 跳到 32%，每三十六分鐘從 22 分變 37 個 fantasy 分。",
+      "narration": "第二招，主力缺陣要看球權。公牛新秀 Caleb Wilson 手骨折要休四到六週，他不在場時，Norman Powell 的球權從百分之 24 跳到百分之 32，每三十六分鐘從 22 分變 37 個 fantasy 分。"
     },
     {
       "rank": 1,
