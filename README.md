@@ -35,6 +35,7 @@ python3 make_short.py episodes/2026-wk06.json --voice voice.m4a
 1. 複製 `episodes/2026-wk06.json` → `episodes/2026-wk07.json`
 2. 改 `slug`、`week_label`、`date_range`、`as_of`，以及 3 位球員的 `first`/`last`/`team`/`team_zh`/`stats`/`reason`/`tags`/`caption`
 3. `caption` 就是字幕兼旁白稿，用「，。！」斷句。AI 念錯字可以加 `narration` 欄位寫念法；英文人名念錯就把念法加到 `assets/lexicon_extra.txt`
-4. 跑 `make_short.py`
+4. 預設是倒數（第 3 名 → 第 1 名）；想從第一個講起（例如「第一招、第二招、第三招」），在 JSON 加 `"order": "ascending"`
+5. 跑 `make_short.py`
 
 每集的旁白腳本和上傳資訊放在 `episodes/*-SCRIPT.md`。

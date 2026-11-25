@@ -3,6 +3,7 @@
   "week_label": "H2H",
   "date_range": "POINTS LEAGUE",
   "as_of": "數據截至 2026/11/25 · 來自我自己做的 Fantasy 日報網站",
+  "order": "ascending",
   "hook": {
     "duration": 3.0,
     "kicker": "ESPN FANTASY · 積分盟",
@@ -14,22 +15,22 @@
   },
   "players": [
     {
-      "rank": 3,
-      "kicker": "第 3 招  ·  分辨真開竅",
-      "first": "Caleb",
-      "last": "Martin",
-      "team": "DAL",
-      "team_zh": "獨行俠",
-      "accent": [255, 176, 32],
+      "rank": 1,
+      "kicker": "第 1 招  ·  看比賽節奏",
+      "first": "Isaac",
+      "last": "Okoro",
+      "team": "CHI",
+      "team_zh": "公牛",
+      "accent": [255, 92, 56],
       "stats": [
-        {"value": "10→30", "zh": "近 5 場平均暴增", "en": "FPTS PER GAME"},
-        {"value": "100%", "zh": "先發比例（之前 63%）", "en": "STARTS"}
+        {"value": "102.1", "zh": "公牛節奏 聯盟前二", "en": "PACE · LEAGUE AVG 98.7"},
+        {"value": "23.6", "zh": "近 5 場平均", "en": "FPTS · LAST 5"}
       ],
-      "reason": "上場、先發、球權都變多＝真開竅\n只有命中率變高的不算，那是手感",
-      "tags": ["MIN", "USAGE"],
+      "reason": "節奏快＝回合多＝大家都多拿分\n他也升上先發，上場 31 分鐘",
+      "tags": ["PACE", "FPTS"],
       "duration": 8.0,
-      "caption": "第三招，分辨真開竅。Caleb Martin 近五場從 10 暴增到 30 fpts，上場時間、先發、球權都變多，是真開竅。如果只有命中率變高，那是手感，小心回落。",
-      "narration": "第三招，分辨真開竅。Caleb Martin 近五場從 10 暴增到 30 fantasy points，上場時間、先發、球權都變多，是真開竅。如果只有命中率變高，那是手感，小心回落。"
+      "caption": "第一招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟前二，推薦 Isaac Okoro，升上先發後，近五場每場 23 fpts。",
+      "narration": "第一招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟前二，推薦 Isaac Okoro，升上先發後，近五場每場 23 fantasy points。"
     },
     {
       "rank": 2,
@@ -50,22 +51,22 @@
       "narration": "第二招，主力缺陣看誰真的受惠。灰熊新秀 Cameron Boozer 腳踝扭傷，四週後才再評估。他不在場時，Javon Small 每三十六分鐘從 16 暴增到 40 fantasy points。"
     },
     {
-      "rank": 1,
-      "kicker": "第 1 招  ·  看比賽節奏",
-      "first": "Isaac",
-      "last": "Okoro",
-      "team": "CHI",
-      "team_zh": "公牛",
-      "accent": [255, 92, 56],
+      "rank": 3,
+      "kicker": "第 3 招  ·  分辨真開竅",
+      "first": "Caleb",
+      "last": "Martin",
+      "team": "DAL",
+      "team_zh": "獨行俠",
+      "accent": [255, 176, 32],
       "stats": [
-        {"value": "102.1", "zh": "公牛節奏 聯盟前二", "en": "PACE · LEAGUE AVG 98.7"},
-        {"value": "23.6", "zh": "近 5 場平均", "en": "FPTS · LAST 5"}
+        {"value": "10→30", "zh": "近 5 場平均暴增", "en": "FPTS PER GAME"},
+        {"value": "100%", "zh": "先發比例（之前 63%）", "en": "STARTS"}
       ],
-      "reason": "節奏快＝回合多＝大家都多拿分\n他也升上先發，上場 31 分鐘",
-      "tags": ["PACE", "FPTS"],
+      "reason": "上場、先發、球權都變多＝真開竅\n只有命中率變高的不算，那是手感",
+      "tags": ["MIN", "USAGE"],
       "duration": 8.0,
-      "caption": "第一招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟前二，推薦 Isaac Okoro，升上先發後，近五場每場 23 fpts。",
-      "narration": "第一招，看比賽節奏。打得快的比賽回合多，大家都多拿分。公牛節奏聯盟前二，推薦 Isaac Okoro，升上先發後，近五場每場 23 fantasy points。"
+      "caption": "第三招，分辨真開竅。Caleb Martin 近五場從 10 暴增到 30 fpts，上場時間、先發、球權都變多，是真開竅。如果只有命中率變高，那是手感，小心回落。",
+      "narration": "第三招，分辨真開竅。Caleb Martin 近五場從 10 暴增到 30 fantasy points，上場時間、先發、球權都變多，是真開竅。如果只有命中率變高，那是手感，小心回落。"
     }
   ],
   "cta": {

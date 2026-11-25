@@ -386,10 +386,16 @@ def draw_caption(frame, sc, t, dur):
 
 # --------------------------------------------------------------------------- timeline
 
+def ordered_players(ep):
+    """Countdown (3, 2, 1) by default; "order": "ascending" in the episode tells it 1, 2, 3."""
+    asc = ep.get("order") == "ascending"
+    return sorted(ep["players"], key=lambda p: p["rank"] if asc else -p["rank"])
+
+
 def build_timeline(ep, narration=None):
     """narration: optional list (one per scene) of (audio, timings) from the TTS step."""
     scenes = [("hook", None, ep["hook"]["duration"], ep["hook"]["caption"])]
-    for pl in sorted(ep["players"], key=lambda p: -p["rank"]):
+    for pl in ordered_players(ep):
         scenes.append(("player", pl, pl["duration"], pl["caption"]))
     scenes.append(("cta", None, ep["cta"]["duration"], ep["cta"]["caption"]))
     out, start = [], 0.0
@@ -505,9 +511,9 @@ def synth_narration(ep, speed, sid):
     t2s = OpenCC("t2s")  # the model's lexicon is Simplified Chinese
     tts = make_tts()
     texts = [ep["hook"].get("narration", ep["hook"]["caption"])]
-    texts += [p.get("narration", p["caption"]) for p in sorted(ep["players"], key=lambda p: -p["rank"])]
+    texts += [p.get("narration", p["caption"]) for p in ordered_players(ep)]
     texts += [ep["cta"].get("narration", ep["cta"]["caption"])]
-    caps = [ep["hook"]["caption"]] + [p["caption"] for p in sorted(ep["players"], key=lambda p: -p["rank"])]
+    caps = [ep["hook"]["caption"]] + [p["caption"] for p in ordered_players(ep)]
     caps += [ep["cta"]["caption"]]
     result = []
     for text, cap in zip(texts, caps):
