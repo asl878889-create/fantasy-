@@ -632,7 +632,8 @@ def render_frame(ep, timeline, bg, T, shakes, captions=True):
     else:
         scene_cta(frame, ep, t, dur)
 
-    draw_progress(frame, idx, len(timeline), clamp(t / dur))
+    if ep.get("progress_bar"):  # story-style segment bar; off by default (Shorts has its own)
+        draw_progress(frame, idx, len(timeline), clamp(t / dur))
     if captions:
         draw_caption(frame, sc, t, dur)
     draw_wipes(frame, timeline, T)

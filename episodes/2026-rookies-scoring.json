@@ -1,0 +1,65 @@
+{
+  "slug": "2026-rookies-scoring",
+  "as_of": "數據截至 2026/11/25 · 出賽 5 場以上的新秀 · ESPN",
+  "scenes": [
+    {
+      "kind": "hook2",
+      "kicker": "2026 NBA 新秀",
+      "left": "#7",
+      "right": "#1",
+      "mid": ">",
+      "lines": ["新秀得分王，不是狀元", "連第 11 順位都贏他"],
+      "duration": 3.0,
+      "caption": "今年新秀得分最高的，不是狀元。"
+    },
+    {
+      "kind": "versus",
+      "title": "新秀每場得分",
+      "sides": [
+        {"tag": "第 7 順位", "first": "Darius", "last": "Acuff Jr.", "team": "SAC 國王", "value": "24.6", "label": "每場得分", "accent": [64, 224, 208], "win": "新秀得分王"},
+        {"tag": "狀元", "first": "AJ", "last": "Dybantsa", "team": "WSH 巫師", "value": "16.7", "label": "每場得分", "accent": [255, 120, 40]}
+      ],
+      "note": "每場多 7.9 分",
+      "note2": "Acuff 每場還有 7.2 助攻",
+      "caption": "第 7 順位的 Acuff，每場 24.6 分、7.2 助攻，狀元 Dybantsa 只有 16.7 分。"
+    },
+    {
+      "kind": "ranking",
+      "title": "新秀每場得分排行",
+      "subtitle": "出賽 5 場以上 · 2026/11/25",
+      "rows": [
+        {"name": "Darius Acuff Jr.", "tag": "第 7 順位", "value": "24.6", "accent": [64, 224, 208]},
+        {"name": "Yaxel Lendeborg", "tag": "第 11 順位", "value": "19.2", "accent": [255, 176, 32]},
+        {"name": "Caleb Wilson", "tag": "第 4 順位", "value": "18.9", "flag": "傷缺"},
+        {"name": "AJ Dybantsa", "tag": "狀元", "value": "16.7", "accent": [255, 120, 40]},
+        {"name": "Cameron Boozer", "tag": "第 3 順位", "value": "16.6", "flag": "傷缺"},
+        {"name": "Darryn Peterson", "tag": "榜眼", "value": "15.9", "accent": [255, 92, 56]}
+      ],
+      "caption": "得分排行，第 11 順位的 Lendeborg 排第二，狀元只排第四，榜眼排第六。"
+    },
+    {
+      "kind": "trend",
+      "accent": [255, 120, 40],
+      "tag": "狀元的反擊",
+      "first": "AJ",
+      "last": "Dybantsa",
+      "bars": [{"label": "整季平均", "value": "16.7"}, {"label": "近 5 場", "value": "20.0"}],
+      "note": "近 5 場還有 9.2 籃板、4.8 助攻",
+      "caption": "但先別說狀元是水貨。Dybantsa 最近五場，每場 20 分、9.2 籃板、4.8 助攻。"
+    },
+    {
+      "kind": "question",
+      "accent": [255, 120, 40],
+      "line1": "年度最佳新秀",
+      "line2": "你押誰？",
+      "options": [
+        {"text": "A  Acuff", "accent": [64, 224, 208]},
+        {"text": "B  Lendeborg", "accent": [255, 176, 32]},
+        {"text": "C  Dybantsa", "accent": [255, 120, 40]}
+      ],
+      "sub": "留言打 A、B、C",
+      "duration": 4.0,
+      "caption": "年度最佳新秀，你押誰？Acuff、Lendeborg，還是 Dybantsa？留言告訴我！"
+    }
+  ]
+}
