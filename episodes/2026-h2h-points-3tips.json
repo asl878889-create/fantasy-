@@ -32,20 +32,20 @@
     },
     {
       "rank": 2,
-      "kicker": "第 2 招  ·  輪流撿人",
-      "first": "Kelly",
-      "last": "Oubre Jr.",
-      "team": "IND",
-      "team_zh": "溜馬",
+      "kicker": "第 2 招  ·  主力缺陣誰受惠",
+      "first": "Isaiah",
+      "last": "Hartenstein",
+      "team": "OKC",
+      "team_zh": "雷霆",
       "accent": [64, 224, 208],
       "stats": [
-        {"value": "24.6", "zh": "近 5 場平均（翻倍）", "en": "FPTS · LAST 5"},
-        {"value": "+5.4", "zh": "上場分鐘變多", "en": "MINUTES"}
+        {"value": "33→44", "zh": "Holmgren 不在場時", "en": "FPTS PER 36 MIN"},
+        {"value": "8-10", "zh": "Holmgren 至少休幾週", "en": "WEEKS OUT"}
       ],
-      "reason": "同一個名額，每隔幾天換有比賽的人\n記得在開打前換",
-      "tags": ["GAMES", "ADDS"],
+      "reason": "不是只看誰補先發\n要看主力不在場時，隊友實際多拿多少",
+      "tags": ["WOWY", "REB"],
       "duration": 8.0,
-      "caption": "第二招，輪流撿人。積分盟比總分，多打一場就多拿分，同一個名額每隔幾天換一個有比賽的人。推薦 Kelly Oubre，上場時間變多，近五場翻倍到 24 個 fantasy 分。"
+      "caption": "第二招，主力缺陣看誰受惠。不是猜誰補先發，而是看主力不在場時，隊友實際多拿多少。雷霆 Holmgren 至少休八到十週，Hartenstein 在他不在場時，每三十六分鐘從 33 分變 44 個 fantasy 分。"
     },
     {
       "rank": 1,
