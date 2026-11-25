@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T01:08:03.162Z",
+  "updated": "2026-11-25T13:08:38.672Z",
   "items": {
     "3975": {
       "n": "Stephen Curry",
@@ -192,10 +192,10 @@
     },
     "4066259": {
       "n": "De'Aaron Fox",
-      "when": "2026-11-24T06:06Z",
-      "head": "Fox (shin) has been ruled out for Monday's game against the Kings, Jeff McDonald of the San Antonio Express-News reports.",
-      "story": "Fox will miss his second outing of the regular season due to a right shin contusion. Stephon Castle will operate as the primary ballhandler with Dylan Harper (hip) also sidelined, while Jordan McLaughlin should see increased burn off the Spurs' bench.",
-      "zh": "右小腿脛骨挫傷，週一對國王確定缺陣；本季第二場缺賽"
+      "when": "2026-11-25T01:27Z",
+      "head": "Fox (shin) is questionable to play Wednesday's game against the Trail Blazers.",
+      "story": "Fox sat out Monday's 123-107 win over Sacramento due to a right shin contusion, and he's now in danger of missing a second consecutive regular-season outing with the ailment. Stephon Castle will continue to see increased usage if Fox remains sidelined.",
+      "zh": "右脛骨挫傷，週一已缺陣，週三對拓荒者出賽成疑"
     },
     "4066336": {
       "n": "Lauri Markkanen",
@@ -217,13 +217,6 @@
       "head": "Jackson has been diagnosed with a torn MCL in his right knee and will be sidelined for 6-to-8 weeks, per Shams Charania of ESPN.",
       "story": "Jackson sustained the injury early in Monday's loss to Memphis, and he's now expected to miss at least a month and a half of action. The star big man's absence creates a major void in the Utah lineup, one that is likely to be filled by a timeshare of Jaxson Hayes (shoulder), Kyle Filipowski and Mo Bamba. The Jazz could also shift Lauri Markkanen (wrist), when healthy, to the center spot at times, perhaps allowing Ace Bailey to spend more time at power forward.",
       "zh": "右膝 MCL 撕裂，預計缺陣 6 到 8 週。"
-    },
-    "4278078": {
-      "n": "P.J. Washington",
-      "when": "2026-11-23T23:21Z",
-      "head": "Washington (illness) is questionable for Tuesday's game against the Nuggets.",
-      "story": "Washington is trying to end a two-game absence Tuesday with an illness. Following consecutive starts, Zaccharie Risacher figures to have the most to gain from another potential absence for Washington from a fantasy perspective.",
-      "zh": "生病，週二對金塊出賽成疑，已連續缺兩場"
     },
     "4279888": {
       "n": "Ja Morant",
@@ -493,10 +486,10 @@
     },
     "4898371": {
       "n": "Maxime Raynaud",
-      "when": "2026-11-18T05:54Z",
-      "head": "Raynaud (knee) will remain on the inactive list for Wednesday's game against the Suns.",
-      "story": "Raynaud continues to get ruled out a full day in advance of tipoff, suggesting he's still not close. He should be considered week-to-week moving forward.",
-      "zh": "膝蓋傷勢，週三對太陽確定缺陣，以週為單位觀察"
+      "when": "2026-11-25T04:21Z",
+      "head": "Raynaud (knee) is out for Wednesday's game against the Warriors.",
+      "story": "The Kings have not provided any updates on Raynaud, and he continues to get ruled out 24 hours in advance of tipoff, suggesting he's still not close. Raynaud should be considered week-to-week.",
+      "zh": "膝傷，週三對勇士確定缺陣，球隊未更新進度，預計還要缺陣數週"
     },
     "4914336": {
       "n": "Shaedon Sharpe",
@@ -556,10 +549,10 @@
     },
     "5104157": {
       "n": "Victor Wembanyama",
-      "when": "2026-11-24T06:06Z",
-      "head": "Wembanyama (back) won't play Monday against the Kings, Jeff McDonald of the San Antonio Express-News reports.",
-      "story": "Wembanyama is dealing with some back pain and will sit out Monday's game against the 1-14 Kings, but he's expected to return for Wednesday's NBA Cup game in Portland. Luka Kornet will likely get the start with Wembanyama unavailable, and Stephon Castle should see a sizeable uptick in usage.",
-      "zh": "背部不適，週一對國王確定缺陣；預計週三NBA盃對拓荒者復出"
+      "when": "2026-11-25T01:23Z",
+      "head": "Wembanyama (back) is questionable for Wednesday's game in Portland.",
+      "story": "Wembanyama sat out Monday's 123-107 win over the Kings due to a back issue, but it looks like he could be back in action Wednesday night. If he's cleared to return, Luke Kornet would head back to the second unit and Tarris Reed could drop from the rotation entirely.",
+      "zh": "背部不適，週一已缺陣，週三客場對拓荒者出賽成疑，有機會復出"
     },
     "5105462": {
       "n": "Richie Saunders",
