@@ -1,0 +1,70 @@
+{
+  "slug": "2026-rookies-11-vs-1",
+  "as_of": "數據截至 2026/11/25 · 出賽 5 場以上 · 來自我自己做的 Fantasy 日報網站",
+  "scenes": [
+    {
+      "kind": "hook2",
+      "kicker": "2026 NBA 新秀 · FANTASY",
+      "left": "#11",
+      "right": "#1",
+      "mid": ">",
+      "lines": ["第 11 順位打爆狀元？", "用數據說話"],
+      "duration": 3.0,
+      "caption": "今年新秀最強的，不是狀元。"
+    },
+    {
+      "kind": "versus",
+      "accent": [64, 224, 208],
+      "title": "Fantasy 每場平均",
+      "sides": [
+        {"tag": "第 11 順位", "first": "Yaxel", "last": "Lendeborg", "team": "GSW 勇士", "value": "31.6", "accent": [64, 224, 208], "win": "勝"},
+        {"tag": "狀元", "first": "AJ", "last": "Dybantsa", "team": "WSH 巫師", "value": "26.2", "accent": [255, 120, 40]}
+      ],
+      "note": "整季平均差 5.4 fpts",
+      "note2": "ESPN 積分盟預設計分",
+      "caption": "用 fantasy 分數算，第 11 順位的 Lendeborg 平均 31.6 fpts，狀元 Dybantsa 只有 26.2。",
+      "narration": "用 fantasy 分數算，第 11 順位的 Lendeborg 平均 31.6 fantasy points，狀元 Dybantsa 只有 26.2。"
+    },
+    {
+      "kind": "ranking",
+      "accent": [255, 176, 32],
+      "title": "新秀 Fantasy 平均排行",
+      "subtitle": "出賽 5 場以上 · 每場 fpts",
+      "rows": [
+        {"name": "Cameron Boozer", "tag": "第 3 順位", "value": "33.2", "flag": "傷缺"},
+        {"name": "Yaxel Lendeborg", "tag": "第 11 順位", "value": "31.6", "accent": [64, 224, 208]},
+        {"name": "Darius Acuff Jr.", "tag": "第 7 順位", "value": "28.5"},
+        {"name": "Aday Mara", "tag": "第 12 順位", "value": "27.8", "flag": "傷缺"},
+        {"name": "Caleb Wilson", "tag": "第 4 順位", "value": "27.6", "flag": "傷缺"},
+        {"name": "AJ Dybantsa", "tag": "狀元", "value": "26.2", "accent": [255, 120, 40]},
+        {"name": "Darryn Peterson", "tag": "榜眼", "value": "24.7", "accent": [255, 92, 56]}
+      ],
+      "caption": "排行榜前五名，有三個不是前五順位。狀元排第六，榜眼更慘，排第七。"
+    },
+    {
+      "kind": "trend",
+      "accent": [255, 120, 40],
+      "tag": "狀元的反擊",
+      "first": "AJ",
+      "last": "Dybantsa",
+      "bars": [{"label": "整季平均", "value": "26.2"}, {"label": "近 5 場", "value": "37.2"}],
+      "note": "比所有新秀的整季平均都高",
+      "caption": "但先別說狀元是水貨。Dybantsa 最近五場平均 37.2 fpts，比所有新秀的整季平均都高。",
+      "narration": "但先別說狀元是水貨。Dybantsa 最近五場平均 37.2 fantasy points，比所有新秀的整季平均都高。"
+    },
+    {
+      "kind": "question",
+      "accent": [255, 120, 40],
+      "line1": "年度最佳新秀",
+      "line2": "你押誰？",
+      "options": [
+        {"text": "A  Boozer", "accent": [255, 176, 32]},
+        {"text": "B  Lendeborg", "accent": [64, 224, 208]},
+        {"text": "C  Dybantsa", "accent": [255, 120, 40]}
+      ],
+      "sub": "留言打 A、B、C",
+      "duration": 4.0,
+      "caption": "所以年度最佳新秀，你押誰？Boozer、Lendeborg，還是 Dybantsa？留言告訴我！"
+    }
+  ]
+}

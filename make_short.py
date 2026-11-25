@@ -338,6 +338,185 @@ def scene_cta(frame, ep, t, dur):
     blit(frame, asof, W / 2, 1300, alpha=prog(t, 1.2, 0.3), anchor="ct")
 
 
+
+# --------------------------------------------------------------------------- free-form scenes
+
+TEAL = (64, 224, 208)
+GOLD = (255, 176, 32)
+
+
+def count_up(value, p):
+    """Animate a number like '31.6' from 0 while keeping its decimals."""
+    try:
+        v = float(value)
+    except ValueError:
+        return value
+    dec = len(value.split(".")[1]) if "." in value else 0
+    return f"{v * ease_out(p):.{dec}f}"
+
+
+def scene_hook2(frame, ep, d, t, dur):
+    """Big comparison hook, e.g. '#11 > #1?' with a line under it."""
+    a = tuple(d.get("accent", HOOK_ACCENT))
+    blit(frame, glow_sprite(a), W / 2 + 100 * math.sin(t * 1.3), 820, alpha=0.9, anchor="cc", shake=False)
+    k = text_sprite(d["kicker"], font("latin", 40, "Bold"), DIM, tracking=10)
+    blit(frame, k, W / 2, 330, alpha=prog(t, 0, 0.3), anchor="ct")
+    left = text_sprite(d["left"], font("latin", 250), tuple(d.get("left_color", TEAL)) + (255,))
+    right = text_sprite(d["right"], font("latin", 250), tuple(d.get("right_color", HOOK_ACCENT)) + (255,))
+    mid = text_sprite(d.get("mid", ">"), font("latin", 150), WHITE)
+    p1, p2, p3 = prog(t, 0.05, 0.3), prog(t, 0.35, 0.3), prog(t, 0.55, 0.25)
+    gap = 50
+    total = left.width + mid.width + right.width + 2 * gap
+    x0 = W / 2 - total / 2
+    blit(frame, left, x0 + left.width / 2 - 200 * (1 - ease_out(p1)), 640, alpha=p1, anchor="cc")
+    blit(frame, right, x0 + left.width + mid.width + 2 * gap + right.width / 2 + 200 * (1 - ease_out(p2)), 640,
+         alpha=p2, anchor="cc")
+    blit(frame, mid, x0 + left.width + gap + mid.width / 2, 650, alpha=p3, scale=2 - ease_out(p3), anchor="cc")
+    for i, line in enumerate(d["lines"]):
+        f = fit_font("cjk", line, W - 140, 120 if i == 0 else 64, "Black" if i == 0 else "Bold")
+        spr = text_sprite(line, f, WHITE if i == 0 else tuple(d.get("line2_color", GOLD)) + (255,))
+        p = prog(t, 0.8 + i * 0.25, 0.3)
+        blit(frame, spr, W / 2, 900 + i * 170, alpha=p, scale=1.3 - 0.3 * ease_out(p), anchor="ct")
+
+
+def versus_card(side, accent, w=440, h=760):
+    key = ("vcard", side["last"], accent)
+    if key in _sprites:
+        return _sprites[key]
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(img)
+    dr.rounded_rectangle((0, 0, w - 1, h - 1), 34, fill=(255, 255, 255, 20), outline=accent + (200,), width=4)
+    tag = pill_sprite(side["tag"], font("cjk", 38, "Black"), accent + (255,), (15, 15, 25, 255))
+    img.alpha_composite(tag, ((w - tag.width) // 2, 36))
+    fn = text_sprite(side["first"].upper(), font("latin", 46, "ExtraBold"), (255, 255, 255, 190), tracking=4)
+    img.alpha_composite(fn, ((w - fn.width) // 2, 150))
+    ln = text_sprite(side["last"].upper(), fit_font("latin", side["last"].upper(), w - 50, 84), WHITE)
+    img.alpha_composite(ln, ((w - ln.width) // 2, 210))
+    tm = text_sprite(side["team"], font("cjk", 36, "Bold"), DIM)
+    img.alpha_composite(tm, ((w - tm.width) // 2, 320))
+    lab = text_sprite(side.get("label", "每場平均"), font("cjk", 34, "Bold"), DIM)
+    img.alpha_composite(lab, ((w - lab.width) // 2, h - 120))
+    _sprites[key] = img
+    return img
+
+
+def scene_versus(frame, ep, d, t, dur):
+    title = pill_sprite(d["title"], font("cjk", 40, "Black"), (255, 255, 255, 235), (15, 15, 25, 255))
+    blit(frame, title, W / 2, 210, alpha=prog(t, 0, 0.3), anchor="ct")
+    sides = d["sides"]
+    for i, sd in enumerate(sides):
+        acc = tuple(sd["accent"])
+        card = versus_card(sd, acc)
+        p = prog(t, 0.15 + i * 0.2, 0.4)
+        x = 80 + card.width / 2 + i * (card.width + 40)
+        blit(frame, card, x + (-1 if i == 0 else 1) * 160 * (1 - ease_out(p)), 330 + card.height / 2, alpha=p, anchor="cc")
+        val = count_up(sd["value"], prog(t, 0.5, 0.8))
+        v = text_sprite(val, font("latin", 150), acc + (255,))
+        blit(frame, v, x, 330 + 430, alpha=p, anchor="cc")
+        if sd.get("win"):
+            pw = prog(t, 1.4, 0.3)
+            crown = pill_sprite(sd["win"], font("cjk", 40, "Black"), acc + (255,), (15, 15, 25, 255))
+            blit(frame, crown, x, 330 + 560, alpha=pw, scale=0.5 + 0.5 * ease_back(pw), anchor="cc")
+    vs = pill_sprite("VS", font("latin", 46), (15, 15, 25, 255), WHITE, padx=22, pady=14)
+    pv = prog(t, 0.45, 0.3)
+    blit(frame, vs, W / 2, 330 + 380, alpha=pv, scale=0.5 + 0.5 * ease_back(pv), anchor="cc")
+    if d.get("note"):
+        n = text_sprite(d["note"], fit_font("cjk", d["note"], W - 160, 46, "Bold"), WHITE)
+        blit(frame, n, W / 2, 1150, alpha=prog(t, 1.6, 0.4), anchor="ct")
+    if d.get("note2"):
+        n = text_sprite(d["note2"], fit_font("cjk", d["note2"], W - 160, 34, "Medium"), DIM)
+        blit(frame, n, W / 2, 1222, alpha=prog(t, 1.9, 0.4), anchor="ct")
+
+
+def scene_ranking(frame, ep, d, t, dur):
+    title = text_sprite(d["title"], fit_font("cjk", d["title"], W - 160, 70, "Black"), WHITE)
+    blit(frame, title, 80, 190, alpha=prog(t, 0, 0.3))
+    sub = text_sprite(d["subtitle"], font("cjk", 34, "Bold"), DIM)
+    blit(frame, sub, 80, 290, alpha=prog(t, 0.1, 0.3))
+    rows = d["rows"]
+    vmax = max(float(r["value"]) for r in rows)
+    y0, rh = 370, min(130, int(1020 / len(rows)))
+    dr = ImageDraw.Draw(frame)
+    for i, r in enumerate(rows):
+        p = prog(t, 0.3 + i * 0.22, 0.45)
+        if p <= 0:
+            continue
+        y = y0 + i * rh
+        acc = tuple(r.get("accent", (120, 130, 160)))
+        hl = r.get("accent") is not None
+        num = text_sprite(str(i + 1), font("latin", 56), (acc if hl else (200, 200, 215)) + (255,))
+        blit(frame, num, 80, y + 8, alpha=p)
+        nm = text_sprite(r["name"], font("latin", 44, "ExtraBold"), WHITE if hl else (235, 235, 245, 255))
+        blit(frame, nm, 150, y + 4, alpha=p)
+        tag = pill_sprite(r["tag"], font("cjk", 28, "Black"), acc + (255,) if hl else (70, 76, 100, 255),
+                          (15, 15, 25, 255) if hl else WHITE, padx=16, pady=6)
+        blit(frame, tag, 150 + nm.width + 14, y + 10, alpha=p)
+        if r.get("flag"):
+            fl = pill_sprite(r["flag"], font("cjk", 26, "Bold"), (90, 30, 34, 255), (255, 140, 140, 255), padx=12, pady=5)
+            blit(frame, fl, 150 + nm.width + 14 + tag.width + 10, y + 12, alpha=p)
+        bw = (W - 150 - 220) * float(r["value"]) / vmax * ease_out(p)
+        by = y + 66
+        dr.rounded_rectangle((150, by, 150 + max(10, bw), by + 30), 15, fill=(acc if hl else (90, 98, 128)) + (255,))
+        v = text_sprite(count_up(r["value"], p), font("latin", 44), (acc if hl else (220, 220, 235)) + (255,))
+        blit(frame, v, 150 + bw + 18, by - 10, alpha=p)
+
+
+def scene_trend(frame, ep, d, t, dur):
+    a = tuple(d.get("accent", HOOK_ACCENT))
+    blit(frame, glow_sprite(a), 760, 760, alpha=0.8, anchor="cc", shake=False)
+    tag = pill_sprite(d["tag"], font("cjk", 36, "Black"), a + (255,), (15, 15, 25, 255))
+    blit(frame, tag, 80, 200, alpha=prog(t, 0, 0.3))
+    fn = text_sprite(d["first"].upper(), font("latin", 70, "ExtraBold"), (255, 255, 255, 190), tracking=6)
+    blit(frame, fn, 80, 290, alpha=prog(t, 0.1, 0.3))
+    ln = text_sprite(d["last"].upper(), fit_font("latin", d["last"].upper(), W - 160, 170), WHITE)
+    blit(frame, ln, 80, 370, alpha=prog(t, 0.2, 0.3))
+    base_y, maxh = 1120, 480
+    vals = [float(b["value"]) for b in d["bars"]]
+    top = max(vals)
+    dr = ImageDraw.Draw(frame)
+    for i, b in enumerate(d["bars"]):
+        p = prog(t, 0.5 + i * 0.45, 0.6)
+        x = 150 + i * 430
+        hgt = maxh * float(b["value"]) / top * ease_out(p)
+        col = a if i == len(d["bars"]) - 1 else (110, 118, 150)
+        dr.rounded_rectangle((x, base_y - hgt, x + 300, base_y), 22, fill=col + (255,))
+        v = text_sprite(count_up(b["value"], p), font("latin", 96), col + (255,) if i else (220, 220, 235, 255))
+        blit(frame, v, x + 150, base_y - hgt - 70, alpha=min(1, p * 3), anchor="cc")
+        lb = text_sprite(b["label"], font("cjk", 40, "Bold"), WHITE)
+        blit(frame, lb, x + 150, base_y + 24, alpha=min(1, p * 3), anchor="ct")
+    if len(d["bars"]) == 2:
+        pa = prog(t, 1.2, 0.3)
+        arrow = text_sprite("→", font("latin", 110), WHITE)
+        blit(frame, arrow, 515, base_y - 140, alpha=pa, anchor="cc")
+    if d.get("note"):
+        n = text_sprite(d["note"], fit_font("cjk", d["note"], W - 160, 46, "Bold"), tuple(GOLD) + (255,))
+        blit(frame, n, W / 2, 1250, alpha=prog(t, 1.6, 0.4), anchor="ct")
+
+
+def scene_question(frame, ep, d, t, dur):
+    a = tuple(d.get("accent", HOOK_ACCENT))
+    blit(frame, glow_sprite(a), W / 2, 760 + 40 * math.sin(t * 2), alpha=0.8, anchor="cc", shake=False)
+    l1 = text_sprite(d["line1"], fit_font("cjk", d["line1"], W - 140, 120), WHITE)
+    p = prog(t, 0, 0.3)
+    blit(frame, l1, W / 2, 330, alpha=p, scale=1.4 - 0.4 * ease_out(p), anchor="ct")
+    l2 = text_sprite(d["line2"], fit_font("cjk", d["line2"], W - 140, 100), a + (255,))
+    p = prog(t, 0.25, 0.3)
+    blit(frame, l2, W / 2, 490, alpha=p, scale=1.4 - 0.4 * ease_out(p), anchor="ct")
+    for i, opt in enumerate(d["options"]):
+        pp = prog(t, 0.6 + i * 0.18, 0.35)
+        acc = tuple(opt.get("accent", (255, 255, 255)))
+        pill = pill_sprite(opt["text"], font("cjk", 56, "Black"), acc + (255,), (15, 15, 25, 255), padx=50, pady=22)
+        blit(frame, pill, W / 2, 720 + i * 150, alpha=pp, scale=0.6 + 0.4 * ease_back(pp), anchor="ct")
+    if d.get("sub"):
+        s_ = text_sprite(d["sub"], font("cjk", 44, "Bold"), WHITE)
+        blit(frame, s_, W / 2, 1200, alpha=prog(t, 1.3, 0.3), anchor="ct")
+    asof = text_sprite(ep["as_of"], fit_font("cjk", ep["as_of"], W - 160, 28, "Medium"), DIM)
+    blit(frame, asof, W / 2, 1300, alpha=prog(t, 1.5, 0.3), anchor="ct")
+
+
+EXTRA_SCENES = {"hook2": scene_hook2, "versus": scene_versus, "ranking": scene_ranking,
+                "trend": scene_trend, "question": scene_question}
+
 # --------------------------------------------------------------------------- captions
 
 def split_phrases(text):
@@ -392,20 +571,31 @@ def ordered_players(ep):
     return sorted(ep["players"], key=lambda p: p["rank"] if asc else -p["rank"])
 
 
+def scene_specs(ep):
+    """Every scene as (kind, data, min_duration, caption, narration).
+
+    Episodes either use the fixed hook / players / cta layout, or list free-form
+    "scenes" (kinds: hook2, versus, ranking, trend, question)."""
+    if "scenes" in ep:
+        return [(s["kind"], s, s.get("duration", 3.0), s["caption"], s.get("narration", s["caption"]))
+                for s in ep["scenes"]]
+    out = [("hook", None, ep["hook"]["duration"], ep["hook"]["caption"], ep["hook"].get("narration", ep["hook"]["caption"]))]
+    for pl in ordered_players(ep):
+        out.append(("player", pl, pl["duration"], pl["caption"], pl.get("narration", pl["caption"])))
+    out.append(("cta", None, ep["cta"]["duration"], ep["cta"]["caption"], ep["cta"].get("narration", ep["cta"]["caption"])))
+    return out
+
+
 def build_timeline(ep, narration=None):
     """narration: optional list (one per scene) of (audio, timings) from the TTS step."""
-    scenes = [("hook", None, ep["hook"]["duration"], ep["hook"]["caption"])]
-    for pl in ordered_players(ep):
-        scenes.append(("player", pl, pl["duration"], pl["caption"]))
-    scenes.append(("cta", None, ep["cta"]["duration"], ep["cta"]["caption"]))
     out, start = [], 0.0
-    for i, (kind, pl, dur, cap) in enumerate(scenes):
+    for i, (kind, pl, dur, cap, _) in enumerate(scene_specs(ep)):
         sc = dict(kind=kind, pl=pl, start=start, dur=dur, caption=cap)
         if narration:
             audio, timings = narration[i]
             sc["voice"] = audio
             sc["timings"] = [(ph, VOICE_LEAD + a, VOICE_LEAD + b) for ph, a, b in timings]
-            sc["dur"] = dur = max(dur if kind == "hook" else 2.5, VOICE_LEAD + len(audio) / SR + VOICE_TAIL)
+            sc["dur"] = dur = max(dur if kind in ("hook", "hook2") else 2.5, VOICE_LEAD + len(audio) / SR + VOICE_TAIL)
         out.append(sc)
         start += dur
     return out, start
@@ -414,6 +604,8 @@ def build_timeline(ep, narration=None):
 def impacts(timeline):
     times = [sc["start"] + 0.72 for sc in timeline if sc["kind"] == "hook"]
     times += [sc["start"] + 0.3 for sc in timeline if sc["kind"] == "player"]
+    times += [sc["start"] + 0.55 for sc in timeline if sc["kind"] == "hook2"]
+    times += [sc["start"] + 1.0 for sc in timeline if sc["kind"] == "versus"]
     return times
 
 
@@ -431,6 +623,8 @@ def render_frame(ep, timeline, bg, T, shakes, captions=True):
         scene_hook(frame, ep, t, dur)
     elif sc["kind"] == "player":
         scene_player(frame, ep, sc["pl"], t, dur)
+    elif sc["kind"] in EXTRA_SCENES:
+        EXTRA_SCENES[sc["kind"]](frame, ep, sc["pl"], t, dur)
     else:
         scene_cta(frame, ep, t, dur)
 
@@ -447,7 +641,7 @@ def draw_wipes(frame, timeline, T):
         b = sc["start"]
         if abs(T - b) < half:
             p = (T - b + half) / (2 * half)
-            color = tuple(sc["pl"]["accent"]) if sc["pl"] else HOOK_ACCENT
+            color = tuple(sc["pl"]["accent"]) if sc["pl"] and sc["pl"].get("accent") else HOOK_ACCENT
             cx = -900 + p * (W + 1800)
             skew, bw = 500, 900
             d = ImageDraw.Draw(frame)
@@ -510,11 +704,9 @@ def synth_narration(ep, speed, sid):
     from opencc import OpenCC
     t2s = OpenCC("t2s")  # the model's lexicon is Simplified Chinese
     tts = make_tts()
-    texts = [ep["hook"].get("narration", ep["hook"]["caption"])]
-    texts += [p.get("narration", p["caption"]) for p in ordered_players(ep)]
-    texts += [ep["cta"].get("narration", ep["cta"]["caption"])]
-    caps = [ep["hook"]["caption"]] + [p["caption"] for p in ordered_players(ep)]
-    caps += [ep["cta"]["caption"]]
+    specs = scene_specs(ep)
+    texts = [x[4] for x in specs]
+    caps = [x[3] for x in specs]
     result = []
     for text, cap in zip(texts, caps):
         spoken, shown = split_phrases(text), split_phrases(cap)
