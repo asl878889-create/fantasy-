@@ -472,7 +472,7 @@ def scene_trend(frame, ep, d, t, dur):
     blit(frame, tag, 80, 200, alpha=prog(t, 0, 0.3))
     fn = text_sprite(d["first"].upper(), font("latin", 70, "ExtraBold"), (255, 255, 255, 190), tracking=6)
     blit(frame, fn, 80, 290, alpha=prog(t, 0.1, 0.3))
-    ln = text_sprite(d["last"].upper(), fit_font("latin", d["last"].upper(), W - 160, 170), WHITE)
+    ln = text_sprite(d["last"].upper(), fit_font("latin", d["last"].upper(), W - 160, d.get("last_size", 170)), WHITE)
     blit(frame, ln, 80, 370, alpha=prog(t, 0.2, 0.3))
     base_y, maxh = 1120, 480
     vals = [float(b["value"]) for b in d["bars"]]

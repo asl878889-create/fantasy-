@@ -1,0 +1,159 @@
+{
+  "slug": "2026-b2b-second-night",
+  "as_of": "上季＋本季例行賽 · 背靠背第二天有出賽 10 場以上 · ESPN 逐場數據 · 截至 2026/11/25",
+  "scenes": [
+    {
+      "kind": "hook2",
+      "kicker": "KLAY THOMPSON · 連續兩天比賽",
+      "left": "12",
+      "mid": "→",
+      "right": "15",
+      "lines": [
+        "36 歲，第二天反而更猛？",
+        "每場得分 11.7 → 15.4（背靠背第二天）"
+      ],
+      "duration": 3.0,
+      "caption": "36 歲的 Klay，連續兩天比賽，第二天反而多拿三成的分。"
+    },
+    {
+      "kind": "trend",
+      "accent": [
+        64,
+        224,
+        208
+      ],
+      "tag": "反直覺",
+      "first": "全聯盟",
+      "last": "平均得分",
+      "bars": [
+        {
+          "label": "平常",
+          "value": "13.6"
+        },
+        {
+          "label": "第二天",
+          "value": "13.9"
+        }
+      ],
+      "note": "背靠背第二天，得分反而多 2%",
+      "caption": "先講一個反直覺的：全聯盟平均，背靠背第二天得分反而多 2%。",
+      "last_size": 110
+    },
+    {
+      "kind": "ranking",
+      "title": "第二天得分少幾 %",
+      "subtitle": "跟平常每場得分比 · 上季＋本季",
+      "rows": [
+        {
+          "name": "Kyle Kuzma",
+          "tag": "MIL 公鹿",
+          "value": "22.4",
+          "accent": [
+            255,
+            92,
+            56
+          ]
+        },
+        {
+          "name": "Max Christie",
+          "tag": "DAL 獨行俠",
+          "value": "21.8"
+        },
+        {
+          "name": "Tari Eason",
+          "tag": "HOU 火箭",
+          "value": "21.2"
+        },
+        {
+          "name": "Bilal Coulibaly",
+          "tag": "WSH 巫師",
+          "value": "20.8"
+        },
+        {
+          "name": "Jaden McDaniels",
+          "tag": "MIN 灰狼",
+          "value": "20.3",
+          "accent": [
+            255,
+            120,
+            40
+          ]
+        },
+        {
+          "name": "Rui Hachimura",
+          "tag": "LAC 快艇",
+          "value": "20.2",
+          "accent": [
+            255,
+            176,
+            32
+          ]
+        }
+      ],
+      "caption": "但有人第二天直接變另一個人：Kuzma 少 22%，McDaniels 少 20%，八村壘也少 20%。",
+      "narration": "但有人第二天直接變另一個人：Kuzma 少百分之二十二，McDaniels 少百分之二十，八村壘也少百分之二十。"
+    },
+    {
+      "kind": "trend",
+      "accent": [
+        255,
+        92,
+        56
+      ],
+      "tag": "MIA 熱火 · 36 歲",
+      "first": "Klay",
+      "last": "Thompson",
+      "bars": [
+        {
+          "label": "平常",
+          "value": "11.7"
+        },
+        {
+          "label": "第二天",
+          "value": "15.4"
+        }
+      ],
+      "note": "第二天上場時間還少 1 分鐘",
+      "caption": "反過來，Klay 第二天每場 15.4 分，平常只有 11.7，而且上場時間還更少。"
+    },
+    {
+      "kind": "question",
+      "accent": [
+        255,
+        92,
+        56
+      ],
+      "line1": "Klay 第二天更猛",
+      "line2": "你覺得為什麼？",
+      "options": [
+        {
+          "text": "A  老將有經驗",
+          "accent": [
+            64,
+            224,
+            208
+          ]
+        },
+        {
+          "text": "B  對手比他更累",
+          "accent": [
+            255,
+            176,
+            32
+          ]
+        },
+        {
+          "text": "C  只是運氣",
+          "accent": [
+            255,
+            92,
+            56
+          ]
+        }
+      ],
+      "sub": "留言打 A、B、C",
+      "duration": 4.0,
+      "caption": "36 歲反而第二天更猛，你覺得為什麼？老將經驗、對手更累，還是只是運氣？留言告訴我！"
+    }
+  ]
+}
