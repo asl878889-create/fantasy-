@@ -41,57 +41,31 @@
     },
     {
       "kind": "ranking",
-      "title": "第二天得分少幾 %",
-      "subtitle": "跟平常每場得分比 · 上季＋本季",
+      "title": "背靠背第二天，得分少兩成",
+      "subtitle": "每場得分：平常 → 第二天 · 上季＋本季",
       "rows": [
         {
           "name": "Kyle Kuzma",
           "tag": "MIL 公鹿",
-          "value": "22.4",
-          "accent": [
-            255,
-            92,
-            56
-          ]
-        },
-        {
-          "name": "Max Christie",
-          "tag": "DAL 獨行俠",
-          "value": "21.8"
-        },
-        {
-          "name": "Tari Eason",
-          "tag": "HOU 火箭",
-          "value": "21.2"
-        },
-        {
-          "name": "Bilal Coulibaly",
-          "tag": "WSH 巫師",
-          "value": "20.8"
+          "detail": "13.5 → 10.5 分",
+          "change": "−22%"
         },
         {
           "name": "Jaden McDaniels",
           "tag": "MIN 灰狼",
-          "value": "20.3",
-          "accent": [
-            255,
-            120,
-            40
-          ]
+          "detail": "16.3 → 13.0 分",
+          "change": "−20%"
         },
         {
           "name": "Rui Hachimura",
           "tag": "LAC 快艇",
-          "value": "20.2",
-          "accent": [
-            255,
-            176,
-            32
-          ]
+          "detail": "12.4 → 9.9 分",
+          "change": "−20%"
         }
       ],
       "caption": "但有人第二天直接變另一個人：Kuzma 少 22%，McDaniels 少 20%，八村壘也少 20%。",
-      "narration": "但有人第二天直接變另一個人：Kuzma 少百分之二十二，McDaniels 少百分之二十，八村壘也少百分之二十。"
+      "narration": "但有人第二天直接變另一個人：Kuzma 少百分之二十二，McDaniels 少百分之二十，八村壘也少百分之二十。",
+      "style": "delta"
     },
     {
       "kind": "trend",

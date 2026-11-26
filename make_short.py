@@ -194,6 +194,8 @@ def blit(frame, spr, x, y, alpha=1.0, scale=1.0, anchor="lt", shake=True):
         s.putalpha(s.getchannel("A").point(lambda v: int(v * alpha)))
     if anchor[0] == "c":
         x -= s.width / 2
+    elif anchor[0] == "r":
+        x -= s.width
     if anchor[1] == "c":
         y -= s.height / 2
     if shake:
@@ -432,12 +434,35 @@ def scene_versus(frame, ep, d, t, dur):
         blit(frame, n, W / 2, 1222, alpha=prog(t, 1.9, 0.4), anchor="ct")
 
 
+def ranking_delta(frame, d, rows, t):
+    """Rows of 'before -> after' with a big change label on the right, e.g. '-22%'."""
+    y0, rh = 420, 250
+    for i, r in enumerate(rows):
+        p = prog(t, 0.3 + i * 0.3, 0.45)
+        if p <= 0:
+            continue
+        y = y0 + i * rh
+        acc = tuple(r.get("accent", (255, 92, 56)))
+        dr = ImageDraw.Draw(frame)
+        dr.rounded_rectangle((60, y, W - 60, y + 190), 28, fill=(32, 34, 54, int(255 * p)))
+        nm = text_sprite(r["name"], fit_font("latin", r["name"], 520, 56, "ExtraBold"), WHITE)
+        blit(frame, nm, 100, y + 28, alpha=p)
+        tag = pill_sprite(r["tag"], font("cjk", 30, "Black"), (70, 76, 100, 255), WHITE, padx=16, pady=6)
+        det = text_sprite(r["detail"], font("cjk", 44, "Bold"), DIM)
+        blit(frame, det, 100, y + 112, alpha=p)
+        blit(frame, tag, 100 + det.width + 20, y + 118, alpha=p)
+        v = text_sprite(r["change"], font("latin", 110), acc + (255,))
+        blit(frame, v, W - 100, y + 95, alpha=p, scale=1.4 - 0.4 * ease_out(p), anchor="rc")
+
+
 def scene_ranking(frame, ep, d, t, dur):
     title = text_sprite(d["title"], fit_font("cjk", d["title"], W - 160, 70, "Black"), WHITE)
     blit(frame, title, 80, 190, alpha=prog(t, 0, 0.3))
     sub = text_sprite(d["subtitle"], font("cjk", 34, "Bold"), DIM)
     blit(frame, sub, 80, 290, alpha=prog(t, 0.1, 0.3))
     rows = d["rows"]
+    if d.get("style") == "delta":
+        return ranking_delta(frame, d, rows, t)
     vmax = max(float(r["value"]) for r in rows)
     y0, rh = 370, min(130, int(1020 / len(rows)))
     dr = ImageDraw.Draw(frame)
