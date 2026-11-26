@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-25T19:11:40.939Z",
- "file": "Injury-Report_2026-11-25_02_00PM.pdf",
- "report": "11/25/26 02:00 PM",
+ "updated": "2026-11-26T03:12:10.476Z",
+ "file": "Injury-Report_2026-11-25_10_00PM.pdf",
+ "report": "11/25/26 10:00 PM",
  "items": {
   "giannis antetokounmpo": [
    {
     "n": "Giannis Antetokounmpo",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Right Groin Tendinitis",
     "gd": "2026-11-25",
     "mu": "MIA@PHI",
@@ -46,7 +46,7 @@
   "joel embiid": [
    {
     "n": "Joel Embiid",
-    "st": "Doubtful",
+    "st": "Out",
     "why": "Illness",
     "gd": "2026-11-25",
     "mu": "MIA@PHI",
@@ -96,7 +96,7 @@
   "jalen smith": [
    {
     "n": "Jalen Smith",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Gastrointestinal Illness",
     "gd": "2026-11-25",
     "mu": "CHI@CHA",
@@ -146,7 +146,7 @@
   "sion james": [
    {
     "n": "Sion James",
-    "st": "Probable",
+    "st": "Available",
     "why": "Left Thigh Soreness",
     "gd": "2026-11-25",
     "mu": "CHI@CHA",
@@ -246,7 +246,7 @@
   "jalen brunson": [
    {
     "n": "Jalen Brunson",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Illness",
     "gd": "2026-11-25",
     "mu": "CLE@NYK",
@@ -266,7 +266,7 @@
   "josh hart": [
    {
     "n": "Josh Hart",
-    "st": "Probable",
+    "st": "Available",
     "why": "Right Shoulder Sprain",
     "gd": "2026-11-25",
     "mu": "CLE@NYK",
@@ -286,7 +286,7 @@
   "karl anthony towns": [
    {
     "n": "Karl-Anthony Towns",
-    "st": "Probable",
+    "st": "Available",
     "why": "Right Knee Inflammation",
     "gd": "2026-11-25",
     "mu": "CLE@NYK",
@@ -506,7 +506,7 @@
   "jalen pickett": [
    {
     "n": "Jalen Pickett",
-    "st": "Questionable",
+    "st": "Out",
     "why": "G League - Two-Way",
     "gd": "2026-11-25",
     "mu": "LAC@MEM",
@@ -563,6 +563,26 @@
     "tm": "Memphis Grizzlies"
    }
   ],
+  "pat spencer": [
+   {
+    "n": "Pat Spencer",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "PHX@HOU",
+    "tm": "Phoenix Suns"
+   }
+  ],
+  "drew timme": [
+   {
+    "n": "Drew Timme",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-25",
+    "mu": "PHX@HOU",
+    "tm": "Phoenix Suns"
+   }
+  ],
   "mark williams": [
    {
     "n": "Mark Williams",
@@ -591,6 +611,16 @@
     "gd": "2026-11-25",
     "mu": "PHX@HOU",
     "tm": "Houston Rockets"
+   }
+  ],
+  "zach lavine": [
+   {
+    "n": "Zach LaVine",
+    "st": "Out",
+    "why": "Right Knee Soreness",
+    "gd": "2026-11-25",
+    "mu": "SAC@GSW",
+    "tm": "Sacramento Kings"
    }
   ],
   "jonathan mogbo": [
@@ -646,7 +676,7 @@
   "yaxel lendeborg": [
    {
     "n": "Yaxel Lendeborg",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Illness",
     "gd": "2026-11-25",
     "mu": "SAC@GSW",
@@ -657,7 +687,7 @@
    {
     "n": "Moses Moody",
     "st": "Out",
-    "why": "Left Patellar Tendon",
+    "why": "Left Patellar Tendon Repair / Surgery",
     "gd": "2026-11-25",
     "mu": "SAC@GSW",
     "tm": "Golden State Warriors"
@@ -676,7 +706,7 @@
   "brandon williams": [
    {
     "n": "Brandon Williams",
-    "st": "Questionable",
+    "st": "Available",
     "why": "Left Hamstring Strain",
     "gd": "2026-11-25",
     "mu": "SAC@GSW",
@@ -686,7 +716,7 @@
   "de aaron fox": [
    {
     "n": "De'Aaron Fox",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Right Shin Contusion",
     "gd": "2026-11-25",
     "mu": "SAS@POR",
@@ -726,8 +756,8 @@
   "victor wembanyama": [
    {
     "n": "Victor Wembanyama",
-    "st": "Questionable",
-    "why": "Low Back Tightness",
+    "st": "Available",
+    "why": "-",
     "gd": "2026-11-25",
     "mu": "SAS@POR",
     "tm": "San Antonio Spurs"
