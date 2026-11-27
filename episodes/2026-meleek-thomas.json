@@ -1,0 +1,170 @@
+{
+  "slug": "2026-meleek-thomas",
+  "as_of": "2026 新秀 · 出賽 5 場以上 · ESPN 數據 · 截至 2026/11/27",
+  "scenes": [
+    {
+      "kind": "hook2",
+      "kicker": "2026 新秀 · 每場得分",
+      "left": "#34",
+      "mid": ">",
+      "right": "#5",
+      "lines": [
+        "二輪新秀，打贏 8 個樂透籤",
+        "第 34 順位 · Meleek Thomas"
+      ],
+      "duration": 3.0,
+      "caption": "第 34 順位的新秀，得分贏過 8 個樂透籤。"
+    },
+    {
+      "kind": "ranking",
+      "title": "新秀每場得分",
+      "subtitle": "出賽 5 場以上 · 2026/11/27",
+      "rows": [
+        {
+          "name": "Darius Acuff Jr.",
+          "tag": "第 7 順位",
+          "value": "24.4"
+        },
+        {
+          "name": "Yaxel Lendeborg",
+          "tag": "第 11 順位",
+          "value": "19.0"
+        },
+        {
+          "name": "Caleb Wilson",
+          "tag": "第 4 順位",
+          "value": "18.9",
+          "flag": "傷缺"
+        },
+        {
+          "name": "AJ Dybantsa",
+          "tag": "狀元",
+          "value": "16.7"
+        },
+        {
+          "name": "Cameron Boozer",
+          "tag": "第 3 順位",
+          "value": "16.6",
+          "flag": "傷缺"
+        },
+        {
+          "name": "Darryn Peterson",
+          "tag": "榜眼",
+          "value": "15.9"
+        },
+        {
+          "name": "Meleek Thomas",
+          "tag": "第 34 順位",
+          "value": "12.4",
+          "accent": [
+            255,
+            176,
+            32
+          ]
+        },
+        {
+          "name": "Mikel Brown Jr.",
+          "tag": "第 6 順位",
+          "value": "11.9"
+        },
+        {
+          "name": "Keaton Wagler",
+          "tag": "第 5 順位",
+          "value": "11.2"
+        }
+      ],
+      "caption": "新秀得分榜前六名，全是前十一順位。第七名，就是第 34 順位的 Meleek Thomas。"
+    },
+    {
+      "kind": "versus",
+      "title": "上場時間差不多",
+      "sides": [
+        {
+          "tag": "第 34 順位",
+          "first": "Meleek",
+          "last": "Thomas",
+          "team": "CLE 騎士 · 23.0 分鐘",
+          "value": "41.6",
+          "label": "三分命中率 %",
+          "accent": [
+            255,
+            176,
+            32
+          ],
+          "win": "準度更高"
+        },
+        {
+          "tag": "第 6 順位",
+          "first": "Mikel",
+          "last": "Brown Jr.",
+          "team": "BKN 籃網 · 23.4 分鐘",
+          "value": "34.2",
+          "label": "三分命中率 %",
+          "accent": [
+            120,
+            130,
+            160
+          ]
+        }
+      ],
+      "note": "每場得分 12.4 vs 11.9",
+      "note2": "上場時間幾乎一樣",
+      "caption": "跟第 6 順位的 Brown 比，上場時間差不多，他得分更多，三分命中率 41.6%。",
+      "narration": "跟第 6 順位的 Brown 比，上場時間差不多，他得分更多，三分命中率百分之四十一點六。"
+    },
+    {
+      "kind": "trend",
+      "accent": [
+        255,
+        176,
+        32
+      ],
+      "tag": "大多替補出發",
+      "first": "Meleek",
+      "last": "Thomas",
+      "bars": [
+        {
+          "label": "每場（23 分鐘）",
+          "value": "12.4"
+        },
+        {
+          "label": "換算 36 分鐘",
+          "value": "19.4"
+        }
+      ],
+      "note": "16 場只先發 3 場",
+      "caption": "而且他大多替補，換算成 36 分鐘，是 19.4 分。"
+    },
+    {
+      "kind": "question",
+      "accent": [
+        255,
+        176,
+        32
+      ],
+      "line1": "第 34 順位",
+      "line2": "撿到寶還是曇花一現？",
+      "options": [
+        {
+          "text": "A  撿到寶",
+          "accent": [
+            64,
+            224,
+            208
+          ]
+        },
+        {
+          "text": "B  曇花一現",
+          "accent": [
+            255,
+            92,
+            56
+          ]
+        }
+      ],
+      "sub": "最近 5 場平均 9.8 分",
+      "duration": 4.0,
+      "caption": "但他最近五場降到 9.8 分。撿到寶，還是曇花一現？留言告訴我！"
+    }
+  ]
+}
