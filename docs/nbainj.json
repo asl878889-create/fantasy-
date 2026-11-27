@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-27T11:12:03.721Z",
- "file": "Injury-Report_2026-11-27_06_00AM.pdf",
- "report": "11/27/26 06:00 AM",
+ "updated": "2026-11-27T19:11:27.880Z",
+ "file": "Injury-Report_2026-11-27_02_00PM.pdf",
+ "report": "11/27/26 02:00 PM",
  "items": {
   "giannis antetokounmpo": [
    {
@@ -36,8 +36,8 @@
   "andrew wiggins": [
    {
     "n": "Andrew Wiggins",
-    "st": "Probable",
-    "why": "Right Ankle Sprain",
+    "st": "Available",
+    "why": "Right Ankle Impingement",
     "gd": "2026-11-27",
     "mu": "MIA@NYK",
     "tm": "Miami Heat"
@@ -46,7 +46,7 @@
   "og anunoby": [
    {
     "n": "OG Anunoby",
-    "st": "Doubtful",
+    "st": "Out",
     "why": "Left Calf Strain",
     "gd": "2026-11-27",
     "mu": "MIA@NYK",
@@ -56,7 +56,7 @@
   "jordan clarkson": [
    {
     "n": "Jordan Clarkson",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Right Plantar Fasciitis",
     "gd": "2026-11-27",
     "mu": "MIA@NYK",
@@ -66,8 +66,8 @@
   "andre drummond": [
    {
     "n": "Andre Drummond",
-    "st": "Questionable",
-    "why": "Head",
+    "st": "Out",
+    "why": "Concussion Protocol",
     "gd": "2026-11-27",
     "mu": "MIA@NYK",
     "tm": "New York Knicks"
@@ -76,8 +76,18 @@
   "miles mcbride": [
    {
     "n": "Miles McBride",
+    "st": "Out",
+    "why": "Left Athletic Pubalgia",
+    "gd": "2026-11-27",
+    "mu": "MIA@NYK",
+    "tm": "New York Knicks"
+   }
+  ],
+  "karl anthony towns": [
+   {
+    "n": "Karl-Anthony Towns",
     "st": "Questionable",
-    "why": "Left Adductor Tightness",
+    "why": "Right Abdominal Contusion",
     "gd": "2026-11-27",
     "mu": "MIA@NYK",
     "tm": "New York Knicks"
@@ -191,6 +201,16 @@
     "gd": "2026-11-27",
     "mu": "BKN@TOR",
     "tm": "Toronto Raptors"
+   }
+  ],
+  "kasparas jakucionis": [
+   {
+    "n": "Kasparas Jakucionis",
+    "st": "Out",
+    "why": "Left Ankle Tenosynovitis",
+    "gd": "2026-11-27",
+    "mu": "MIL@DET",
+    "tm": "Milwaukee Bucks"
    }
   ],
   "kam jones": [
@@ -307,7 +327,17 @@
    {
     "n": "Ariel Hukporti",
     "st": "Out",
-    "why": "Right Achilles Tendon Rupture / Tear",
+    "why": "Right Achilles Tendon",
+    "gd": "2026-11-27",
+    "mu": "PHI@IND",
+    "tm": "Philadelphia 76ers"
+   }
+  ],
+  "dean wade": [
+   {
+    "n": "Dean Wade",
+    "st": "Questionable",
+    "why": "Left Hamstring Injury Management",
     "gd": "2026-11-27",
     "mu": "PHI@IND",
     "tm": "Philadelphia 76ers"
@@ -346,7 +376,7 @@
   "larry nance": [
    {
     "n": "Larry Nance Jr.",
-    "st": "Questionable",
+    "st": "Probable",
     "why": "Right Ankle Bruise",
     "gd": "2026-11-27",
     "mu": "PHI@IND",
@@ -466,7 +496,7 @@
   "mitchell robinson": [
    {
     "n": "Mitchell Robinson",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Illness",
     "gd": "2026-11-27",
     "mu": "ATL@BOS",
@@ -566,7 +596,7 @@
   "lamelo ball": [
    {
     "n": "LaMelo Ball",
-    "st": "Questionable",
+    "st": "Out",
     "why": "Left Ankle Sprain",
     "gd": "2026-11-27",
     "mu": "MEM@MIN",
@@ -638,6 +668,16 @@
     "n": "Sergio de Larrea",
     "st": "Out",
     "why": "Right Knee Sprain",
+    "gd": "2026-11-27",
+    "mu": "DAL@PHX",
+    "tm": "Dallas Mavericks"
+   }
+  ],
+  "kyrie irving": [
+   {
+    "n": "Kyrie Irving",
+    "st": "Questionable",
+    "why": "Left Knee Injury Management",
     "gd": "2026-11-27",
     "mu": "DAL@PHX",
     "tm": "Dallas Mavericks"
@@ -718,6 +758,16 @@
     "n": "Jonas Aidoo",
     "st": "Out",
     "why": "G League - Two-Way",
+    "gd": "2026-11-27",
+    "mu": "DEN@UTA",
+    "tm": "Utah Jazz"
+   }
+  ],
+  "mo bamba": [
+   {
+    "n": "Mo Bamba",
+    "st": "Questionable",
+    "why": "Illness",
     "gd": "2026-11-27",
     "mu": "DEN@UTA",
     "tm": "Utah Jazz"
@@ -828,6 +878,16 @@
     "n": "Vit Krejci",
     "st": "Out",
     "why": "Left Ankle Fracture",
+    "gd": "2026-11-27",
+    "mu": "GSW@POR",
+    "tm": "Portland Trail Blazers"
+   }
+  ],
+  "damian lillard": [
+   {
+    "n": "Damian Lillard",
+    "st": "Out",
+    "why": "Right Calf Tightness / Soreness",
     "gd": "2026-11-27",
     "mu": "GSW@POR",
     "tm": "Portland Trail Blazers"
@@ -1041,6 +1101,76 @@
     "gd": "2026-11-27",
     "mu": "NOP@LAC",
     "tm": "LA Clippers"
+   }
+  ],
+  "tobe awaka": [
+   {
+    "n": "Tobe Awaka",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "noa essengue": [
+   {
+    "n": "Noa Essengue",
+    "st": "Probable",
+    "why": "Right Thumb Sprain",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "norman powell": [
+   {
+    "n": "Norman Powell",
+    "st": "Out",
+    "why": "Right Hamstring Strain",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "jaylin sellers": [
+   {
+    "n": "Jaylin Sellers",
+    "st": "Out",
+    "why": "G League - Two-Way",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "jalen smith": [
+   {
+    "n": "Jalen Smith",
+    "st": "Probable",
+    "why": "Gastrointestinal Illness",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "dailyn swain": [
+   {
+    "n": "Dailyn Swain",
+    "st": "Out",
+    "why": "G League - On Assignment",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
+   }
+  ],
+  "caleb wilson": [
+   {
+    "n": "Caleb Wilson",
+    "st": "Out",
+    "why": "Right Metacarpal Fracture",
+    "gd": "2026-11-28",
+    "mu": "IND@CHI",
+    "tm": "Chicago Bulls"
    }
   ]
  }
